@@ -2,6 +2,7 @@
 #define DRACO_P1_ACTUATOR_MODEL
 
 #include <Utils/wrap_eigen.hpp>
+#include <vector>
 
 #define NUM_ACTUATORS 3
 #define NUM_STATES_PER_ACTUATOR 2
@@ -20,22 +21,30 @@ public:
     void getDampingMatrix(sejong::Matrix &B_act);
     void getStiffnessMatrix(sejong::Matrix &K_act);
 
+    double get_joint_pos_q(int &index, double &z_act_pos);
+    double get_act_pos_z(int &index, double &q_act_pos); 
+    double getJacobian_dzdq(int &index, double &z_act_pos);   
+
+    // double
+    std::vector<double> r_arm; // Moment arm
+
     // Mass
-    double M_motor;
-    double M_spring;
-    double M_load;
+    std::vector<double> M_motor;
+    std::vector<double> M_spring;
+    std::vector<double> M_load;
 
     // Damping
-    double B_motor;
-    double B_spring;
-    double B_load;
+    std::vector<double> B_motor;
+    std::vector<double> B_spring;
+    std::vector<double> B_load;
 
     // Spring Elements
-    double K_motor;
-    double K_spring;
+    std::vector<double> K_motor;
+    std::vector<double> K_spring;
     
-    // Torque Constant (N-m / Amps) 
-    double K_m;
+     
+    std::vector<double> K_m; // Torque Constant (N-m / Amps)
+    std::vector<double> z_o; // initial actuator position for which spring force is 0.
 
 private:
     void Initialization();
