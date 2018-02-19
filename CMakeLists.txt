@@ -57,21 +57,23 @@ include_directories(
 #${catkin_INCLUDE_DIRS}
 )
 
-#include_directories(include)
+include_directories(include)
 include_directories(src/draco_dynamic_model)
 
-set(draco_sim_model_sources src/draco_dynamic_model/DracoP1Rot_Definition.h
+set(draco_dyn_model_sources src/draco_dynamic_model/DracoP1Rot_Definition.h
 						  src/draco_dynamic_model/Draco_Dyn_Model.hpp						  
 						  src/draco_dynamic_model/Draco_Dyn_Model.cpp
 						  src/draco_dynamic_model/Draco_Kin_Model.hpp						  
 						  src/draco_dynamic_model/Draco_Kin_Model.cpp						  
 						  src/draco_dynamic_model/DracoModel.hpp
-						  src/draco_dynamic_model/DracoModel.cpp)								  			
+						  src/draco_dynamic_model/DracoModel.cpp)					
 
-add_executable(test_draco_model  src/small_tests/test_draco_model.cpp	
-								 ${draco_sim_model_sources})
+set(draco_act_model_sources src/draco_actuator_model/DracoActuatorModel.cpp) 			  			
 
-target_link_libraries(test_draco_model  ${SJUtils}
-  									    ${SJurdf}
-									    ${SJrbdl}
-									    ${SJsnopt})								 
+#---------------------------------------------------------------------------------------------------------------------
+# Test Draco Model ---------------------------------------------------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------
+add_executable(test_draco_model  src/small_tests/test_draco_model.cpp  ${draco_dyn_model_sources} ${draco_act_model_sources})
+target_link_libraries(test_draco_model  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
+#---------------------------------------------------------------------------------------------------------------------
+

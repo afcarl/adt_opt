@@ -130,7 +130,7 @@ DracoModel::DracoModel(){
     dyn_model_ = new Draco_Dyn_Model(model_);
     kin_model_ = new Draco_Kin_Model(model_);
 
-    printf("[Draco Model] Contructed\n");
+    printf("[Draco Model] Constructed\n");
 }
 
 DracoModel::~DracoModel(){
