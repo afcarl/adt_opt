@@ -17,28 +17,59 @@ DracoActuatorModel::DracoActuatorModel(){
 }
 
 void DracoActuatorModel::Initialization(){
+    // Mass Elements (Kg)
+    M_motor.resize(NUM_ACTUATORS); 	M_motor.setZero();
+    M_spring.resize(NUM_ACTUATORS); M_spring.setZero();
+    M_load.resize(NUM_ACTUATORS);  	M_load.setZero();
+
+    // Damping Elements (N/m-s)
+    B_motor.resize(NUM_ACTUATORS); B_motor.setZero();
+    B_spring.resize(NUM_ACTUATORS); B_spring.setZero();
+    B_load.resize(NUM_ACTUATORS); B_load.setZero();
+
+    // Spring Elements (N/m)
+    K_motor.resize(NUM_ACTUATORS); K_motor.setZero();
+    K_spring.resize(NUM_ACTUATORS); K_spring.setZero();
+
+	// Torque Constant (N-m/Amperes)	        
+    K_m.resize(NUM_ACTUATORS); K_m.setZero();
+
+	// Actuator Moment Arm (m)
+    r_arm.resize(NUM_ACTUATORS); r_arm.setZero();
+	// Zero spring force actuator position
+    z_o.resize(NUM_ACTUATORS); z_o.setZero();		
+
+	// Zero spring force joint position
+    q_o.resize(NUM_ACTUATORS); q_o.setZero();		    
+
+    // Set Default Values
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 	    // Mass Elements (Kg)
-	    M_motor.push_back(3);
-	    M_spring.push_back(1);
-	    M_load.push_back(1);
+	    M_motor[i] = 3;
+	    M_spring[i] = 1;
+	    M_load[i] = 1;
 
 	    // Damping Elements (N/m-s)
-	    B_motor.push_back(6);
-	    B_spring.push_back(1);
-	    B_load.push_back(2);
+	    B_motor[i] = 6;
+	    B_spring[i] = 1;
+	    B_load[i] = 2;
 
 	    // Spring Elements (N/m)
-	    K_motor.push_back(9);
-	    K_spring.push_back(3);
+	    K_motor[i] = 9;
+	    K_spring[i] = 3;
 		// Torque Constant (N-m/Amperes)	    
-		K_m.push_back(0.01);
+		K_m[i] = 0.01;
 
 		// Actuator Moment Arm (m)
-		r_arm.push_back(0.05); 		
+		r_arm[i] = 0.05; 		
 		// Zero spring force actuator position
-		z_o.push_back(0.00);
+		z_o[i] = 0.0;
+		q_o[i] = 0.0;
 	}
+
+	q_o[0] = -1.0;
+	q_o[1] = 2.0;
+	q_o[2] = -1.0;
 
 }
 
@@ -52,7 +83,6 @@ void DracoActuatorModel::getMassMatrix(sejong::Matrix &M_act){
 		M_act(NUM_STATES_PER_ACTUATOR*i + 1, NUM_STATES_PER_ACTUATOR*i) = M_load[i];		
 		M_act(NUM_STATES_PER_ACTUATOR*i + 1, NUM_STATES_PER_ACTUATOR*i + 1) = M_spring[i];				
 	}
-	sejong::pretty_print(M_act, std::cout, "M_act");	
 }
 
 void DracoActuatorModel::getDampingMatrix(sejong::Matrix &B_act){
@@ -65,7 +95,6 @@ void DracoActuatorModel::getDampingMatrix(sejong::Matrix &B_act){
 		B_act(NUM_STATES_PER_ACTUATOR*i + 1, NUM_STATES_PER_ACTUATOR*i) = B_load[i];		
 		B_act(NUM_STATES_PER_ACTUATOR*i + 1, NUM_STATES_PER_ACTUATOR*i + 1) = B_spring[i];				
 	}
-	sejong::pretty_print(B_act, std::cout, "B_act");	
 }
 
 void DracoActuatorModel::getStiffnessMatrix(sejong::Matrix &K_act){
@@ -77,20 +106,36 @@ void DracoActuatorModel::getStiffnessMatrix(sejong::Matrix &K_act){
 		K_act(NUM_STATES_PER_ACTUATOR*i, NUM_STATES_PER_ACTUATOR*i + 1) = K_motor[i] - K_spring[i];		
 		K_act(NUM_STATES_PER_ACTUATOR*i + 1, NUM_STATES_PER_ACTUATOR*i + 1) = K_spring[i];				
 	}
-	sejong::pretty_print(K_act, std::cout, "K_act");		
 }
 
+
+// Set the zero spring force joint position
+void DracoActuatorModel::set_zero_pos_q_o(sejong::Vector &q_o_in){
+	for(size_t i = 0; i < NUM_ACTUATORS; i++){
+		q_o[i] = q_o_in[i];
+	}	
+}
 
 // Simple Relationship between actuator position and joint position
-// (z - z_o) = r*q 
+// (z - z_o) = r*(q - q_o) 
 double DracoActuatorModel::get_joint_pos_q(int &index, double &z_act_pos){
-	return (z_act_pos - z_o[index])/r_arm[index];
+	return (z_act_pos - z_o[index])/r_arm[index] + q_o[index];
 }
 double DracoActuatorModel::get_act_pos_z(int &index, double &q_act_pos){
-	return z_o[index] + r_arm[index]*q_act_pos;
+	return z_o[index] + r_arm[index]*(q_act_pos + q_o[index]);
 }
 
 // dz/dq = r 
 double DracoActuatorModel::getJacobian_dzdq(int &index, double &z_act_pos){
 	return r_arm[index];
+}
+
+void DracoActuatorModel::getFullJacobian(sejong::Matrix &L){
+	L.resize(NUM_ACTUATORS, NUM_ACTUATORS);
+	L.setIdentity();
+
+	for(size_t i = 0; i < NUM_ACTUATORS; i++){
+		L(i,i) = r_arm[i];
+	}
+
 }

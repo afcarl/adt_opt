@@ -23,28 +23,31 @@ public:
 
     double get_joint_pos_q(int &index, double &z_act_pos);
     double get_act_pos_z(int &index, double &q_act_pos); 
-    double getJacobian_dzdq(int &index, double &z_act_pos);   
+    double getJacobian_dzdq(int &index, double &z_act_pos);
+    void getFullJacobian(sejong::Matrix &L);   
 
+
+    void set_zero_pos_q_o(sejong::Vector &q_o_in);
     // double
-    std::vector<double> r_arm; // Moment arm
+    sejong::Vector r_arm; // Moment arm
 
     // Mass
-    std::vector<double> M_motor;
-    std::vector<double> M_spring;
-    std::vector<double> M_load;
+    sejong::Vector M_motor;
+    sejong::Vector M_spring;
+    sejong::Vector M_load;
 
     // Damping
-    std::vector<double> B_motor;
-    std::vector<double> B_spring;
-    std::vector<double> B_load;
+    sejong::Vector B_motor;
+    sejong::Vector B_spring;
+    sejong::Vector B_load;
 
     // Spring Elements
-    std::vector<double> K_motor;
-    std::vector<double> K_spring;
-    
-     
-    std::vector<double> K_m; // Torque Constant (N-m / Amps)
-    std::vector<double> z_o; // initial actuator position for which spring force is 0.
+    sejong::Vector K_motor;
+    sejong::Vector K_spring;
+        
+    sejong::Vector K_m; // Torque Constant (N-m / Amps)
+    sejong::Vector z_o; // initial actuator position for which spring force is 0.
+    sejong::Vector q_o; // initial joint position for which the spring force is 0.    
 
 private:
     void Initialization();
