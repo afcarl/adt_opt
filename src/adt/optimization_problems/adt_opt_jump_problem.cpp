@@ -47,17 +47,9 @@ void Jump_Opt::initialize_starting_configuration(){
 void Jump_Opt::initialize_contact_list(){
 	Draco_Toe_Contact* toe_contact = new Draco_Toe_Contact();
 	Draco_Heel_Contact* heel_contact = new Draco_Heel_Contact();
-
-	// Test Jacobians
-	sejong::Matrix J_toe_contact;
-	sejong::Matrix J_heel_contact;
-
-	toe_contact->getContactJacobian(robot_q_init, J_toe_contact);
-	sejong::pretty_print(J_toe_contact, std::cout, "[Jump_Opt] J_toe_contact");
-
-	heel_contact->getContactJacobian(robot_q_init, J_heel_contact);
-	sejong::pretty_print(J_heel_contact, std::cout, "[Jump_Opt] J_heel_contact");	
-
+	// Append to contact list
+	contact_list.append_contact(toe_contact);
+	contact_list.append_contact(heel_contact);
 }
 void Jump_Opt::initialize_td_constraint_list(){}
 

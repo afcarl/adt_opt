@@ -2,10 +2,10 @@
 #define ADT_JUMP_OPTIMIZATION_PROBLEM_H
 
 #include <adt/optimization_problems/adt_opt_problem_main.hpp>
-#include <adt/containers/adt_opt_variable_manager.hpp>
 
-#include <adt/contacts/adt_draco_contact_toe.hpp>
-#include <adt/contacts/adt_draco_contact_heel.hpp>
+#include <adt/containers/adt_opt_variable_manager.hpp>
+#include <adt/containers/adt_contact_list.hpp>
+
 
 class Jump_Opt: public Optimization_Problem_Main{
 public:
@@ -13,6 +13,9 @@ public:
 	~Jump_Opt();	
 
 	ADT_Opt_Variable_Manager					opt_var_manager;
+
+	Contact_List 								contact_list;
+
 /*	Constraint_List 							td_constraint_list; // Time Dependent Constraint List, exists for all timesteps
 	Constraint_List 							ti_constraint_list;	// Time Independent Constraint List, exists for at a particular timestep
 */

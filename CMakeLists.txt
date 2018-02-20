@@ -73,7 +73,8 @@ set(draco_act_model_sources src/draco_actuator_model/DracoActuatorModel.cpp)
 
 set(adt_container_sources src/adt/containers/adt_opt_variable.cpp
 						  src/adt/containers/adt_opt_variable_manager.cpp
-						  src/adt/containers/adt_constraint_list.cpp)
+						  src/adt/containers/adt_constraint_list.cpp
+						  src/adt/containers/adt_contact_list.cpp)
 
 set(adt_contact_sources src/adt/contacts/adt_draco_contact_toe.cpp
 						src/adt/contacts/adt_draco_contact_heel.cpp)
