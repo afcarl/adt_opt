@@ -70,6 +70,11 @@ set(draco_dyn_model_sources src/draco_dynamic_model/DracoP1Rot_Definition.h
 
 set(draco_act_model_sources src/draco_actuator_model/DracoActuatorModel.cpp) 			  			
 
+
+set(adt_container_sources src/adt/containers/adt_opt_variable.cpp
+						  src/adt/containers/adt_opt_variable_manager.cpp)
+
+
 #---------------------------------------------------------------------------------------------------------------------
 # Test Draco Model ---------------------------------------------------------------------------------------------------
 #---------------------------------------------------------------------------------------------------------------------
@@ -77,3 +82,10 @@ add_executable(test_draco_model  src/small_tests/test_draco_model.cpp  ${draco_d
 target_link_libraries(test_draco_model  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
 #---------------------------------------------------------------------------------------------------------------------
 
+
+#--------------------------------------------
+# Test Variable Containers Model 
+#--------------------------------------------
+add_executable(test_adt_containers  src/small_tests/test_adt_containers.cpp  ${adt_container_sources})
+target_link_libraries(test_adt_containers  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
+#--------------------------------------------
