@@ -36,6 +36,8 @@ public:
 	void update_x(std::vector<double> &x_in);	 // To do
 	void populate_x(std::vector<double> &x_out); // To do
 
+
+	int initial_conditions_offset = 0;
 	int total_knotpoints;
 
 	int get_num_q_vars();
@@ -62,7 +64,10 @@ private:
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_keyframe_vars;
 
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_z_vars;
+	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_zdot_vars;
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_delta_vars;
+	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_delta_dot_vars;
+
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_u_vars;	
 
 	std::vector<ADT_Opt_Variable*> knotpoint_to_dt;

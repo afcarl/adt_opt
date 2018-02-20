@@ -25,8 +25,12 @@ void ADT_Opt_Variable_Manager::append_variable(ADT_Opt_Variable* opt_variable){
 		add_variable_to_map(knotpoint_to_keyframe_vars, opt_variable);		
 	}else if(opt_variable->type == VAR_TYPE_Z){
 		add_variable_to_map(knotpoint_to_z_vars, opt_variable);				
+	}else if(opt_variable->type == VAR_TYPE_ZDOT){
+		add_variable_to_map(knotpoint_to_zdot_vars, opt_variable);				
 	}else if(opt_variable->type == VAR_TYPE_DELTA){
 		add_variable_to_map(knotpoint_to_delta_vars, opt_variable);				
+	}else if(opt_variable->type == VAR_TYPE_DELTA_DOT){
+		add_variable_to_map(knotpoint_to_delta_dot_vars, opt_variable);				
 	}else if(opt_variable->type == VAR_TYPE_U){
 		add_variable_to_map(knotpoint_to_u_vars, opt_variable);				
 	}else if(opt_variable->type == VAR_TYPE_H){
@@ -206,7 +210,7 @@ void ADT_Opt_Variable_Manager::update_x(std::vector<double> &x_in){
 		// Update the values
 		for (size_t i = 0; i < x_in.size(); i++){
 //			std::cout << "old var_list[" << i << "] = " << opt_var_list[i]->value << std::endl;
-			opt_var_list[i]->value = x_in[i];
+			opt_var_list[i + initial_conditions_offset]->value = x_in[i];
 //			std::cout << "new var_list[" << i << "] = " << opt_var_list[i]->value << std::endl;			
 		}
 	}else{
@@ -216,7 +220,7 @@ void ADT_Opt_Variable_Manager::update_x(std::vector<double> &x_in){
 
 void ADT_Opt_Variable_Manager::populate_x(std::vector<double> &x_out){
 	x_out.clear();
-	for (size_t i = 0; i < opt_var_list.size(); i++){
+	for (size_t i = initial_conditions_offset; i < opt_var_list.size(); i++){
 		x_out.push_back(opt_var_list[i]->value);
 	}
 

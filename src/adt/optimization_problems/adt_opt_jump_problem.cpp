@@ -1,6 +1,9 @@
 #include <Utils/utilities.hpp>
 #include <adt/optimization_problems/adt_opt_jump_problem.hpp>
+
 #include "DracoP1Rot_Definition.h"
+#include <draco_actuator_model/DracoActuatorModel.hpp>
+
 
 #include <adt/contacts/adt_draco_contact_toe.hpp>
 #include <adt/contacts/adt_draco_contact_heel.hpp>
@@ -43,7 +46,6 @@ void Jump_Opt::initialize_starting_configuration(){
 
 }
 
-
 void Jump_Opt::initialize_contact_list(){
 	Draco_Toe_Contact* toe_contact = new Draco_Toe_Contact();
 	Draco_Heel_Contact* heel_contact = new Draco_Heel_Contact();
@@ -55,8 +57,22 @@ void Jump_Opt::initialize_td_constraint_list(){}
 
 
 
+void Jump_Opt::initialize_opt_vars(){
+	// At timestep 0, we initialize the joint positions of the robot.
+	for(size_t i = 0; i < NUM_VIRTUAL; i++){
+		// append to opt_var_manager the virtual joints initial positions
+	}
+	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+		// append to opt_var_manager the actuator z and delta states	
+	}	
 
-void Jump_Opt::initialize_opt_vars(){}
+	// set variable manager initial condition offset = NUM_VIRTUAL + NUM_STATES_PER_ACTUATOR*NUM_ACT 
+
+	for(size_t k = 1; k < N_total_knotpoints; k++){
+		// add to variable manager 
+	}
+
+}
 void Jump_Opt::initialize_objective_func(){}
 
 

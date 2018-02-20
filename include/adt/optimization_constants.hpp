@@ -17,7 +17,10 @@
   #define VAR_TYPE_H 5    // Knot Point Time Step Variable Type
 
   #define VAR_TYPE_Z 6    // Actuator z-position variable type
-  #define VAR_TYPE_DELTA 7    // Actuator spring delta variable type
-  #define VAR_TYPE_U 8    // Actuator current input variable type
+  #define VAR_TYPE_ZDOT 7    // Actuator z-velocity variable type
+  #define VAR_TYPE_DELTA 8    // Actuator spring delta variable type
+  #define VAR_TYPE_DELTA_DOT 9    // Actuator spring delta velocity variable type
+
+  #define VAR_TYPE_U 10    // Actuator current input variable type
 
 #endif 
