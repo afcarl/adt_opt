@@ -113,19 +113,29 @@ void ADT_Opt_Variable_Manager::get_var_knotpoint_dt(const int &knotpoint, double
 
 
 void ADT_Opt_Variable_Manager::get_q_states(const int &knotpoint, sejong::Vector &q_state){
-		convert_to_vector(knotpoint, knotpoint_to_q_state_vars, q_state);
+	convert_to_vector(knotpoint, knotpoint_to_q_state_vars, q_state);
 }
 void ADT_Opt_Variable_Manager::get_qdot_states(const int &knotpoint, sejong::Vector &qdot_state){
-		convert_to_vector(knotpoint, knotpoint_to_qdot_state_vars, qdot_state);
+	convert_to_vector(knotpoint, knotpoint_to_qdot_state_vars, qdot_state);
 }			
 void ADT_Opt_Variable_Manager::get_z_states(const int &knotpoint, sejong::Vector &z_state){
-		convert_to_vector(knotpoint, knotpoint_to_z_vars, z_state);
+	convert_to_vector(knotpoint, knotpoint_to_z_vars, z_state);
 }
+void ADT_Opt_Variable_Manager::get_zdot_states(const int &knotpoint, sejong::Vector &zdot_state){
+	convert_to_vector(knotpoint, knotpoint_to_zdot_vars, zdot_state);	
+}
+
 void ADT_Opt_Variable_Manager::get_delta_states(const int &knotpoint, sejong::Vector &delta_state){
-		convert_to_vector(knotpoint, knotpoint_to_delta_vars, delta_state);
+	convert_to_vector(knotpoint, knotpoint_to_delta_vars, delta_state);
 }		
+
+void ADT_Opt_Variable_Manager::get_delta_dot_states(const int &knotpoint, sejong::Vector &delta_dot_state){
+	convert_to_vector(knotpoint, knotpoint_to_delta_dot_vars, delta_dot_state);	
+}
+
+
 void ADT_Opt_Variable_Manager::get_u_states(const int &knotpoint, sejong::Vector &u_state){
-		convert_to_vector(knotpoint, knotpoint_to_u_vars, u_state);
+	convert_to_vector(knotpoint, knotpoint_to_u_vars, u_state);
 }
 
 

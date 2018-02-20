@@ -26,8 +26,14 @@ public:
 
 	void get_q_states(const int &knotpoint, sejong::Vector &q_state);		
 	void get_qdot_states(const int &knotpoint, sejong::Vector &qdot_state);			
+
 	void get_z_states(const int &knotpoint, sejong::Vector &z_state);		
+	void get_zdot_states(const int &knotpoint, sejong::Vector &zdot_state);			
+
 	void get_delta_states(const int &knotpoint, sejong::Vector &delta_state);		
+	void get_delta_dot_states(const int &knotpoint, sejong::Vector &delta_dot_state);		
+
+
 	void get_u_states(const int &knotpoint, sejong::Vector &u_state);				
 
 	int get_size();
