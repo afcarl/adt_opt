@@ -74,14 +74,14 @@ set(draco_act_model_sources src/draco_actuator_model/DracoActuatorModel.cpp)
 set(adt_container_sources src/adt/containers/adt_opt_variable.cpp
 						  src/adt/containers/adt_opt_variable_manager.cpp)
 
+set(adt_optimization_problem_sources src/adt/optimization_problems/adt_opt_jump_problem.cpp)
 
-#---------------------------------------------------------------------------------------------------------------------
-# Test Draco Model ---------------------------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------------------------------------------
+#--------------------------------------------
+# Test Draco Model 
+#--------------------------------------------
 add_executable(test_draco_model  src/small_tests/test_draco_model.cpp  ${draco_dyn_model_sources} ${draco_act_model_sources})
 target_link_libraries(test_draco_model  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
-#---------------------------------------------------------------------------------------------------------------------
-
+#--------------------------------------------
 
 #--------------------------------------------
 # Test Variable Containers Model 
@@ -89,3 +89,9 @@ target_link_libraries(test_draco_model  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt
 add_executable(test_adt_containers  src/small_tests/test_adt_containers.cpp  ${adt_container_sources})
 target_link_libraries(test_adt_containers  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
 #--------------------------------------------
+
+#--------------------------------------------
+# Test Optimization Problem Object 
+#--------------------------------------------
+add_executable(test_jump_prob_object  src/small_tests/test_jump_prob_object.cpp  ${adt_optimization_problem_sources}  																					 ${adt_container_sources}) 
+target_link_libraries(test_jump_prob_object  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
