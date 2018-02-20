@@ -5,6 +5,7 @@
 #include <adt/containers/adt_opt_variable_manager.hpp>
 
 #include <adt/contacts/adt_draco_contact_toe.hpp>
+#include <adt/contacts/adt_draco_contact_heel.hpp>
 
 class Jump_Opt: public Optimization_Problem_Main{
 public:

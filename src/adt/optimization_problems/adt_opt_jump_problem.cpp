@@ -2,6 +2,9 @@
 #include <adt/optimization_problems/adt_opt_jump_problem.hpp>
 #include "DracoP1Rot_Definition.h"
 
+#include <adt/contacts/adt_draco_contact_toe.hpp>
+#include <adt/contacts/adt_draco_contact_heel.hpp>
+
 Jump_Opt::Jump_Opt(){
 	problem_name = "Draco Jump Optimization Problem";
 
@@ -43,9 +46,17 @@ void Jump_Opt::initialize_starting_configuration(){
 
 void Jump_Opt::initialize_contact_list(){
 	Draco_Toe_Contact* toe_contact = new Draco_Toe_Contact();
+	Draco_Heel_Contact* heel_contact = new Draco_Heel_Contact();
+
+	// Test Jacobians
 	sejong::Matrix J_toe_contact;
-	//toe_contact->getContactJacobian(q_test, J_toe_contact);
-	//sejong::pretty_print(J_toe_contact, std::cout, "toe_contact");
+	sejong::Matrix J_heel_contact;
+
+	toe_contact->getContactJacobian(robot_q_init, J_toe_contact);
+	sejong::pretty_print(J_toe_contact, std::cout, "[Jump_Opt] J_toe_contact");
+
+	heel_contact->getContactJacobian(robot_q_init, J_heel_contact);
+	sejong::pretty_print(J_heel_contact, std::cout, "[Jump_Opt] J_heel_contact");	
 
 }
 void Jump_Opt::initialize_td_constraint_list(){}
