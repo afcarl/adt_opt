@@ -21,10 +21,12 @@ public:
     void getDampingMatrix(sejong::Matrix &B_act);
     void getStiffnessMatrix(sejong::Matrix &K_act);
 
-    double get_joint_pos_q(int &index, double &z_act_pos);
-    double get_act_pos_z(int &index, double &q_act_pos); 
-    double getJacobian_dzdq(int &index, double &z_act_pos);
+    double get_joint_pos_q(const int &index, const double &z_act_pos);
+    double get_act_pos_z(const int &index, const double &q_act_pos); 
+    double getJacobian_dzdq(const int &index, const double &z_act_pos);
+
     void getFullJacobian(sejong::Matrix &L);   
+    void getFull_joint_pos_q(const sejong::Vector &z_in, sejong::Vector &q_out);
 
 
     void set_zero_pos_q_o(sejong::Vector &q_o_in);

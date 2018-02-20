@@ -118,15 +118,15 @@ void DracoActuatorModel::set_zero_pos_q_o(sejong::Vector &q_o_in){
 
 // Simple Relationship between actuator position and joint position
 // (z - z_o) = r*(q - q_o) 
-double DracoActuatorModel::get_joint_pos_q(int &index, double &z_act_pos){
+double DracoActuatorModel::get_joint_pos_q(const int &index, const double &z_act_pos){
 	return (z_act_pos - z_o[index])/r_arm[index] + q_o[index];
 }
-double DracoActuatorModel::get_act_pos_z(int &index, double &q_act_pos){
+double DracoActuatorModel::get_act_pos_z(const int &index, const double &q_act_pos){
 	return z_o[index] + r_arm[index]*(q_act_pos + q_o[index]);
 }
 
 // dz/dq = r 
-double DracoActuatorModel::getJacobian_dzdq(int &index, double &z_act_pos){
+double DracoActuatorModel::getJacobian_dzdq(const int &index, const double &z_act_pos){
 	return r_arm[index];
 }
 
@@ -139,3 +139,15 @@ void DracoActuatorModel::getFullJacobian(sejong::Matrix &L){
 	}
 
 }
+
+void DracoActuatorModel::getFull_joint_pos_q(const sejong::Vector &z_in, sejong::Vector &q_out){
+	q_out.resize(NUM_ACTUATORS);
+	q_out.setZero();
+
+	double z_index_val = 0.0;
+	for(int i = 0; i < NUM_ACTUATORS; i++){
+		z_index_val = z_in[i];
+		q_out[i] = get_joint_pos_q(i, z_index_val);
+	}	
+}
+
