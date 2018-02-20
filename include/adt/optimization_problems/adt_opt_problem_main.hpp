@@ -4,7 +4,6 @@
 #include <adt/optimization_constants.hpp>
 #include <string>
 
-
 class Optimization_Problem_Main{
 public:
   Optimization_Problem_Main(){}

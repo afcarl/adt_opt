@@ -10,6 +10,7 @@ Jump_Opt::Jump_Opt(){
 
 	robot_q_init.setZero(); 
 	robot_qdot_init.setZero();
+	Initialization();
 }
 
 Jump_Opt::~Jump_Opt(){
@@ -17,11 +18,41 @@ Jump_Opt::~Jump_Opt(){
 }
 
 
-// Problem Specific Initialization
-void Jump_Opt::Initialization(){}
-void Jump_Opt::initialize_starting_configuration(){}
-void Jump_Opt::initialize_contact_list(){}
+// Problem Specific Initialization -------------------------------------
+void Jump_Opt::Initialization(){
+	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
+	N_total_knotpoints = 1;
+	initialize_starting_configuration();
+	initialize_contact_list();
+}
+void Jump_Opt::initialize_starting_configuration(){
+ // Set Virtual Joints
+  // x_pos
+  robot_q_init[0] = 0.01;
+  // z_pos
+  robot_q_init[1] = 0.87 - 0.19;
+  // Ry_rot
+  robot_q_init[2] = 0.00; //1.135; //1.131; 	
+
+  robot_q_init[SJJointID::bodyPitch] = -1.0;
+  robot_q_init[SJJointID::kneePitch] = 2.0;
+  robot_q_init[SJJointID::anklePitch] = -1.0;
+
+}
+
+
+void Jump_Opt::initialize_contact_list(){
+	Draco_Toe_Contact* toe_contact = new Draco_Toe_Contact();
+	sejong::Matrix J_toe_contact;
+	//toe_contact->getContactJacobian(q_test, J_toe_contact);
+	//sejong::pretty_print(J_toe_contact, std::cout, "toe_contact");
+
+}
 void Jump_Opt::initialize_td_constraint_list(){}
+
+
+
+
 void Jump_Opt::initialize_opt_vars(){}
 void Jump_Opt::initialize_objective_func(){}
 

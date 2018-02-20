@@ -259,9 +259,9 @@ unsigned int Draco_Kin_Model::_find_body_idx(int id) const {
   case LK_foot:
     return model_->GetBodyId("foot");
   case LK_FootToe:
-    return model_->GetBodyId("FootToe");
+    return model_->GetBodyId("toe");
   case LK_FootHeel:
-    return model_->GetBodyId("FootHeel");
+    return model_->GetBodyId("heel");
   }
   return (unsigned int)(id + 2);
 }
