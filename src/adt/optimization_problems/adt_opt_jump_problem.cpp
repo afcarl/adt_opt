@@ -63,34 +63,44 @@ void Jump_Opt::initialize_td_constraint_list(){}
 
 
 void Jump_Opt::initialize_opt_vars(){
+	// Optimization Variable Order:
+	// opt_init = [q_virt, z, qdot_virt, zdot, delta, delta_dot]
+	// opt_td_k = [q_virt_k, z_k, qdot_virt_k, zdot_k, delta_k, delta_dot_k, u_k, Fij_k, Bij_k]
+	// opt_var = [opt_init, opt_td_1, opt_td_2, ..., opt_td_k]
+
+	// Append to opt_var_manager the initial configuration
 	// ------------------------------------------------------------
 	// Set Initial Conditions
 	// ------------------------------------------------------------
 	// At knotpoint 0, we initialize the joint positions of the robot.
-	// Append to opt_var_manager the virtual joints initial positions
-	std::string opt_var_name;
+	// [q_virt, z]
 	for(size_t i = 0; i < NUM_VIRTUAL; i++){
-		opt_var_name = "virtual_q_state_" + std::to_string(i);
-        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_Q, 0, robot_q_init[i], robot_q_init[i] - OPT_ZERO_EPS, robot_q_init[i] + OPT_ZERO_EPS) );
-		opt_var_name = "virtual_qdot_state_" + std::to_string(i);        
-        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_QDOT, 0, robot_qdot_init[i], robot_qdot_init[i] - OPT_ZERO_EPS, robot_qdot_init[i] + OPT_ZERO_EPS) );
+        opt_var_manager.append_variable(new ADT_Opt_Variable("virtual_q_state_" + std::to_string(i), VAR_TYPE_Q, 0, robot_q_init[i], robot_q_init[i] - OPT_ZERO_EPS, robot_q_init[i] + OPT_ZERO_EPS) );
      }
-	// Append to opt_var_manager the actuator z and delta states	
 	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
 		// Initial values must be fixed
-		opt_var_name = "actuator_z_state_" + std::to_string(i);	
-        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_Z, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
-		opt_var_name = "actuator_zdot_state_" + std::to_string(i);	
-        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_ZDOT, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );        
-		opt_var_name = "actuator_delta_state_" + std::to_string(i);	
-        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_DELTA, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
-		opt_var_name = "actuator_delta_dot_state_" + std::to_string(i);	
-        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_DELTA_DOT, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
-	}	
+        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_z_state_" + std::to_string(i), VAR_TYPE_Z, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+	}     
+	// [qdot_virt, zdot]
+	for(size_t i = 0; i < NUM_VIRTUAL; i++){
+	    opt_var_manager.append_variable(new ADT_Opt_Variable("virtual_qdot_state_" + std::to_string(i), VAR_TYPE_QDOT, 0, robot_qdot_init[i], robot_qdot_init[i] - OPT_ZERO_EPS, robot_qdot_init[i] + OPT_ZERO_EPS) );	
+     }
+	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_zdot_state_" + std::to_string(i), VAR_TYPE_ZDOT, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );        
+	}
+	// [delta, delta_dot]
+	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_state_" + std::to_string(i), VAR_TYPE_DELTA, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+	}
+	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_dot_state_" + std::to_string(i), VAR_TYPE_DELTA_DOT, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+	}
+
 	// set variable manager initial condition offset = NUM_VIRTUAL*2 + (NUM_STATES_PER_ACTUATOR*NUM_ACT)*2 
-	int initial_condition_offset = NUM_VIRTUAL*2 + (NUM_STATES_PER_ACTUATOR*NUM_ACT_JOINT)*2;
-	std::cout << "[Jump_Opt] Predicted Number of states : " << initial_condition_offset << std::endl;
+	int initial_conditions_offset = NUM_VIRTUAL*2 + (NUM_STATES_PER_ACTUATOR*NUM_ACT_JOINT)*2;
+	std::cout << "[Jump_Opt] Predicted Number of states : " << initial_conditions_offset << std::endl;
 	std::cout << "[Jump_Opt] Actual : " << opt_var_manager.get_size() << std::endl;	 
+	opt_var_manager.initial_conditions_offset = initial_conditions_offset;
 
 	// ------------------------------------------------------------------
 	// Set Time Dependent Variables
