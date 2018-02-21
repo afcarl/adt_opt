@@ -1,5 +1,9 @@
 #include <draco_actuator_model/DracoActuatorModel.hpp>
+#include "DracoP1Rot_Definition.h"
 #include <Utils/utilities.hpp>
+
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 DracoActuatorModel* DracoActuatorModel::GetDracoActuatorModel(){
     static DracoActuatorModel draco_act_model_;
@@ -14,6 +18,10 @@ DracoActuatorModel::~DracoActuatorModel(){
 DracoActuatorModel::DracoActuatorModel(){
 	Initialization();
 	printf("[Draco Actuator Model] Constructed\n");
+	sejong::pretty_print(q_l_bound, std::cout, "q Lower Bound");
+	sejong::pretty_print(q_u_bound, std::cout, "q Upper Bound");
+	sejong::pretty_print(z_l_bound, std::cout, "z Lower Bound");		
+	sejong::pretty_print(z_u_bound, std::cout, "z Upper Bound");
 }
 
 void DracoActuatorModel::Initialization(){
@@ -42,34 +50,55 @@ void DracoActuatorModel::Initialization(){
 	// Zero spring force joint position
     q_o.resize(NUM_ACTUATORS); q_o.setZero();		    
 
+    q_l_bound.resize(NUM_ACTUATORS); q_l_bound.setZero();
+    q_u_bound.resize(NUM_ACTUATORS); q_u_bound.setZero();
+    z_l_bound.resize(NUM_ACTUATORS); z_l_bound.setZero();
+    z_u_bound.resize(NUM_ACTUATORS); z_u_bound.setZero();   
+
+
     // Set Default Values
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 	    // Mass Elements (Kg)
-	    M_motor[i] = 3;
-	    M_spring[i] = 1;
-	    M_load[i] = 1;
+	    M_motor[i] = 293;
+	    M_spring[i] = 1.7;
+	    M_load[i] = 0.1; // Unknown
 
 	    // Damping Elements (N/m-s)
-	    B_motor[i] = 6;
-	    B_spring[i] = 1;
-	    B_load[i] = 2;
+	    B_motor[i] = 1680;
+	    B_spring[i] = 0;
+	    B_load[i] = 0;
 
 	    // Spring Elements (N/m)
-	    K_motor[i] = 9;
-	    K_spring[i] = 3;
-		// Torque Constant (N-m/Amperes)	    
-		K_m[i] = 0.01;
+	    K_motor[i] = 0; // Motor has no spring
+	    K_spring[i] = 8109000; // Stiff spring estimated by hcrl
+
+		// Torque Constant (N/Amperes)	    
+		K_m[i] = -157.0;
 
 		// Actuator Moment Arm (m)
-		r_arm[i] = 0.05; 		
+		r_arm[i] = 0.11; //  		
 		// Zero spring force actuator position
 		z_o[i] = 0.0;
 		q_o[i] = 0.0;
 	}
 
-	q_o[0] = -1.0;
-	q_o[1] = 2.0;
-	q_o[2] = -1.0;
+	// Initial Configuration for which z = 0;
+	q_o[SJActuatorID::act_bodyPitch] = -M_PI/4.0;
+	q_o[SJActuatorID::act_kneePitch] = M_PI/2.0;
+	q_o[SJActuatorID::act_anklePitch] = -M_PI/4.0;
+
+	// Lower Bound of joint configuration
+	q_l_bound[SJActuatorID::act_bodyPitch] = -M_PI;
+	q_l_bound[SJActuatorID::act_kneePitch] = 0.0;
+	q_l_bound[SJActuatorID::act_anklePitch] = (-M_PI/2.0) + 0.67;
+
+	// Upper Bound of joint configuration
+	q_u_bound[SJActuatorID::act_bodyPitch] = M_PI/4.0;
+	q_u_bound[SJActuatorID::act_kneePitch] = M_PI - 0.67 ;
+	q_u_bound[SJActuatorID::act_anklePitch] = M_PI/2.0;	
+
+	getFull_act_pos_z(q_l_bound, z_l_bound);
+	getFull_act_pos_z(q_u_bound, z_u_bound);	
 
 }
 
@@ -116,13 +145,14 @@ void DracoActuatorModel::set_zero_pos_q_o(sejong::Vector &q_o_in){
 	}	
 }
 
+// -----------------------------------------------------------------------------
 // Simple Relationship between actuator position and joint position
 // (z - z_o) = r*(q - q_o) 
 double DracoActuatorModel::get_joint_pos_q(const int &index, const double &z_act_pos){
 	return (z_act_pos - z_o[index])/r_arm[index] + q_o[index];
 }
 double DracoActuatorModel::get_act_pos_z(const int &index, const double &q_act_pos){
-	return z_o[index] + r_arm[index]*(q_act_pos + q_o[index]);
+	return z_o[index] + r_arm[index]*(q_act_pos - q_o[index]);
 }
 
 // dz/dq = r 
@@ -137,17 +167,27 @@ void DracoActuatorModel::getFullJacobian(sejong::Matrix &L){
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 		L(i,i) = r_arm[i];
 	}
-
 }
+// -----------------------------------------------------------------------------
 
 void DracoActuatorModel::getFull_joint_pos_q(const sejong::Vector &z_in, sejong::Vector &q_out){
 	q_out.resize(NUM_ACTUATORS);
 	q_out.setZero();
 
-	double z_index_val = 0.0;
+	double z_val = 0.0;
 	for(int i = 0; i < NUM_ACTUATORS; i++){
-		z_index_val = z_in[i];
-		q_out[i] = get_joint_pos_q(i, z_index_val);
+		z_val = z_in[i];
+		q_out[i] = get_joint_pos_q(i, z_val);
 	}	
 }
 
+void DracoActuatorModel::getFull_act_pos_z(const sejong::Vector &q_in, sejong::Vector &z_out){
+	z_out.resize(NUM_ACTUATORS);
+	z_out.setZero();
+
+	double q_val = 0.0;
+	for(int i = 0; i < NUM_ACTUATORS; i++){
+		q_val = q_in[i];
+		z_out[i] = get_act_pos_z(i, q_val);
+	}	
+}

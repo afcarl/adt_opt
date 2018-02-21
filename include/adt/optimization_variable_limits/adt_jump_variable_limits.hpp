@@ -15,6 +15,7 @@ public:
 	// opt_td_k = [q_virt_k, z_k, qdot_virt_k, zdot_k, delta_k, delta_dot_k, u_k, Fij_k, Bij_k]
 	// opt_var = [opt_init, opt_td_1, opt_td_2, ..., opt_td_k]
 
+	DracoActuatorModel* actuator_model;
 	Contact_List* contact_list;
 
 	double current_limit = 100.0; // Amps

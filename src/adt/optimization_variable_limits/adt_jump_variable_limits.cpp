@@ -10,6 +10,7 @@ Jump_Opt_Variable_Limits::Jump_Opt_Variable_Limits(Contact_List* contact_list_in
 }
 
 void Jump_Opt_Variable_Limits::Initialization(){
+	actuator_model = DracoActuatorModel::GetDracoActuatorModel();	
 	initialize_to_zero();
 	set_limits();
 }
@@ -49,13 +50,8 @@ void Jump_Opt_Variable_Limits::set_limits(){
 	u_q_virt_limits[SJJointID::VIRTUAL_Z] = 10.0;	// z upper limit (m)
 	u_q_virt_limits[SJJointID::VIRTUAL_Ry] = 10.0;	// Ry upper limit (rads)
 
-	l_z_limits[SJActuatorID::act_bodyPitch] = -1.0; // z1 act lower limit (m)
-	l_z_limits[SJActuatorID::act_kneePitch] = -1.0;	// z2 act lower limit (m)
-	l_z_limits[SJActuatorID::act_anklePitch] = -1.0;	// z3 act lower limit (m)
-
-	u_z_limits[SJActuatorID::act_bodyPitch] = 1.0; // z1 act lower limit (m)
-	u_z_limits[SJActuatorID::act_kneePitch] = 1.0;	// z2 act lower limit (m)
-	u_z_limits[SJActuatorID::act_anklePitch] = 1.0;	// z3 act lower limit  (m)
+	l_z_limits = actuator_model->z_l_bound;
+	u_z_limits = actuator_model->z_u_bound;
 
 	l_qdot_virt_limits[SJJointID::VIRTUAL_X] = -linear_velocity_limit; // x velocity lower limit (m/s)
 	l_qdot_virt_limits[SJJointID::VIRTUAL_Z] = -linear_velocity_limit; // z velocity lower limit (m/s)

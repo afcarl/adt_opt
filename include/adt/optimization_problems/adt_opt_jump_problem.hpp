@@ -23,6 +23,11 @@ public:
 
 	sejong::Vector 								robot_q_init;
   	sejong::Vector 								robot_qdot_init; 
+  	sejong::Vector 								act_z_init;
+  	sejong::Vector 								act_zdot_init;
+  	sejong::Vector 								act_delta_init;
+  	sejong::Vector 								act_delta_dot_init;  	  	
+
 
   	int 										N_total_knotpoints;
 

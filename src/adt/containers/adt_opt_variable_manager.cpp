@@ -13,8 +13,8 @@ ADT_Opt_Variable_Manager::~ADT_Opt_Variable_Manager(){
 void ADT_Opt_Variable_Manager::append_variable(ADT_Opt_Variable* opt_variable){
 	opt_var_list.push_back(opt_variable);
 	std::cout << "[ADT_Opt_Variable_Manager] Adding " << opt_variable->name 
-			  << " (value, lower, uppers) = " 
-			  << "(" << opt_variable->value << ", " << opt_variable->l_bound << ", " << opt_variable->u_bound << ")"
+			  << " (knotpoint, value, lower, uppers) = " 
+			  << "(" << opt_variable->knotpoint << ", " << opt_variable->value << ", " << opt_variable->l_bound << ", " << opt_variable->u_bound << ")"
 			  << std::endl;	
 	if (opt_variable->type == VAR_TYPE_Q){
 		add_variable_to_map(knotpoint_to_q_state_vars, opt_variable);

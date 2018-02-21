@@ -12,14 +12,28 @@
 
 #include <adt/optimization_variable_limits/adt_jump_variable_limits.hpp>
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 Jump_Opt::Jump_Opt(){
 	problem_name = "Draco Jump Optimization Problem";
 
 	robot_q_init.resize(NUM_Q); 
 	robot_qdot_init.resize(NUM_QDOT);	
 
+  	act_z_init.resize(NUM_ACT_JOINT);
+  	act_zdot_init.resize(NUM_ACT_JOINT);
+  	act_delta_init.resize(NUM_ACT_JOINT);
+  	act_delta_dot_init.resize(NUM_ACT_JOINT);
+
+
 	robot_q_init.setZero(); 
 	robot_qdot_init.setZero();
+  	act_z_init.setZero();
+  	act_zdot_init.setZero();
+  	act_delta_init.setZero();
+  	act_delta_dot_init.setZero();
+
 	Initialization();
 }
 
@@ -30,6 +44,7 @@ Jump_Opt::~Jump_Opt(){
 
 // Problem Specific Initialization -------------------------------------
 void Jump_Opt::Initialization(){
+
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
 	N_total_knotpoints = 1;
 	initialize_starting_configuration();
@@ -39,6 +54,7 @@ void Jump_Opt::Initialization(){
 
 }
 void Jump_Opt::initialize_starting_configuration(){
+  DracoActuatorModel* actuator_model = DracoActuatorModel::GetDracoActuatorModel();
  // Set Virtual Joints
   // x_pos
   robot_q_init[0] = 0.01;
@@ -48,12 +64,12 @@ void Jump_Opt::initialize_starting_configuration(){
   robot_q_init[2] = 0.00; //1.135; //1.131; 	
 
   // Need to find equivalent z_positions
-  robot_q_init[SJJointID::bodyPitch] = -1.0;
-  robot_q_init[SJJointID::kneePitch] = 2.0;
-  robot_q_init[SJJointID::anklePitch] = -1.0;
+  robot_q_init[SJJointID::bodyPitch] = -M_PI/4.0; //-1.0;
+  robot_q_init[SJJointID::kneePitch] = M_PI/2.0; //2.0;
+  robot_q_init[SJJointID::anklePitch] = -M_PI/4.0;//-1.0;
 
-  // robot_act_init = convert(robot_q_init.tail(NUM_ACT_JOINT)); 
-
+  // Find equivalent starting z positions
+  actuator_model->getFull_act_pos_z(robot_q_init.tail(NUM_ACT_JOINT), act_z_init);
 }
 
 void Jump_Opt::initialize_contact_list(){
@@ -84,21 +100,21 @@ void Jump_Opt::initialize_opt_vars(){
      }
 	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
 		// Initial values must be fixed
-        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_z_state_" + std::to_string(i), VAR_TYPE_Z, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_z_state_" + std::to_string(i), VAR_TYPE_Z, 0, act_z_init[i], -OPT_INFINITY, OPT_INFINITY) );
 	}     
 	// [qdot_virt, zdot]
 	for(size_t i = 0; i < NUM_VIRTUAL; i++){
 	    opt_var_manager.append_variable(new ADT_Opt_Variable("virtual_qdot_state_" + std::to_string(i), VAR_TYPE_QDOT, 0, robot_qdot_init[i], robot_qdot_init[i] - OPT_ZERO_EPS, robot_qdot_init[i] + OPT_ZERO_EPS) );	
      }
 	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
-        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_zdot_state_" + std::to_string(i), VAR_TYPE_ZDOT, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );        
+        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_zdot_state_" + std::to_string(i), VAR_TYPE_ZDOT, 0, act_zdot_init[i], -OPT_INFINITY, OPT_INFINITY) );        
 	}
 	// [delta, delta_dot]
 	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
-        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_state_" + std::to_string(i), VAR_TYPE_DELTA, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_state_" + std::to_string(i), VAR_TYPE_DELTA, 0, act_delta_init[i], -OPT_INFINITY, OPT_INFINITY) );
 	}
 	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
-        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_dot_state_" + std::to_string(i), VAR_TYPE_DELTA_DOT, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_dot_state_" + std::to_string(i), VAR_TYPE_DELTA_DOT, 0, act_delta_dot_init[i], -OPT_INFINITY, OPT_INFINITY) );
 	}
 
 	// set variable manager initial condition offset = NUM_VIRTUAL*2 + (NUM_STATES_PER_ACTUATOR*NUM_ACT)*2 

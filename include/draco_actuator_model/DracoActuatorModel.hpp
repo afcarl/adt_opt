@@ -27,6 +27,7 @@ public:
 
     void getFullJacobian(sejong::Matrix &L);   
     void getFull_joint_pos_q(const sejong::Vector &z_in, sejong::Vector &q_out);
+    void getFull_act_pos_z(const sejong::Vector &q_in, sejong::Vector &z_out);
 
 
     void set_zero_pos_q_o(sejong::Vector &q_o_in);
@@ -50,6 +51,13 @@ public:
     sejong::Vector K_m; // Torque Constant (N-m / Amps)
     sejong::Vector z_o; // initial actuator position for which spring force is 0.
     sejong::Vector q_o; // initial joint position for which the spring force is 0.    
+
+
+    sejong::Vector q_l_bound;
+    sejong::Vector q_u_bound;
+
+    sejong::Vector z_l_bound;
+    sejong::Vector z_u_bound;    
 
 private:
     void Initialization();
