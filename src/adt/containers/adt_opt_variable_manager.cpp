@@ -14,8 +14,10 @@ void ADT_Opt_Variable_Manager::append_variable(ADT_Opt_Variable* opt_variable){
 	opt_var_list.push_back(opt_variable);
 
 	if (opt_variable->type == VAR_TYPE_Q){
+		std::cout << "[ADT_Opt_Variable_Manager] Adding q_var" << std::endl;	
 		add_variable_to_map(knotpoint_to_q_state_vars, opt_variable);
 	}else if(opt_variable->type == VAR_TYPE_QDOT){
+		std::cout << "[ADT_Opt_Variable_Manager] Adding qdot_var" << std::endl;
 		add_variable_to_map(knotpoint_to_qdot_state_vars, opt_variable);
 	}else if(opt_variable->type == VAR_TYPE_TA){
 		add_variable_to_map(knotpoint_to_xddot_vars, opt_variable);		
@@ -24,12 +26,16 @@ void ADT_Opt_Variable_Manager::append_variable(ADT_Opt_Variable* opt_variable){
 	}else if(opt_variable->type == VAR_TYPE_KF){
 		add_variable_to_map(knotpoint_to_keyframe_vars, opt_variable);		
 	}else if(opt_variable->type == VAR_TYPE_Z){
-		add_variable_to_map(knotpoint_to_z_vars, opt_variable);				
+		std::cout << "[ADT_Opt_Variable_Manager] Adding z_var" << std::endl;
+		add_variable_to_map(knotpoint_to_z_vars, opt_variable);					
 	}else if(opt_variable->type == VAR_TYPE_ZDOT){
+		std::cout << "[ADT_Opt_Variable_Manager] Adding zdot_var" << std::endl;
 		add_variable_to_map(knotpoint_to_zdot_vars, opt_variable);				
 	}else if(opt_variable->type == VAR_TYPE_DELTA){
+		std::cout << "[ADT_Opt_Variable_Manager] Adding delta_var" << std::endl;
 		add_variable_to_map(knotpoint_to_delta_vars, opt_variable);				
 	}else if(opt_variable->type == VAR_TYPE_DELTA_DOT){
+		std::cout << "[ADT_Opt_Variable_Manager] Adding delta_dot_var" << std::endl;		
 		add_variable_to_map(knotpoint_to_delta_dot_vars, opt_variable);				
 	}else if(opt_variable->type == VAR_TYPE_U){
 		add_variable_to_map(knotpoint_to_u_vars, opt_variable);				
@@ -132,8 +138,6 @@ void ADT_Opt_Variable_Manager::get_delta_states(const int &knotpoint, sejong::Ve
 void ADT_Opt_Variable_Manager::get_delta_dot_states(const int &knotpoint, sejong::Vector &delta_dot_state){
 	convert_to_vector(knotpoint, knotpoint_to_delta_dot_vars, delta_dot_state);	
 }
-
-
 void ADT_Opt_Variable_Manager::get_u_states(const int &knotpoint, sejong::Vector &u_state){
 	convert_to_vector(knotpoint, knotpoint_to_u_vars, u_state);
 }

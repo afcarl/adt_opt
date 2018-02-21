@@ -3,6 +3,8 @@
 
 #include <adt/optimization_problems/adt_opt_problem_main.hpp>
 
+
+#include <adt/containers/adt_opt_variable.hpp>
 #include <adt/containers/adt_opt_variable_manager.hpp>
 #include <adt/containers/adt_contact_list.hpp>
 

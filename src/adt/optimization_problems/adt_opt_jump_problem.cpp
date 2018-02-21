@@ -1,12 +1,14 @@
 #include <Utils/utilities.hpp>
 #include <adt/optimization_problems/adt_opt_jump_problem.hpp>
+#include <adt/optimization_constants.hpp>
 
 #include "DracoP1Rot_Definition.h"
 #include <draco_actuator_model/DracoActuatorModel.hpp>
 
-
 #include <adt/contacts/adt_draco_contact_toe.hpp>
 #include <adt/contacts/adt_draco_contact_heel.hpp>
+
+#include <string>
 
 Jump_Opt::Jump_Opt(){
 	problem_name = "Draco Jump Optimization Problem";
@@ -30,6 +32,9 @@ void Jump_Opt::Initialization(){
 	N_total_knotpoints = 1;
 	initialize_starting_configuration();
 	initialize_contact_list();
+	initialize_opt_vars();
+
+
 }
 void Jump_Opt::initialize_starting_configuration(){
  // Set Virtual Joints
@@ -58,16 +63,38 @@ void Jump_Opt::initialize_td_constraint_list(){}
 
 
 void Jump_Opt::initialize_opt_vars(){
-	// At timestep 0, we initialize the joint positions of the robot.
+	// ------------------------------------------------------------
+	// Set Initial Conditions
+	// ------------------------------------------------------------
+	// At knotpoint 0, we initialize the joint positions of the robot.
+	// Append to opt_var_manager the virtual joints initial positions
+	std::string opt_var_name;
 	for(size_t i = 0; i < NUM_VIRTUAL; i++){
-		// append to opt_var_manager the virtual joints initial positions
-	}
+		opt_var_name = "virtual_q_state_" + std::to_string(i);
+        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_Q, 0, robot_q_init[i], robot_q_init[i] - OPT_ZERO_EPS, robot_q_init[i] + OPT_ZERO_EPS) );
+		opt_var_name = "virtual_qdot_state_" + std::to_string(i);        
+        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_QDOT, 0, robot_qdot_init[i], robot_qdot_init[i] - OPT_ZERO_EPS, robot_qdot_init[i] + OPT_ZERO_EPS) );
+     }
+	// Append to opt_var_manager the actuator z and delta states	
 	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
-		// append to opt_var_manager the actuator z and delta states	
+		// Initial values must be fixed
+		opt_var_name = "actuator_z_state_" + std::to_string(i);	
+        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_Z, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+		opt_var_name = "actuator_zdot_state_" + std::to_string(i);	
+        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_ZDOT, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );        
+		opt_var_name = "actuator_delta_state_" + std::to_string(i);	
+        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_DELTA, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+		opt_var_name = "actuator_delta_dot_state_" + std::to_string(i);	
+        opt_var_manager.append_variable(new ADT_Opt_Variable(opt_var_name, VAR_TYPE_DELTA_DOT, 0, 0.0, -OPT_INFINITY, OPT_INFINITY) );
 	}	
+	// set variable manager initial condition offset = NUM_VIRTUAL*2 + (NUM_STATES_PER_ACTUATOR*NUM_ACT)*2 
+	int initial_condition_offset = NUM_VIRTUAL*2 + (NUM_STATES_PER_ACTUATOR*NUM_ACT_JOINT)*2;
+	std::cout << "[Jump_Opt] Predicted Number of states : " << initial_condition_offset << std::endl;
+	std::cout << "[Jump_Opt] Actual : " << opt_var_manager.get_size() << std::endl;	 
 
-	// set variable manager initial condition offset = NUM_VIRTUAL + NUM_STATES_PER_ACTUATOR*NUM_ACT 
-
+	// ------------------------------------------------------------------
+	// Set Time Dependent Variables
+	// ------------------------------------------------------------------
 	for(size_t k = 1; k < N_total_knotpoints; k++){
 		// add to variable manager 
 	}
