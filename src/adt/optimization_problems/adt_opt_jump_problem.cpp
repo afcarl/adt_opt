@@ -10,6 +10,8 @@
 
 #include <string>
 
+#include <adt/optimization_variable_limits/adt_jump_variable_limits.hpp>
+
 Jump_Opt::Jump_Opt(){
 	problem_name = "Draco Jump Optimization Problem";
 
@@ -45,9 +47,12 @@ void Jump_Opt::initialize_starting_configuration(){
   // Ry_rot
   robot_q_init[2] = 0.00; //1.135; //1.131; 	
 
+  // Need to find equivalent z_positions
   robot_q_init[SJJointID::bodyPitch] = -1.0;
   robot_q_init[SJJointID::kneePitch] = 2.0;
   robot_q_init[SJJointID::anklePitch] = -1.0;
+
+  // robot_act_init = convert(robot_q_init.tail(NUM_ACT_JOINT)); 
 
 }
 
@@ -102,10 +107,39 @@ void Jump_Opt::initialize_opt_vars(){
 	std::cout << "[Jump_Opt] Actual : " << opt_var_manager.get_size() << std::endl;	 
 	opt_var_manager.initial_conditions_offset = initial_conditions_offset;
 
+
+	Jump_Opt_Variable_Limits opt_var_limits;
 	// ------------------------------------------------------------------
 	// Set Time Dependent Variables
 	// ------------------------------------------------------------------
-	for(size_t k = 1; k < N_total_knotpoints; k++){
+	for(size_t k = 1; k < N_total_knotpoints + 1; k++){
+
+		for(size_t i = 0; i < NUM_VIRTUAL; i++){
+	        opt_var_manager.append_variable(new ADT_Opt_Variable("virtual_q_state_" + std::to_string(i), VAR_TYPE_Q, k, robot_q_init[i], opt_var_limits.l_q_virt_limits[i] , opt_var_limits.u_q_virt_limits[i]) );
+	     }
+		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+			// Initial values must be fixed
+	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_z_state_" + std::to_string(i), VAR_TYPE_Z, k, 0.0, opt_var_limits.l_z_limits[i], opt_var_limits.u_z_limits[i]) );
+		}     
+		// [qdot_virt, zdot]
+		for(size_t i = 0; i < NUM_VIRTUAL; i++){
+		    opt_var_manager.append_variable(new ADT_Opt_Variable("virtual_qdot_state_" + std::to_string(i), VAR_TYPE_QDOT, k, robot_qdot_init[i], opt_var_limits.l_qdot_virt_limits[i], opt_var_limits.u_qdot_virt_limits[i]) );	
+	     }
+		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_zdot_state_" + std::to_string(i), VAR_TYPE_ZDOT, k, 0.0, opt_var_limits.l_zdot_limits[i], opt_var_limits.u_zdot_limits[i]) );        
+		}
+		// [delta, delta_dot]
+		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_state_" + std::to_string(i), VAR_TYPE_DELTA, k, 0.0, opt_var_limits.l_delta_limits[i] , opt_var_limits.u_delta_limits[i]) );
+		}
+		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_dot_state_" + std::to_string(i), VAR_TYPE_DELTA_DOT, k, 0.0, opt_var_limits.l_delta_dot_limits[i], opt_var_limits.u_delta_dot_limits[i]) );
+		}
+		// [current_u]
+		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_current_u_" + std::to_string(i), VAR_TYPE_U, k, 0.0, opt_var_limits.l_current_limits[i], opt_var_limits.u_current_limits[i]) );
+		}
+
 		// add to variable manager 
 	}
 

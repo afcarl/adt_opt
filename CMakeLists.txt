@@ -79,6 +79,8 @@ set(adt_container_sources src/adt/containers/adt_opt_variable.cpp
 set(adt_contact_sources src/adt/contacts/adt_draco_contact_toe.cpp
 						src/adt/contacts/adt_draco_contact_heel.cpp)
 
+set(adt_optimization_var_limits_sources src/adt/optimization_variable_limits/adt_jump_variable_limits.cpp)
+
 set(adt_optimization_problem_sources src/adt/optimization_problems/adt_opt_jump_problem.cpp)
 
 #--------------------------------------------
@@ -104,5 +106,6 @@ add_executable(test_jump_prob_object  src/small_tests/test_jump_prob_object.cpp
 										${adt_container_sources}
 										${adt_optimization_problem_sources}
 										${adt_contact_sources}
+										${adt_optimization_var_limits_sources}
 										) 
 target_link_libraries(test_jump_prob_object  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 

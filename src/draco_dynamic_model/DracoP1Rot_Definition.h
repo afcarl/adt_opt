@@ -7,7 +7,7 @@
 
 #define MEASURE_TIME 0
 
-#define _DEF_SENSOR_DATA_ double time, const std::vector<double> & jpos, const std::vector<double> & jvel, const std::vector<double> & torque, const std::vector<double> & body_pos, const std::vector<double> & body_vel, const double & body_ori, const double & body_ang_vel
+#define _DEF_SENSOR_DATA_ double time, const std::vector<doubel> & jpos, const std::vector<double> & jvel, const std::vector<double> & torque, const std::vector<double> & body_pos, const std::vector<double> & body_vel, const double & body_ori, const double & body_ang_vel
 
 #define _VAR_SENSOR_DATA_ time, jpos, jvel, torque, body_pos, body_vel, body_ori, body_ang_vel
 
@@ -30,6 +30,12 @@ enum SJJointID{
   kneePitch,
   anklePitch,
   NUM_JOINT
+};
+
+enum SJActuatorID{
+  act_bodyPitch = 0,
+  act_kneePitch,
+  act_anklePitch,
 };
 
 #define NUM_QDOT 6
