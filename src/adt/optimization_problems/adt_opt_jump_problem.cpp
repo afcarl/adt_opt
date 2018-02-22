@@ -8,6 +8,8 @@
 #include <adt/contacts/adt_draco_contact_toe.hpp>
 #include <adt/contacts/adt_draco_contact_heel.hpp>
 
+#include <adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.hpp>
+
 #include <string>
 
 #include <adt/optimization_variable_limits/adt_jump_variable_limits.hpp>
@@ -57,6 +59,7 @@ void Jump_Opt::Initialization(){
 	initialize_contact_list();
 	initialize_opt_vars();
 
+	initialize_td_constraint_list();
 
 }
 void Jump_Opt::initialize_starting_configuration(){
@@ -85,7 +88,12 @@ void Jump_Opt::initialize_contact_list(){
 	contact_list.append_contact(toe_contact);
 	contact_list.append_contact(heel_contact);
 }
-void Jump_Opt::initialize_td_constraint_list(){}
+
+void Jump_Opt::initialize_td_constraint_list(){
+	int toe_contact_index = 0;
+	int heel_contact_index = 0;	
+    td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
+}
 
 
 

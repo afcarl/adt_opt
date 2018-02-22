@@ -39,7 +39,7 @@ void Jump_Opt_Variable_Limits::initialize_to_zero(){
 
 void Jump_Opt_Variable_Limits::set_limits(){
 	l_q_virt_limits[SJJointID::VIRTUAL_X] = -10.0; // x lower limit (m)
-	l_q_virt_limits[SJJointID::VIRTUAL_Z] = -10.0;	// z lower limit (m)
+	l_q_virt_limits[SJJointID::VIRTUAL_Z] = 0.0;	// z lower limit (m)
 	l_q_virt_limits[SJJointID::VIRTUAL_Ry] = -10.0;	// Ry lower limit (m)	
 
 	u_q_virt_limits[SJJointID::VIRTUAL_X] = 10.0; // x upper limit (m)

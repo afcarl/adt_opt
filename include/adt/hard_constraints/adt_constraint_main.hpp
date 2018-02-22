@@ -14,9 +14,9 @@ public:
 	virtual ~Constraint_Function(){
 		std::cout << "Constraint Function Destructor called" << std::endl;
 	}
-	virtual void evaluate_constraint(const int &timestep, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& F_vec) {}
-	virtual void evaluate_sparse_gradient(const int &timestep, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& G, std::vector<int>& iG, std::vector<int>& jG) {}
-	virtual void evaluate_sparse_A_matrix(const int &timestep, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& A, std::vector<int>& iA, std::vector<int>& jA) {}	
+	virtual void evaluate_constraint(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& F_vec) {}
+	virtual void evaluate_sparse_gradient(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& G, std::vector<int>& iG, std::vector<int>& jG) {}
+	virtual void evaluate_sparse_A_matrix(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& A, std::vector<int>& iA, std::vector<int>& jA) {}	
 
 	// Each constraint containts its bounds
 	std::vector<double> F_low;
@@ -27,7 +27,10 @@ public:
 	int constraint_index = -1; // Modified by the Constraint List Holder
 	int constraint_size = 0; // Modified by the Object Constructor
 	
-	virtual int get_constraint_size(){ return constraint_size; }
+	virtual int get_constraint_size(){ 
+		constraint_size = F_low.size(); 
+		return constraint_size;
+	}
 	virtual int get_constraint_index(){ return constraint_index;}	
 
 	// virtual void test_function(){}
