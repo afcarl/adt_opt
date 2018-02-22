@@ -1,0 +1,14 @@
+ - Construct Optimization Problem DONE
+ - Initialize Variables DONE
+ - Create Interface 
+ 
+ - Setup Contact Information DONE
+ - Check Foot Robot Position DONE
+
+ - Construct Objective Function Object
+
+ - Setup Constraint List
+ 	LCP Constraints DONE
+ 	Friction Cone Constraints
+ 	Kinematic Constraints
+ 	Actuator-Robot-Link Time Integration Constraints

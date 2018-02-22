@@ -10,6 +10,8 @@
 #include <adt/containers/adt_contact_list.hpp>
 
 #include "DracoModel.hpp"
+#include <draco_actuator_model/DracoActuatorModel.hpp>
+
 
 class Floor_2D_Contact_LCP_Constraint: public Constraint_Function{
 public:
@@ -18,6 +20,7 @@ public:
 	~Floor_2D_Contact_LCP_Constraint();
 
 	DracoModel* robot_model;	
+	DracoActuatorModel* actuator_model;
 
 	void setContact_List(Contact_List* contact_list_in);
 	void setContact_index(int index_in);	

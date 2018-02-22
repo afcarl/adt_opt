@@ -68,7 +68,7 @@ void Jump_Opt::initialize_starting_configuration(){
   // x_pos
   robot_q_init[0] = 0.01;
   // z_pos
-  robot_q_init[1] = 0.87 - 0.19;
+  robot_q_init[1] = 0.831165 + 0.00679965;//0.87 - 0.19;
   // Ry_rot
   robot_q_init[2] = 0.00; //1.135; //1.131; 	
 
@@ -197,25 +197,79 @@ void Jump_Opt::initialize_opt_vars(){
 	int size_of_time_dep_vars = NUM_VIRTUAL*2 + NUM_ACT_JOINT*5 + contact_list.get_size()*2 + contact_list.get_size()*N_d + N_total_knotpoints;
 	std::cout << "[Jump_Opt] Predicted Size of Time Dependent Vars : " << size_of_time_dep_vars << std::endl;
 	std::cout << "[Jump_Opt] Actual : " << opt_var_manager.get_size_timedependent_vars() << std::endl;	 
-
+	int predicted_size_of_F = size_of_time_dep_vars*N_total_knotpoints;
+	std::cout << "[Jump_Opt] Predicted Size of Opt Vars: " << predicted_size_of_F << std::endl;
 
 }
 void Jump_Opt::initialize_objective_func(){}
 
 
 // SNOPT Interface
+// Remember to apply the initial conditions offset for the optimization variables 
 void Jump_Opt::get_init_opt_vars(std::vector<double> &x_vars){}
 void Jump_Opt::get_opt_vars_bounds(std::vector<double> &x_low, std::vector<double> &x_upp){}   	  	
 void Jump_Opt::get_current_opt_vars(std::vector<double> &x_vars_out){}
 void Jump_Opt::update_opt_vars(std::vector<double> &x_vars){} 	  		
 
-void Jump_Opt::get_F_bounds(std::vector<double> &F_low, std::vector<double> &F_upp){}
+
+void Jump_Opt::get_F_bounds(std::vector<double> &F_low, std::vector<double> &F_upp){
+  F_low.clear();
+  F_upp.clear();  
+  // Initialize Bounds for Time Dependent Constraints
+  for(int knotpoint = 1; knotpoint < N_total_knotpoints + 1; knotpoint++){
+
+    for(size_t i = 0; i < td_constraint_list.get_size(); i++){
+      for(size_t j = 0; j < td_constraint_list.get_constraint(i)->F_low.size(); j++ ){
+        F_low.push_back(td_constraint_list.get_constraint(i)->F_low[j]);
+      }
+      for(size_t j = 0; j < td_constraint_list.get_constraint(i)->F_upp.size(); j++ ){
+        F_upp.push_back(td_constraint_list.get_constraint(i)->F_upp[j]);
+      }
+    }
+
+  }
+
+  // Initialize Bounds for Time Independent Constraints
+  // Code Here
+
+
+  // Initialize Bounds for the Objective Function
+  //F_low.push_back(objective_function.F_low);
+  //F_upp.push_back(objective_function.F_upp); 	
+}
 void Jump_Opt::get_F_obj_Row(int &obj_row){}
 
 void Jump_Opt::compute_F(std::vector<double> &F_eval){}
-void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){}
-void Jump_Opt::compute_F_objective_function(double &result_out){}
+void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){
+  std::vector<double> F_vec_const;
+  //std::cout << "[Jump_OPT] Computing F Constraints" << std::endl;
 
+  // Compute Timestep Dependent Constraints
+  for(int knotpoint = 1; knotpoint < N_total_knotpoints + 1; knotpoint++){
+    for(int i = 0; i < td_constraint_list.get_size(); i++){
+      F_vec_const.clear();
+      td_constraint_list.get_constraint(i)->evaluate_constraint(knotpoint, opt_var_manager, F_vec_const);
+
+      for(int j = 0; j < F_vec_const.size(); j++){
+        std::cout << "F_vec_const[" << j <<"] = " << F_vec_const[j] << std::endl;
+        // Add to F_eval
+        F_eval.push_back(F_vec_const[j]);
+      }
+    }
+  }
+
+  // Compute Timestep Independent Constraints
+  // Code here
+
+  // Debug statement  
+  /*  for(int j = 0; j < F_eval.size(); j++){
+      std::cout << "F_eval[" << j << "] = " << F_eval[j] << std::endl;
+    }*/
+
+}
+
+
+void Jump_Opt::compute_F_objective_function(double &result_out){}
 void Jump_Opt::compute_G(std::vector<double> &G_eval, std::vector<int> &iGfun, std::vector<int> &jGvar, int &neG){}
 void Jump_Opt::compute_A(std::vector<double> &A_eval, std::vector<int> &iAfun, std::vector<int> &jAvar, int &neA){}
 

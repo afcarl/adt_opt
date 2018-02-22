@@ -21,6 +21,7 @@ Floor_2D_Contact_LCP_Constraint::~Floor_2D_Contact_LCP_Constraint(){
 void Floor_2D_Contact_LCP_Constraint::Initialization(){
   std::cout << "[Floor_2D_Contact_LCP_Constraint] Initialization called" << std::endl;
   robot_model = DracoModel::GetDracoModel();  
+  actuator_model = DracoActuatorModel::GetDracoActuatorModel();
 	initialize_Flow_Fupp();	
 }
 
@@ -47,17 +48,37 @@ void Floor_2D_Contact_LCP_Constraint::evaluate_constraint(const int &knotpoint, 
   Contact* current_contact = contact_list_obj->get_contact(contact_index);
   int contact_link_id = current_contact->contact_link_id;
 
-  // Get q_states---------------------------------------------------------------------------
-  sejong::Vector q_state;
-  sejong::Vector qdot_state;  
-  var_manager.get_var_states(knotpoint, q_state, qdot_state);
+  // Get robot virtual states and actuator z position states---------------------------------------------------------------------------
+  sejong::Vector q_state_virt;
+  sejong::Vector qdot_state_virt;
+  sejong::Vector z_state;  
+  sejong::Vector zdot_state;    
+  var_manager.get_q_states(knotpoint, q_state_virt);
+  var_manager.get_qdot_states(knotpoint, qdot_state_virt);
+  var_manager.get_z_states(knotpoint, z_state);
+  var_manager.get_zdot_states(knotpoint, zdot_state);  
 
+  // convert actuator z_states to joint configuration q_state_act
+  sejong::Vector q_state_act;
+  sejong::Vector qdot_state_act;  
+  actuator_model->getFull_joint_pos_q(z_state, q_state_act);
+  actuator_model->getFull_joint_vel_qdot(z_state, zdot_state, qdot_state_act);
+
+  // Repopulate q_state and qdot_state
+  sejong::Vector q_state; q_state.resize(NUM_QDOT);
+  sejong::Vector qdot_state; qdot_state.resize(NUM_QDOT);
+
+  q_state.head(NUM_VIRTUAL) = q_state_virt;
+  q_state.tail(NUM_ACT_JOINT) = q_state_act;  
+  qdot_state.head(NUM_VIRTUAL) = qdot_state_virt;
+  qdot_state.head(NUM_ACT_JOINT) = qdot_state_act;   
+
+  // Update the robot model
   robot_model->UpdateModel(q_state, qdot_state);  
 
   // Get Fr_states--------------------------------------------------------------------------
   sejong::Vector Fr_all;
   var_manager.get_var_reaction_forces(knotpoint, Fr_all);
-
   int current_contact_size = current_contact->contact_dim;
 
   // Extract the segment of Reaction Forces corresponding to this contact-------------------
@@ -83,7 +104,11 @@ void Floor_2D_Contact_LCP_Constraint::evaluate_constraint(const int &knotpoint, 
 
   // For now, this is just a ground contact
 
-  double phi_contact_dis = contact_pos_vec[2];
+  // contact_pos_vec = [x, z, Ry]
+
+  std::cout << "Fr_z = " << Fr_z[0] << std::endl;
+  std::cout << "Fr_l2_norm_squared = " << Fr_l2_norm_squared  << std::endl;
+  double phi_contact_dis = contact_pos_vec[1];
   double complimentary_constraint = phi_contact_dis*Fr_l2_norm_squared;
 
   F_vec.push_back(complimentary_constraint); // Phi >= 0
