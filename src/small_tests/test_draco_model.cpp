@@ -87,9 +87,17 @@ int main(int argc, char **argv){
 	sejong::pretty_print(Jt_heel_reduced, std::cout, "Jt_heel_reduced");	
 
 
-	sejong::Vect3 vec_pos;
-	robot_model->getPosition(q_state, SJLinkID::LK_foot, vec_pos);
-	sejong::pretty_print(vec_pos, std::cout, "Foot_vec_pos");
+	sejong::Vect3 foot_vec_pos;
+	robot_model->getPosition(q_state, SJLinkID::LK_foot, foot_vec_pos);
+	sejong::pretty_print(foot_vec_pos, std::cout, "Foot_vec_pos");
+
+	sejong::Vect3 toe_vec_pos;
+	robot_model->getPosition(q_state, SJLinkID::LK_FootToe, toe_vec_pos);
+	sejong::pretty_print(toe_vec_pos, std::cout, "Toe_vec_pos");
+
+	sejong::Vect3 heel_vec_pos;
+	robot_model->getPosition(q_state, SJLinkID::LK_FootHeel, heel_vec_pos);
+	sejong::pretty_print(heel_vec_pos, std::cout, "heel_vec_pos");	
 
 
 	return 0;
