@@ -7,6 +7,9 @@
 
 #include <Utils/utilities.hpp>
 
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 int main(int argc, char **argv){
 	std::cout << "[Main]Testing Draco Model Object" << std::endl;
 	DracoModel* robot_model;
@@ -47,6 +50,11 @@ int main(int argc, char **argv){
 	q_state[SJJointID::kneePitch] = 2.0;
 	q_state[SJJointID::anklePitch] = -1.0;
 
+	q_state[1] = 0.831165;
+	q_state[SJJointID::bodyPitch] = -M_PI/4.0;
+	q_state[SJJointID::kneePitch] = M_PI/2.0;
+	q_state[SJJointID::anklePitch] = -M_PI/4.0;	
+
 	sejong::Vector qdot_state;
 	qdot_state.resize(NUM_QDOT);
 	qdot_state.setZero();
@@ -77,6 +85,11 @@ int main(int argc, char **argv){
 	sejong::Matrix Jt_heel_reduced;
 	dh_contact.getContactJacobian(q_state, Jt_heel_reduced);
 	sejong::pretty_print(Jt_heel_reduced, std::cout, "Jt_heel_reduced");	
+
+
+	sejong::Vect3 vec_pos;
+	robot_model->getPosition(q_state, SJLinkID::LK_foot, vec_pos);
+	sejong::pretty_print(vec_pos, std::cout, "Foot_vec_pos");
 
 
 	return 0;
