@@ -11,7 +11,6 @@
 #include <string>
 
 #include <adt/optimization_variable_limits/adt_jump_variable_limits.hpp>
-
 #define _USE_MATH_DEFINES
 #include <cmath>
 
@@ -46,7 +45,14 @@ Jump_Opt::~Jump_Opt(){
 void Jump_Opt::Initialization(){
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 1;
+	N_total_knotpoints = 3;
+
+	N_d = 2; // Number of friction cone basis vectors
+
+	h_dt_min = 0.001; // Minimum knotpoint timestep
+  	max_normal_force = 10000; // Newtons
+  	max_tangential_force = 10000; // Newtons  	  	
+
 	initialize_starting_configuration();
 	initialize_contact_list();
 	initialize_opt_vars();
@@ -155,9 +161,35 @@ void Jump_Opt::initialize_opt_vars(){
 		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
 	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_current_u_" + std::to_string(i), VAR_TYPE_U, k, 0.0, opt_var_limits.l_current_limits[i], opt_var_limits.u_current_limits[i]) );
 		}
-
-		// add to variable manager 
+		// [Fr]
+		for(size_t i = 0; i < contact_list.get_size(); i++){
+			int contact_dim = contact_list.get_contact(i)->contact_dim;		
+			for (size_t j = 0; j < contact_dim; j++){
+				if (j == 0){
+					// Apply tangential force constraints on x direction
+			        opt_var_manager.append_variable(new ADT_Opt_Variable("Fr_x_" + std::to_string(i), VAR_TYPE_FR, k, 0.0, -max_tangential_force, max_tangential_force) );
+				}else if(j == 1){
+					// Apply normal force constraints on z direction		        
+			        opt_var_manager.append_variable(new ADT_Opt_Variable("Fr_z_" + std::to_string(i), VAR_TYPE_FR, k, 0.0, 0.0, max_normal_force) );
+				}
+			}
+		}
+		// [Beta]		
+		for(size_t i = 0; i < contact_list.get_size(); i++){
+			for(size_t j = 0; j < N_d; j++){
+		        opt_var_manager.append_variable(new ADT_Opt_Variable("Beta_c" + std::to_string(i) + "_b" + std::to_string(j) , VAR_TYPE_BETA, k, 0.0, 0.0, OPT_INFINITY) );
+			}
+		}
+		
+		// [h_dt] knotpoint timestep
+        opt_var_manager.append_variable(new ADT_Opt_Variable("h_dt_" + std::to_string(k) , VAR_TYPE_H, k, h_dt_min, h_dt_min, OPT_INFINITY) );
 	}
+	// Compute the size of time independent variables
+	opt_var_manager.compute_size_time_dep_vars();
+	int size_of_time_dep_vars = NUM_VIRTUAL*2 + NUM_ACT_JOINT*5 + contact_list.get_size()*2 + contact_list.get_size()*N_d + N_total_knotpoints;
+	std::cout << "[Jump_Opt] Predicted Size of Time Dependent Vars : " << size_of_time_dep_vars << std::endl;
+	std::cout << "[Jump_Opt] Actual : " << opt_var_manager.get_size_timedependent_vars() << std::endl;	 
+
 
 }
 void Jump_Opt::initialize_objective_func(){}

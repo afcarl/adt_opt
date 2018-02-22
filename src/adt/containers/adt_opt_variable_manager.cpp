@@ -35,7 +35,9 @@ void ADT_Opt_Variable_Manager::append_variable(ADT_Opt_Variable* opt_variable){
 	}else if(opt_variable->type == VAR_TYPE_DELTA_DOT){
 		add_variable_to_map(knotpoint_to_delta_dot_vars, opt_variable);				
 	}else if(opt_variable->type == VAR_TYPE_U){
-		add_variable_to_map(knotpoint_to_u_vars, opt_variable);				
+		add_variable_to_map(knotpoint_to_u_vars, opt_variable);
+	}else if(opt_variable->type == VAR_TYPE_BETA){
+		add_variable_to_map(knotpoint_to_beta_vars, opt_variable);						
 	}else if(opt_variable->type == VAR_TYPE_H){
 		knotpoint_to_dt.push_back(opt_variable);
 	}
@@ -139,6 +141,9 @@ void ADT_Opt_Variable_Manager::get_u_states(const int &knotpoint, sejong::Vector
 	convert_to_vector(knotpoint, knotpoint_to_u_vars, u_state);
 }
 
+void ADT_Opt_Variable_Manager::get_beta_states(const int &knotpoint, sejong::Vector &beta_state){
+	convert_to_vector(knotpoint, knotpoint_to_beta_vars, beta_state);
+}
 
 
 void ADT_Opt_Variable_Manager::convert_to_vector(const int &knotpoint, 
@@ -187,7 +192,7 @@ int ADT_Opt_Variable_Manager::get_num_var_knotpoint_dt(){
 
 
 void ADT_Opt_Variable_Manager::compute_size_time_dep_vars(){
-	int knotpoint = 0;
+	int knotpoint = 1;
 	int total_j_size = 0;
 	
 	num_q_vars = count_num_vars_in_map(knotpoint, knotpoint_to_q_state_vars);
@@ -196,7 +201,40 @@ void ADT_Opt_Variable_Manager::compute_size_time_dep_vars(){
 	num_Fr_vars = count_num_vars_in_map(knotpoint, knotpoint_to_Fr_vars);
 	num_keyframe_vars = count_num_vars_in_map(knotpoint, knotpoint_to_keyframe_vars);
 
-	num_timedep_vars = num_q_vars + num_qdot_vars + num_xddot_vars + num_Fr_vars;
+	num_z_vars = count_num_vars_in_map(knotpoint, knotpoint_to_z_vars);
+	num_zdot_vars = count_num_vars_in_map(knotpoint, knotpoint_to_zdot_vars);
+	num_delta_vars = count_num_vars_in_map(knotpoint, knotpoint_to_delta_vars);
+	num_delta_dot_vars = count_num_vars_in_map(knotpoint, knotpoint_to_delta_dot_vars);
+	num_u_vars = count_num_vars_in_map(knotpoint, knotpoint_to_u_vars);
+	num_beta_vars = count_num_vars_in_map(knotpoint, knotpoint_to_beta_vars);
+	num_h = knotpoint_to_dt.size();
+
+
+/*	std::cout << std::endl;
+	std::cout << "num_xddot_vars = " << num_xddot_vars << std::endl;
+	std::cout << "num_keyframe_vars = " << num_keyframe_vars << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "num_q_vars = " << num_q_vars << std::endl;
+	std::cout << "num_qdot_vars = " << num_qdot_vars << std::endl;
+	std::cout << "num_z_vars = " << num_z_vars << std::endl;
+	std::cout << "num_zdot_vars = " << num_zdot_vars << std::endl;
+	std::cout << "num_delta_vars = " << num_delta_vars << std::endl;
+	std::cout << "num_delta_dot_vars = " << num_delta_dot_vars << std::endl;
+	std::cout << "num_u_vars = " << num_u_vars << std::endl;
+	std::cout << "num_Fr_vars = " << num_Fr_vars << std::endl;		
+	std::cout << "num_beta_vars = " << num_beta_vars << std::endl;
+	std::cout << "num_h = " << num_h << std::endl;
+*/
+	num_timedep_vars = num_q_vars + num_qdot_vars + num_xddot_vars + num_Fr_vars
+					   + num_keyframe_vars
+					   + num_z_vars
+					   + num_zdot_vars
+					   + num_delta_vars
+					   + num_delta_dot_vars					   
+					   + num_u_vars 
+					   + num_beta_vars
+					   + num_h;					   
 }
 
 int ADT_Opt_Variable_Manager::get_size_timedependent_vars(){

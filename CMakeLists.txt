@@ -86,7 +86,7 @@ set(adt_optimization_problem_sources src/adt/optimization_problems/adt_opt_jump_
 #--------------------------------------------
 # Test Draco Model 
 #--------------------------------------------
-add_executable(test_draco_model  src/small_tests/test_draco_model.cpp  ${draco_dyn_model_sources} ${draco_act_model_sources})
+add_executable(test_draco_model  src/small_tests/test_draco_model.cpp  ${draco_dyn_model_sources} ${draco_act_model_sources} ${adt_contact_sources})
 target_link_libraries(test_draco_model  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
 #--------------------------------------------
 

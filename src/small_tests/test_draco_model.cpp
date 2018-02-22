@@ -2,6 +2,9 @@
 #include "DracoP1Rot_Definition.h"
 #include <draco_actuator_model/DracoActuatorModel.hpp>
 
+#include <adt/contacts/adt_draco_contact_heel.hpp>
+#include <adt/contacts/adt_draco_contact_toe.hpp>
+
 #include <Utils/utilities.hpp>
 
 int main(int argc, char **argv){
@@ -60,10 +63,21 @@ int main(int argc, char **argv){
 	robot_model->getFullJacobian(q_state, link_id, Jt);
 	sejong::pretty_print(Jt, std::cout, "Jt_toe");
 
-	link_id =  SJLinkID::LK_FootHeel;
+	Draco_Toe_Contact dt_contact;
+	sejong::Matrix Jt_toe_reduced;
+	dt_contact.getContactJacobian(q_state, Jt_toe_reduced);
+	sejong::pretty_print(Jt_toe_reduced, std::cout, "Jt_toe_reduced");	
 
+
+	link_id =  SJLinkID::LK_FootHeel;
 	robot_model->getFullJacobian(q_state, link_id, Jt);
 	sejong::pretty_print(Jt, std::cout, "Jt_heel");
+
+	Draco_Heel_Contact dh_contact;
+	sejong::Matrix Jt_heel_reduced;
+	dh_contact.getContactJacobian(q_state, Jt_heel_reduced);
+	sejong::pretty_print(Jt_heel_reduced, std::cout, "Jt_heel_reduced");	
+
 
 	return 0;
 }

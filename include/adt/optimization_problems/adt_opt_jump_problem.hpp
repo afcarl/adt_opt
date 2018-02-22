@@ -30,8 +30,14 @@ public:
 
 
   	int 										N_total_knotpoints;
+  	int 										N_d; // Number of friction cone basis vectors
+
+  	double										h_dt_min;
+  	double										max_normal_force;
+  	double										max_tangential_force;	  	
 
  //	WBC_Objective_Function						objective_function;
+
 
   	
   	int constraint_size; // Unused

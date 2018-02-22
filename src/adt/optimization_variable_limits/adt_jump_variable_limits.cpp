@@ -4,11 +4,6 @@ Jump_Opt_Variable_Limits::Jump_Opt_Variable_Limits(){
 	Initialization();
 }
 
-Jump_Opt_Variable_Limits::Jump_Opt_Variable_Limits(Contact_List* contact_list_in){
-	contact_list = contact_list_in;
-	Initialization();
-}
-
 void Jump_Opt_Variable_Limits::Initialization(){
 	actuator_model = DracoActuatorModel::GetDracoActuatorModel();	
 	initialize_to_zero();
@@ -36,6 +31,7 @@ void Jump_Opt_Variable_Limits::initialize_to_zero(){
 
 	l_current_limits.resize(NUM_ACT_JOINT); l_current_limits.setZero();
 	u_current_limits.resize(NUM_ACT_JOINT); u_current_limits.setZero();	
+
 }
 
 
@@ -92,4 +88,7 @@ void Jump_Opt_Variable_Limits::set_limits(){
 	u_current_limits[SJActuatorID::act_bodyPitch] = current_limit; // act_1 current upper limit (A)
 	u_current_limits[SJActuatorID::act_kneePitch] = current_limit;	// act_2 current upper limit (A)
 	u_current_limits[SJActuatorID::act_anklePitch] = current_limit;	// act_3 current upper limit (A)	
+
+
 }
+

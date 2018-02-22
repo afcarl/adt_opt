@@ -16,7 +16,6 @@ public:
 	// opt_var = [opt_init, opt_td_1, opt_td_2, ..., opt_td_k]
 
 	DracoActuatorModel* actuator_model;
-	Contact_List* contact_list;
 
 	double current_limit = 100.0; // Amps
 	double linear_velocity_limit = 10; // m/s
@@ -45,18 +44,14 @@ public:
 	sejong::Vector l_current_limits;
 	sejong::Vector u_current_limits;	
 
-	sejong::Vector l_force_limits;
-	sejong::Vector u_force_limits;	
-
-	sejong::Vector l_beta_basis_limits;
-	sejong::Vector u_beta_basis_limits;		
 
 	Jump_Opt_Variable_Limits();
-	Jump_Opt_Variable_Limits(Contact_List* contact_list_in);	
-	
+
+private:
 	void Initialization();
 	void initialize_to_zero();
 	void set_limits();
+
 };
 
 

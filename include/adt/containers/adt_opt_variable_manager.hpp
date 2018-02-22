@@ -34,7 +34,9 @@ public:
 	void get_delta_dot_states(const int &knotpoint, sejong::Vector &delta_dot_state);		
 
 
-	void get_u_states(const int &knotpoint, sejong::Vector &u_state);				
+	void get_u_states(const int &knotpoint, sejong::Vector &u_state);		
+	void get_beta_states(const int &knotpoint, sejong::Vector &beta_state);				
+
 
 	int get_size();
 	int get_size_timedependent_vars();
@@ -75,6 +77,8 @@ private:
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_delta_dot_vars;
 
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_u_vars;	
+	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_beta_vars;
+
 
 	std::vector<ADT_Opt_Variable*> knotpoint_to_dt;
 	
@@ -90,6 +94,14 @@ private:
 	int num_keyframe_vars = 0;
 
 	int num_knotpoint_dt_vars = 0;	
+
+	int num_z_vars = 0;
+	int num_zdot_vars = 0; 
+	int num_delta_vars = 0;
+	int num_delta_dot_vars = 0;
+	int num_u_vars = 0;
+	int num_beta_vars = 0;
+	int num_h = 0;
 
 };
 
