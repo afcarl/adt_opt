@@ -68,7 +68,9 @@ set(draco_dyn_model_sources src/draco_dynamic_model/DracoP1Rot_Definition.h
 						  src/draco_dynamic_model/DracoModel.hpp
 						  src/draco_dynamic_model/DracoModel.cpp)					
 
-set(draco_act_model_sources src/draco_actuator_model/DracoActuatorModel.cpp) 			  			
+set(draco_act_model_sources src/draco_actuator_model/DracoActuatorModel.cpp) 		
+set(draco_combined_dynamics_sources src/draco_combined_dynamics_model/draco_combined_dynamics_model.cpp) 			  			
+
 
 
 set(adt_container_sources src/adt/containers/adt_opt_variable.cpp
@@ -88,7 +90,9 @@ set(adt_hard_constraints_sources src/adt/hard_constraints/adt_floor_2d_contact_l
 #--------------------------------------------
 # Test Draco Model 
 #--------------------------------------------
-add_executable(test_draco_model  src/small_tests/test_draco_model.cpp  ${draco_dyn_model_sources} ${draco_act_model_sources} ${adt_contact_sources})
+add_executable(test_draco_model  src/small_tests/test_draco_model.cpp  ${draco_dyn_model_sources} 	
+																	   ${draco_act_model_sources}
+																	   ${draco_combined_dynamics_sources} ${adt_contact_sources})
 target_link_libraries(test_draco_model  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
 #--------------------------------------------
 
