@@ -41,6 +41,10 @@ int main(int argc, char **argv){
 	actuator_model->set_zero_pos_q_o(q_o_init);
 	sejong::pretty_print(q_o_init, std::cout, "New q_o_init");
 
+	sejong::Matrix Km_matrix;
+
+	actuator_model->getKm_Matrix(Km_matrix);
+	sejong::pretty_print(Km_matrix, std::cout, "Km_matrix");
 
 	// Test Obtaining the Jacobians
 	sejong::Vector q_state;

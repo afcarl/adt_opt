@@ -252,3 +252,11 @@ void DracoActuatorModel::getFull_act_pos_z(const sejong::Vector &q_in, sejong::V
 		z_out[i] = get_act_pos_z(i, q_val);
 	}	
 }
+
+void DracoActuatorModel::getKm_Matrix(sejong::Matrix &Km_act){
+	Km_act = sejong::Matrix::Identity(NUM_ACTUATORS, NUM_ACTUATORS);
+	for(int i = 0; i < NUM_ACTUATORS; i++){
+		Km_act(i, i) = K_m[i];
+	}	
+
+}
