@@ -5,6 +5,8 @@
  - Setup Contact Information DONE
  - Check Foot Robot Position DONE
 
+- Conversion from zdot to qdot state DONE
+
  - Construct Objective Function Object
 
  - Setup Constraint List

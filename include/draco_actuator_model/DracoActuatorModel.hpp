@@ -25,10 +25,12 @@ public:
     double get_joint_vel_qdot(const int &index, const double z_act_pos, const double &z_act_vel);
 
     double get_act_pos_z(const int &index, const double &q_act_pos); 
-    double getJacobian_dqdz(const int &index, const double &z_act_pos);
-    double getJacobian_dzdq(const int &index, const double &q_act_pos);
+    double getJacobian_dqdz(const int &index, const double &q_act_pos);
+    double getJacobian_dzdq(const int &index, const double &z_act_pos);
 
-    void getFullJacobian(sejong::Matrix &L);   
+    void getFullJacobian_dzdq(const sejong::Vector &z_pos, sejong::Matrix &L);   
+    void getFullJacobian_dqdz(const sejong::Vector &q_pos, sejong::Matrix &J);
+
     void getFull_joint_pos_q(const sejong::Vector &z_in, sejong::Vector &q_out);
     void getFull_joint_vel_qdot(const sejong::Vector &z_in, const sejong::Vector &zdot_in, sejong::Vector &qdot_out);
 

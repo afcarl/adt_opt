@@ -25,7 +25,8 @@ int main(int argc, char **argv){
 	actuator_model->getMassMatrix(M_act);
 	actuator_model->getDampingMatrix(B_act);	
 	actuator_model->getStiffnessMatrix(K_act);
-	actuator_model->getFullJacobian(L_act);
+	sejong::Vector z_act; z_act.resize(NUM_ACT_JOINT); z_act.setZero();
+	actuator_model->getFullJacobian_dzdq(z_act, L_act);
 
 	sejong::pretty_print(M_act, std::cout, "M_act");		
 	sejong::pretty_print(B_act, std::cout, "B_act");		

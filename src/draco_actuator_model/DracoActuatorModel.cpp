@@ -195,24 +195,32 @@ double DracoActuatorModel::get_act_pos_z(const int &index, const double &q_act_p
 	return z_o[index] + r_arm[index]*(q_act_pos - q_o[index]);
 }
 
-double DracoActuatorModel::getJacobian_dqdz(const int &index, const double &z_act_pos){
+double DracoActuatorModel::getJacobian_dqdz(const int &index, const double &q_act_pos){
 	return 1.0/r_arm[index];
 }
 
 // dz/dq = r 
-double DracoActuatorModel::getJacobian_dzdq(const int &index, const double &q_act_pos){
+double DracoActuatorModel::getJacobian_dzdq(const int &index, const double &z_act_pos){
 	return r_arm[index];
 }
+// -----------------------------------------------------------------------------
 
-void DracoActuatorModel::getFullJacobian(sejong::Matrix &L){
+void DracoActuatorModel::getFullJacobian_dzdq(const sejong::Vector &z_pos, sejong::Matrix &L){
 	L.resize(NUM_ACTUATORS, NUM_ACTUATORS);
 	L.setIdentity();
-
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
-		L(i,i) = r_arm[i];
+		L(i,i) = getJacobian_dzdq(i, z_pos[i]); 
 	}
 }
-// -----------------------------------------------------------------------------
+
+void DracoActuatorModel::getFullJacobian_dqdz(const sejong::Vector &q_pos, sejong::Matrix &J){
+	J.resize(NUM_ACTUATORS, NUM_ACTUATORS);
+	J.setIdentity();
+	for(size_t i = 0; i < NUM_ACTUATORS; i++){
+		J(i,i) = getJacobian_dqdz(i, q_pos[i]); 
+	}
+}
+
 
 void DracoActuatorModel::getFull_joint_pos_q(const sejong::Vector &z_in, sejong::Vector &q_out){
 	q_out.resize(NUM_ACTUATORS);
