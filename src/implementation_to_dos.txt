@@ -6,11 +6,16 @@
  - Check Foot Robot Position DONE
 
 - Conversion from zdot to qdot state DONE
-
- - Construct Objective Function Object
+- Construct combined dynamics model
 
  - Setup Constraint List
  	LCP Constraints DONE
  	Friction Cone Constraints
  	Kinematic Constraints
  	Actuator-Robot-Link Time Integration Constraints
+
+- Construct Objective Function Object
+
+- Run Optimization
+
+- Create URDF for Draco visualization

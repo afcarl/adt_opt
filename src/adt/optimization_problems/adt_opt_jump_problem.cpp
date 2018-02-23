@@ -47,7 +47,7 @@ Jump_Opt::~Jump_Opt(){
 void Jump_Opt::Initialization(){
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 3;
+	N_total_knotpoints = 2;
 
 	N_d = 2; // Number of friction cone basis vectors
 
@@ -91,8 +91,10 @@ void Jump_Opt::initialize_contact_list(){
 
 void Jump_Opt::initialize_td_constraint_list(){
 	int toe_contact_index = 0;
-	int heel_contact_index = 0;	
+	int heel_contact_index = 1;	
     td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
+    td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
+
 }
 
 
