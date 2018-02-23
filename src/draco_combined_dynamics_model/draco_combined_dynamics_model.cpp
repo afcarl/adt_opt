@@ -150,18 +150,6 @@ void Draco_Combined_Dynamics_Model::formulate_mass_matrix(){
 	M_delta_z = M_act.block(NUM_ACT_JOINT, 0, NUM_ACT_JOINT, NUM_ACT_JOINT);
 	M_delta_delta = M_act.block(NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT);	
 
-/*	sejong::pretty_print(A_mat, std::cout, "A_mat");
-	sejong::pretty_print(A_bb, std::cout, "A_bb");
-	sejong::pretty_print(A_br, std::cout, "A_br");
-	sejong::pretty_print(A_brT, std::cout, "A_brT");
-	sejong::pretty_print(A_rr, std::cout, "A_rr");	*/
-
-/*	sejong::pretty_print(M_act, std::cout, "M_act");
-	sejong::pretty_print(M_zz, std::cout, "M_zz");
-	sejong::pretty_print(M_z_delta, std::cout, "M_z_delta");
-	sejong::pretty_print(M_delta_z, std::cout, "M_delta_z");
-	sejong::pretty_print(M_delta_delta, std::cout, "M_delta_delta");	*/
-
 	M_combined.block(0, 0, NUM_VIRTUAL, NUM_VIRTUAL) = A_bb;
 	M_combined.block(0, NUM_VIRTUAL, NUM_VIRTUAL, NUM_ACT_JOINT) = A_br*J;
 	M_combined.block(NUM_VIRTUAL, NUM_VIRTUAL, NUM_ACT_JOINT, NUM_ACT_JOINT) = M_zz;
@@ -170,18 +158,23 @@ void Draco_Combined_Dynamics_Model::formulate_mass_matrix(){
 	M_combined.block(NUM_VIRTUAL + NUM_ACT_JOINT, NUM_VIRTUAL, NUM_ACT_JOINT, NUM_VIRTUAL) = A_rr*J + L.transpose()*M_delta_z;	
 	M_combined.block(NUM_VIRTUAL + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT) = L.transpose()*M_delta_delta;	
 
-
-/*	sejong::pretty_print(J, std::cout, "J");
-	sejong::pretty_print(A_br, std::cout, "A_br");*/
-//	sejong::pretty_print(A_br, std::cout, "A_brT");	
-/*	sejong::pretty_print(M_zz, std::cout, "M_zz");
-	sejong::pretty_print(M_z_delta, std::cout, "M_z_delta");	*/
-
-	sejong::pretty_print(M_combined, std::cout, "M_combined");
-
-
+//	sejong::pretty_print(M_combined, std::cout, "M_combined");
 }
-void Draco_Combined_Dynamics_Model::formulate_damping_matrix(){}	
+
+void Draco_Combined_Dynamics_Model::formulate_damping_matrix(){
+	B_zz = B_act.block(0, 0, NUM_ACT_JOINT, NUM_ACT_JOINT);
+	B_z_delta = B_act.block(0, NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT);
+	B_delta_z = B_act.block(NUM_ACT_JOINT, 0, NUM_ACT_JOINT, NUM_ACT_JOINT);
+	B_delta_delta = B_act.block(NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT);	
+
+	B_combined.block(NUM_VIRTUAL, NUM_VIRTUAL, NUM_ACT_JOINT, NUM_ACT_JOINT) = B_zz;
+	B_combined.block(NUM_VIRTUAL, NUM_VIRTUAL + NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT) = B_z_delta;	
+	B_combined.block(NUM_VIRTUAL + NUM_ACT_JOINT, NUM_VIRTUAL, NUM_ACT_JOINT, NUM_VIRTUAL) = L.transpose()*B_delta_z;
+	B_combined.block(NUM_VIRTUAL + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT) = L.transpose()*B_delta_delta;	
+
+//	sejong::pretty_print(B_combined, std::cout, "B_combined");
+}	
+
 void Draco_Combined_Dynamics_Model::formulate_stiffness_matrix(){}
 void Draco_Combined_Dynamics_Model::formulate_joint_link_impedance(){}
 
