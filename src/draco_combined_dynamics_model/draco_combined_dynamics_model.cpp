@@ -69,9 +69,9 @@ void Draco_Combined_Dynamics_Model::Initialization(){
 
 
 	// Initialize Combined Matrices
-	M_combined.resize(NUM_QDOT + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_ACT_JOINT + NUM_ACT_JOINT); M_combined.setZero();
-	B_combined.resize(NUM_QDOT + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_QDOT + NUM_ACT_JOINT + NUM_ACT_JOINT); B_combined.setZero();
-	K_combined.resize(NUM_QDOT + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_QDOT + NUM_ACT_JOINT + NUM_ACT_JOINT); K_combined.setZero();
+	M_combined.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); M_combined.setZero();
+	B_combined.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); B_combined.setZero();
+	K_combined.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); K_combined.setZero();
 
 	// Initialize x, xdot vectors
 	x_state.resize(NUM_QDOT + NUM_ACT_JOINT + NUM_ACT_JOINT); x_state.setZero();
@@ -161,6 +161,23 @@ void Draco_Combined_Dynamics_Model::formulate_mass_matrix(){
 	sejong::pretty_print(M_z_delta, std::cout, "M_z_delta");
 	sejong::pretty_print(M_delta_z, std::cout, "M_delta_z");
 	sejong::pretty_print(M_delta_delta, std::cout, "M_delta_delta");	*/
+
+	M_combined.block(0, 0, NUM_VIRTUAL, NUM_VIRTUAL) = A_bb;
+	M_combined.block(0, NUM_VIRTUAL, NUM_VIRTUAL, NUM_ACT_JOINT) = A_br*J;
+	M_combined.block(NUM_VIRTUAL, NUM_VIRTUAL, NUM_ACT_JOINT, NUM_ACT_JOINT) = M_zz;
+	M_combined.block(NUM_VIRTUAL, NUM_VIRTUAL + NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT) = M_z_delta;	
+	M_combined.block(NUM_VIRTUAL + NUM_ACT_JOINT, 0, NUM_ACT_JOINT, NUM_VIRTUAL) = A_brT;
+	M_combined.block(NUM_VIRTUAL + NUM_ACT_JOINT, NUM_VIRTUAL, NUM_ACT_JOINT, NUM_VIRTUAL) = A_rr*J + L.transpose()*M_delta_z;	
+	M_combined.block(NUM_VIRTUAL + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT) = L.transpose()*M_delta_delta;	
+
+
+/*	sejong::pretty_print(J, std::cout, "J");
+	sejong::pretty_print(A_br, std::cout, "A_br");*/
+//	sejong::pretty_print(A_br, std::cout, "A_brT");	
+/*	sejong::pretty_print(M_zz, std::cout, "M_zz");
+	sejong::pretty_print(M_z_delta, std::cout, "M_z_delta");	*/
+
+	sejong::pretty_print(M_combined, std::cout, "M_combined");
 
 
 }
