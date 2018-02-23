@@ -175,7 +175,20 @@ void Draco_Combined_Dynamics_Model::formulate_damping_matrix(){
 //	sejong::pretty_print(B_combined, std::cout, "B_combined");
 }	
 
-void Draco_Combined_Dynamics_Model::formulate_stiffness_matrix(){}
+void Draco_Combined_Dynamics_Model::formulate_stiffness_matrix(){
+	K_zz = K_act.block(0, 0, NUM_ACT_JOINT, NUM_ACT_JOINT);
+	K_z_delta = K_act.block(0, NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT);
+	K_delta_z = K_act.block(NUM_ACT_JOINT, 0, NUM_ACT_JOINT, NUM_ACT_JOINT);
+	K_delta_delta = K_act.block(NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT);	
+
+	K_combined.block(NUM_VIRTUAL, NUM_VIRTUAL, NUM_ACT_JOINT, NUM_ACT_JOINT) = K_zz;
+	K_combined.block(NUM_VIRTUAL, NUM_VIRTUAL + NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT) = K_z_delta;	
+	K_combined.block(NUM_VIRTUAL + NUM_ACT_JOINT, NUM_VIRTUAL, NUM_ACT_JOINT, NUM_VIRTUAL) = L.transpose()*K_delta_z;
+	K_combined.block(NUM_VIRTUAL + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT, NUM_ACT_JOINT, NUM_ACT_JOINT) = L.transpose()*K_delta_delta;	
+
+//	sejong::pretty_print(K_act, std::cout, "K_act");
+//	sejong::pretty_print(K_combined, std::cout, "K_combined");
+}
 void Draco_Combined_Dynamics_Model::formulate_joint_link_impedance(){}
 
 void Draco_Combined_Dynamics_Model::convert_x_xdot_to_q_qdot(const sejong::Vector &x_state, const sejong::Vector &xdot_state, sejong::Vector q_state_out, sejong::Vector qdot_state_out){
