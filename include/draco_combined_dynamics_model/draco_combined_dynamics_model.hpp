@@ -19,11 +19,11 @@ public:
 	sejong::Matrix B_combined;
 	sejong::Matrix K_combined;
 
-	sejong::Vector A_mat; // NUM_QDOT x NUM_QDT
-	sejong::Vector A_bb; // NUM_VIRTUAL x NUM_VIRTUAL
-	sejong::Vector A_br; // NUM_VIRTUAL x NUM_ACT_JOINT
-	sejong::Vector A_brT; // NUM_ACT_JOINT x NUM_VIRTUAL
-	sejong::Vector A_rr; // NUM_ACT_JOINT x NUM_ACT_JOINT
+	sejong::Matrix A_mat; // NUM_QDOT x NUM_QDT
+	sejong::Matrix A_bb; // NUM_VIRTUAL x NUM_VIRTUAL
+	sejong::Matrix A_br; // NUM_VIRTUAL x NUM_ACT_JOINT
+	sejong::Matrix A_brT; // NUM_ACT_JOINT x NUM_VIRTUAL
+	sejong::Matrix A_rr; // NUM_ACT_JOINT x NUM_ACT_JOINT
 
 	sejong::Vector grav;
 	sejong::Vector coriolis;
@@ -41,10 +41,7 @@ public:
 	sejong::Vector q_state;
 	sejong::Vector qdot_state;	
 
-	sejong::Vector q_virt;
-	sejong::Vector qdot_virt;	
-	sejong::Vector q_act;
-	sejong::Vector qdot_act;
+
 
 	void UpdateModel(const sejong::Vector &x_state_in, const sejong::Vector &xdot_state_in);
 	void setContactJacobian(sejong::Matrix Jc_in);
@@ -60,7 +57,10 @@ public:
 
 
 protected:
-	void convert_x_xdot_to_q_qdot(const sejong::Vector &x_state, const sejong::Vector &xdot_state);
+	void convert_x_xdot_to_q_qdot(const sejong::Vector &x_state, 
+								  const sejong::Vector &xdot_state, 
+								  sejong::Vector q_state_out, 
+								  sejong::Vector qdot_state_out);
 
 	void compute_mass_matrix();
 	void compute_damping_matrix();	
