@@ -64,7 +64,9 @@ void Draco_Combined_Dynamics_Model::Initialization(){
 	initialize_actuator_matrices(K_zz);
 	initialize_actuator_matrices(K_z_delta);
 	initialize_actuator_matrices(K_delta_z);
-	initialize_actuator_matrices(K_delta_delta);			
+	initialize_actuator_matrices(K_delta_delta);
+
+	initialize_actuator_matrices(Km_act);			
 	// ---------------------------------------------------------------
 
 
@@ -93,6 +95,11 @@ void Draco_Combined_Dynamics_Model::Initialization(){
 	// Initialize q, qdot vectors
 	q_state.resize(NUM_QDOT); q_state.setZero();
 	qdot_state.resize(NUM_QDOT); qdot_state.setZero();
+
+	virt_imp.resize(NUM_VIRTUAL); virt_imp.setZero();
+	current_input.resize(NUM_ACT_JOINT); current_input.setZero();
+	joint_imp.resize(NUM_ACT_JOINT); joint_imp.setZero();
+
 }
 
 void Draco_Combined_Dynamics_Model::initialize_actuator_matrices(sejong::Matrix &Mat){
@@ -129,7 +136,6 @@ void Draco_Combined_Dynamics_Model::UpdateModel(const sejong::Vector &x_state_in
 	formulate_mass_matrix();
 	formulate_damping_matrix();
 	formulate_stiffness_matrix();
-	formulate_joint_link_impedance();	
 }
 
 
@@ -189,7 +195,9 @@ void Draco_Combined_Dynamics_Model::formulate_stiffness_matrix(){
 //	sejong::pretty_print(K_act, std::cout, "K_act");
 //	sejong::pretty_print(K_combined, std::cout, "K_combined");
 }
-void Draco_Combined_Dynamics_Model::formulate_joint_link_impedance(){}
+void Draco_Combined_Dynamics_Model::formulate_joint_link_impedance(const sejong::Vector &u_current_in, const::sejong::Vector &Fr_state_in){
+	
+}
 
 void Draco_Combined_Dynamics_Model::convert_x_xdot_to_q_qdot(const sejong::Vector &x_state, const sejong::Vector &xdot_state, sejong::Vector q_state_out, sejong::Vector qdot_state_out){
 	// extract q_virt and actuator z_states from x_states
@@ -214,4 +222,14 @@ void Draco_Combined_Dynamics_Model::convert_x_xdot_to_q_qdot(const sejong::Vecto
 
 /*	sejong::pretty_print(q_state_out, std::cout, "q_state_out");
 	sejong::pretty_print(qdot_state_out, std::cout, "qdot_state_out");	*/
+}
+
+void Draco_Combined_Dynamics_Model::setContactJacobian(sejong::Matrix &Jc_in){
+	Jc = Jc_in;
+}
+
+void Draco_Combined_Dynamics_Model::get_state_acceleration(const sejong::Vector &x_state_in, const::sejong::Vector &xdot_state_in, 
+							    						   const sejong::Vector &u_current_in, const::sejong::Vector &Fr_state_in,
+							    						   sejong::Vector &xddot_state_out){
+	UpdateModel(x_state, xdot_state);
 }

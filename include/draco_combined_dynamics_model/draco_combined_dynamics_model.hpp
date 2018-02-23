@@ -36,6 +36,8 @@ public:
 	sejong::Matrix K_delta_z;	
 	sejong::Matrix K_delta_delta;
 
+	sejong::Matrix Km_act;
+
 	sejong::Matrix A_mat; // NUM_QDOT x NUM_QDT
 	sejong::Matrix A_bb; // NUM_VIRTUAL x NUM_VIRTUAL
 	sejong::Matrix A_br; // NUM_VIRTUAL x NUM_ACT_JOINT
@@ -70,11 +72,15 @@ public:
 	sejong::Vector q_state;
 	sejong::Vector qdot_state;	
 
+	// Input/Impedances
+	sejong::Vector virt_imp;
+	sejong::Vector current_input;
+	sejong::Vector joint_imp;		
 
 
 
 	void UpdateModel(const sejong::Vector &x_state_in, const sejong::Vector &xdot_state_in);
-	void setContactJacobian(sejong::Matrix Jc_in);
+	void setContactJacobian(sejong::Matrix &Jc_in);
 
 	void get_combined_mass_matrix(const sejong::Vector &x_state, const sejong::Vector &xdot_state, sejong::Matrix &M_out);
 	void get_combined_damping_matrix(const sejong::Vector &x_state, const sejong::Vector &xdot_state, sejong::Matrix &B_out);
@@ -83,7 +89,9 @@ public:
 	void get_virtual_joints_impedance(const sejong::Vector &x_state, const sejong::Vector &xdot_state, const sejong::Vector &Fr_states, sejong::Vector &sv_out);
 	void get_actuated_joints_impedance(const sejong::Vector &x_state, const sejong::Vector &xdot_state, const sejong::Vector &Fr_states, sejong::Vector &sa_out);			
 
-	void get_state_acceleration(const sejong::Vector &x_state, const::sejong::Vector &xdot_state, sejong::Vector &xddot_state_out);
+	void get_state_acceleration(const sejong::Vector &x_state_in, const::sejong::Vector &xdot_state_in, 
+							    const sejong::Vector &u_current_in, const::sejong::Vector &Fr_state_in,
+							    sejong::Vector &xddot_state_out);
 
 
 protected:
@@ -95,7 +103,7 @@ protected:
 	void formulate_mass_matrix();
 	void formulate_damping_matrix();	
 	void formulate_stiffness_matrix();
-	void formulate_joint_link_impedance();			
+	void formulate_joint_link_impedance(const sejong::Vector &u_current_in, const::sejong::Vector &Fr_state_in);			
 
 	void Initialization();
 	void initialize_actuator_matrices(sejong::Matrix &Mat);

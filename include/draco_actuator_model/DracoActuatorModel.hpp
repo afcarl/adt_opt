@@ -20,6 +20,8 @@ public:
     void getMassMatrix(sejong::Matrix &M_act);
     void getDampingMatrix(sejong::Matrix &B_act);
     void getStiffnessMatrix(sejong::Matrix &K_act);
+    void getKm_Matrix(sejong::Matrix &Km_act);
+
 
     double get_joint_pos_q(const int &index, const double &z_act_pos);
     double get_joint_vel_qdot(const int &index, const double z_act_pos, const double &z_act_vel);
