@@ -1,6 +1,7 @@
 #include "DracoModel.hpp"
 #include "DracoP1Rot_Definition.h"
 #include <draco_actuator_model/DracoActuatorModel.hpp>
+#include <draco_combined_dynamics_model/draco_combined_dynamics_model.hpp>
 
 #include <adt/contacts/adt_draco_contact_heel.hpp>
 #include <adt/contacts/adt_draco_contact_toe.hpp>
@@ -100,6 +101,42 @@ int main(int argc, char **argv){
 	robot_model->getPosition(q_state, SJLinkID::LK_FootHeel, heel_vec_pos);
 	sejong::pretty_print(heel_vec_pos, std::cout, "heel_vec_pos");	
 
+
+	Draco_Combined_Dynamics_Model* draco_combined_model = Draco_Combined_Dynamics_Model::GetDracoCombinedDynamicsModel();
+
+
+	// 
+	sejong::Vector q_virt = q_state.head(NUM_VIRTUAL);
+	sejong::Vector z_state;
+	sejong::Vector delta_state; delta_state.resize(NUM_ACT_JOINT); delta_state.setZero();	
+
+	sejong::Vector qdot_virt = qdot_state.head(NUM_VIRTUAL);
+	sejong::Vector zdot_state; zdot_state.resize(NUM_ACT_JOINT); zdot_state.setZero();
+	sejong::Vector delta_dot_state;	delta_dot_state.resize(NUM_ACT_JOINT); delta_dot_state.setZero();	
+
+    actuator_model->getFull_act_pos_z(q_state.tail(NUM_ACT_JOINT), z_state);
+
+    sejong::Vector x_state; x_state.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT);
+    sejong::Vector xdot_state; xdot_state.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT);
+
+
+    x_state.head(NUM_VIRTUAL) = q_virt;
+    x_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = z_state;
+	x_state.tail(NUM_ACT_JOINT) = delta_state;
+
+	xdot_state.head(NUM_VIRTUAL) = qdot_virt;
+    xdot_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = zdot_state;
+	xdot_state.tail(NUM_ACT_JOINT) = delta_dot_state;	    
+
+/*	sejong::pretty_print(q_state, std::cout, "q_state");
+	sejong::pretty_print(qdot_state, std::cout, "qdot_state");	
+
+
+	sejong::pretty_print(x_state, std::cout, "x_state");
+	sejong::pretty_print(xdot_state, std::cout, "xdot_state");		
+
+	*/
+	draco_combined_model->UpdateModel(x_state, xdot_state);
 
 	return 0;
 }

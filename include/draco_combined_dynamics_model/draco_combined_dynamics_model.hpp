@@ -14,10 +14,27 @@ public:
 	DracoModel* robot_model;	
 	DracoActuatorModel* actuator_model;
 
-
 	sejong::Matrix M_combined;
 	sejong::Matrix B_combined;
 	sejong::Matrix K_combined;
+
+	sejong::Matrix M_act;
+	sejong::Matrix M_zz;	
+	sejong::Matrix M_z_delta;
+	sejong::Matrix M_delta_z;	
+	sejong::Matrix M_delta_delta;	
+
+	sejong::Matrix B_act;
+	sejong::Matrix B_zz;	
+	sejong::Matrix B_z_delta;
+	sejong::Matrix B_delta_z;	
+	sejong::Matrix B_delta_delta;
+
+	sejong::Matrix K_act;		
+	sejong::Matrix K_zz;	
+	sejong::Matrix K_z_delta;
+	sejong::Matrix K_delta_z;	
+	sejong::Matrix K_delta_delta;
 
 	sejong::Matrix A_mat; // NUM_QDOT x NUM_QDT
 	sejong::Matrix A_bb; // NUM_VIRTUAL x NUM_VIRTUAL
@@ -38,8 +55,21 @@ public:
 	sejong::Vector x_state;
 	sejong::Vector xdot_state;	
 
+	sejong::Vector z_state;
+	sejong::Vector zdot_state;	
+	
+	sejong::Vector q_virt_state;
+	sejong::Vector qdot_virt_state;
+	
+	sejong::Vector q_act;
+	sejong::Vector qdot_act;	
+
+	//sejong::Vector delta_state;
+	//sejong::Vector delta_dot_state;
+
 	sejong::Vector q_state;
 	sejong::Vector qdot_state;	
+
 
 
 
@@ -62,12 +92,13 @@ protected:
 								  sejong::Vector q_state_out, 
 								  sejong::Vector qdot_state_out);
 
-	void compute_mass_matrix();
-	void compute_damping_matrix();	
-	void compute_stiffness_matrix();
-	void compute_joint_link_impedance();			
+	void formulate_mass_matrix();
+	void formulate_damping_matrix();	
+	void formulate_stiffness_matrix();
+	void formulate_joint_link_impedance();			
 
-
+	void Initialization();
+	void initialize_actuator_matrices(sejong::Matrix &Mat);
 
 private:
     Draco_Combined_Dynamics_Model();
