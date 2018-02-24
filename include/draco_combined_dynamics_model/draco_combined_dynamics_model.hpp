@@ -15,6 +15,7 @@ public:
 	DracoActuatorModel* actuator_model;
 
 	sejong::Matrix M_combined;
+	sejong::Matrix M_combined_inv;
 	sejong::Matrix B_combined;
 	sejong::Matrix K_combined;
 
@@ -73,6 +74,7 @@ public:
 	sejong::Vector qdot_state;	
 
 	// Input/Impedances
+	sejong::Vector total_imp;
 	sejong::Vector virt_imp;
 	sejong::Vector current_input;
 	sejong::Vector joint_imp;		
@@ -103,7 +105,7 @@ protected:
 	void formulate_mass_matrix();
 	void formulate_damping_matrix();	
 	void formulate_stiffness_matrix();
-	void formulate_joint_link_impedance(const sejong::Vector &u_current_in, const::sejong::Vector &Fr_state_in);			
+	void formulate_joint_link_impedance(const::sejong::Vector &Fr_state_in);			
 
 	void Initialization();
 	void initialize_actuator_matrices(sejong::Matrix &Mat);

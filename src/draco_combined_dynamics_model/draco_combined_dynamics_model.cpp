@@ -1,5 +1,7 @@
 #include <draco_combined_dynamics_model/draco_combined_dynamics_model.hpp>
 #include <Utils/utilities.hpp>
+#include <Utils/pseudo_inverse.hpp>
+
 #include "DracoP1Rot_Definition.h"
 
 
@@ -72,6 +74,8 @@ void Draco_Combined_Dynamics_Model::Initialization(){
 
 	// Initialize Combined Matrices
 	M_combined.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); M_combined.setZero();
+	M_combined_inv.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); M_combined_inv.setZero();
+
 	B_combined.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); B_combined.setZero();
 	K_combined.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT, NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); K_combined.setZero();
 
@@ -96,6 +100,8 @@ void Draco_Combined_Dynamics_Model::Initialization(){
 	q_state.resize(NUM_QDOT); q_state.setZero();
 	qdot_state.resize(NUM_QDOT); qdot_state.setZero();
 
+
+	total_imp.resize(NUM_VIRTUAL + NUM_ACT_JOINT); total_imp.setZero();
 	virt_imp.resize(NUM_VIRTUAL); virt_imp.setZero();
 	current_input.resize(NUM_ACT_JOINT); current_input.setZero();
 	joint_imp.resize(NUM_ACT_JOINT); joint_imp.setZero();
@@ -125,6 +131,7 @@ void Draco_Combined_Dynamics_Model::UpdateModel(const sejong::Vector &x_state_in
 	actuator_model->getMassMatrix(M_act);
 	actuator_model->getDampingMatrix(B_act);	   
 	actuator_model->getStiffnessMatrix(K_act);	   
+    actuator_model->getKm_Matrix(Km_act);
 
 	sejong::pretty_print(L, std::cout, "L");
 	sejong::pretty_print(J, std::cout, "J");
@@ -132,6 +139,8 @@ void Draco_Combined_Dynamics_Model::UpdateModel(const sejong::Vector &x_state_in
 	sejong::pretty_print(M_act, std::cout, "M_act");
 	sejong::pretty_print(B_act, std::cout, "B_act");
 	sejong::pretty_print(K_act, std::cout, "K_act");
+
+	sejong::pretty_print(grav, std::cout, "grav");
 
 	formulate_mass_matrix();
 	formulate_damping_matrix();
@@ -195,8 +204,10 @@ void Draco_Combined_Dynamics_Model::formulate_stiffness_matrix(){
 //	sejong::pretty_print(K_act, std::cout, "K_act");
 //	sejong::pretty_print(K_combined, std::cout, "K_combined");
 }
-void Draco_Combined_Dynamics_Model::formulate_joint_link_impedance(const sejong::Vector &u_current_in, const::sejong::Vector &Fr_state_in){
-	
+void Draco_Combined_Dynamics_Model::formulate_joint_link_impedance(const::sejong::Vector &Fr_state_in){
+	total_imp = -(coriolis + grav - Jc.transpose()*Fr_state_in);
+	virt_imp = Sv*(total_imp);
+	joint_imp = Sa*(total_imp);
 }
 
 void Draco_Combined_Dynamics_Model::convert_x_xdot_to_q_qdot(const sejong::Vector &x_state, const sejong::Vector &xdot_state, sejong::Vector q_state_out, sejong::Vector qdot_state_out){
@@ -232,4 +243,13 @@ void Draco_Combined_Dynamics_Model::get_state_acceleration(const sejong::Vector 
 							    						   const sejong::Vector &u_current_in, const::sejong::Vector &Fr_state_in,
 							    						   sejong::Vector &xddot_state_out){
 	UpdateModel(x_state, xdot_state);
+    sejong::pseudoInverse(M_combined, 1.e-10, M_combined_inv, 0);
+    formulate_joint_link_impedance(Fr_state_in);
+
+    sejong::Vector total_input; total_input.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); total_input.setZero();
+    total_input.head(NUM_VIRTUAL) = virt_imp;
+    total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_in;
+    total_input.tail(NUM_ACT_JOINT) = joint_imp;
+
+    xddot_state_out = M_combined_inv*(total_input - B_combined*xdot_state_in - K_combined*x_state_in);
 }
