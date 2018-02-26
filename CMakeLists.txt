@@ -85,7 +85,8 @@ set(adt_optimization_var_limits_sources src/adt/optimization_variable_limits/adt
 
 set(adt_optimization_problem_sources src/adt/optimization_problems/adt_opt_jump_problem.cpp)
 
-set(adt_hard_constraints_sources src/adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.cpp)
+set(adt_hard_constraints_sources src/adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.cpp
+								 src/adt/hard_constraints/adt_friction_cone_2d_constraint.cpp)
 
 #--------------------------------------------
 # Test Draco Model 

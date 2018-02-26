@@ -9,6 +9,7 @@
 #include <adt/contacts/adt_draco_contact_heel.hpp>
 
 #include <adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.hpp>
+#include <adt/hard_constraints/adt_friction_cone_2d_constraint.hpp>
 
 #include <string>
 
@@ -94,6 +95,8 @@ void Jump_Opt::initialize_td_constraint_list(){
 	int heel_contact_index = 1;	
     td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
     td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
+    td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
+    td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
 
 }
 

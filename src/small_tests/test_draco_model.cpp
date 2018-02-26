@@ -37,9 +37,9 @@ int main(int argc, char **argv){
 	sejong::Vector q_o_init = actuator_model->q_o;
 	sejong::pretty_print(q_o_init, std::cout, "q_o_init");		
 	// Test Modification of q_init
-	q_o_init.setZero();
-	actuator_model->set_zero_pos_q_o(q_o_init);
-	sejong::pretty_print(q_o_init, std::cout, "New q_o_init");
+	//q_o_init.setZero();
+	//actuator_model->set_zero_pos_q_o(q_o_init);
+	//sejong::pretty_print(q_o_init, std::cout, "New q_o_init");
 
 	sejong::Matrix Km_matrix;
 
@@ -119,6 +119,7 @@ int main(int argc, char **argv){
 	sejong::Vector delta_dot_state;	delta_dot_state.resize(NUM_ACT_JOINT); delta_dot_state.setZero();	
 
     actuator_model->getFull_act_pos_z(q_state.tail(NUM_ACT_JOINT), z_state);
+    sejong::pretty_print(z_state, std::cout, "Hello z_state");
 
     sejong::Vector x_state; x_state.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT);
     sejong::Vector xdot_state; xdot_state.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT);
@@ -141,6 +142,28 @@ int main(int argc, char **argv){
 
 	*/
 	draco_combined_model->UpdateModel(x_state, xdot_state);
+
+
+	// Stack Contact Jacobian:
+	sejong::Matrix Jc = Jt_toe_reduced;
+	int prestack_row_size = Jc.rows();
+	Jc.conservativeResize(prestack_row_size + Jt_heel_reduced.rows(), NUM_QDOT);
+	Jc.block(prestack_row_size, 0, Jt_heel_reduced.rows(), NUM_QDOT) = Jt_heel_reduced;
+	sejong::pretty_print(Jc, std::cout, "Contact Jacobian");
+
+	// Assign Contact Jacobian
+	draco_combined_model->setContactJacobian(Jc);
+
+	sejong::Vector u_in; u_in.resize(NUM_ACT_JOINT); u_in.setZero();
+	sejong::Vector Fr_in; Fr_in.resize(Jc.rows());	Fr_in.setZero();
+
+	u_in[0] = 1;
+
+	sejong::Vector xddot_out; xddot_out.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT);
+	draco_combined_model->get_state_acceleration(x_state, xdot_state, u_in, Fr_in, xddot_out);
+	sejong::pretty_print(xddot_out, std::cout, "xddot_out");
+
+
 
 	return 0;
 }

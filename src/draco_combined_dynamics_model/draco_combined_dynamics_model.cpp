@@ -237,6 +237,7 @@ void Draco_Combined_Dynamics_Model::convert_x_xdot_to_q_qdot(const sejong::Vecto
 
 void Draco_Combined_Dynamics_Model::setContactJacobian(sejong::Matrix &Jc_in){
 	Jc = Jc_in;
+	//sejong::pretty_print(Jc, std::cout, "Jc_in");
 }
 
 void Draco_Combined_Dynamics_Model::get_state_acceleration(const sejong::Vector &x_state_in, const::sejong::Vector &xdot_state_in, 
@@ -251,5 +252,22 @@ void Draco_Combined_Dynamics_Model::get_state_acceleration(const sejong::Vector 
     total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_in;
     total_input.tail(NUM_ACT_JOINT) = joint_imp;
 
+    // sejong::Matrix A_mat_inv;
+    // sejong::pseudoInverse(A_mat, 1.e-10, A_mat_inv, 0);
+    // sejong::Vector tau_test; tau_test.resize(NUM_QDOT); tau_test.setZero();
+    // tau_test[3] = -157;
+
+    // sejong::Vector test_regular_qddot = A_mat_inv*(-coriolis - grav + tau_test);
+    // sejong::pretty_print(test_regular_qddot, std::cout, "test_regular_qddot");
+
+    // xddot_state_out = M_combined_inv*(total_input - B_combined*xdot_state_in - K_combined*x_state_in);
+    // sejong::pretty_print(K_combined, std::cout, "K_combined");
+    // sejong::pretty_print(xdot_state_in, std::cout, "xdot_state_in");
+    // sejong::pretty_print(x_state_in, std::cout, "x_state_in");    
+
+    // sejong::pretty_print(u_current_in, std::cout, "u_current_in");
+    // sejong::pretty_print(total_input, std::cout, "total_input");
+
     xddot_state_out = M_combined_inv*(total_input - B_combined*xdot_state_in - K_combined*x_state_in);
+
 }

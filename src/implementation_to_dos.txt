@@ -6,7 +6,7 @@
  - Check Foot Robot Position DONE
 
 - Conversion from zdot to qdot state DONE
-- Construct combined dynamics model
+- Construct combined dynamics model DONE
 
  - Setup Constraint List
  	LCP Constraints DONE

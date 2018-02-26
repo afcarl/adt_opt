@@ -192,6 +192,8 @@ double DracoActuatorModel::get_joint_vel_qdot(const int &index, const double z_a
 }
 
 double DracoActuatorModel::get_act_pos_z(const int &index, const double &q_act_pos){
+	std::cout << "qo = " << q_o[index] << std::endl;
+	std::cout << "q_act_pos = " << q_act_pos << std::endl;
 	return z_o[index] + r_arm[index]*(q_act_pos - q_o[index]);
 }
 
