@@ -32,7 +32,7 @@ Jump_Opt::Jump_Opt(){
 	act_delta_dot_init.resize(NUM_ACT_JOINT);
 
 
-  robot_q_init.setZero(); 
+	robot_q_init.setZero(); 
 	robot_qdot_init.setZero();
 	act_z_init.setZero();
 	act_zdot_init.setZero();
@@ -239,10 +239,19 @@ void Jump_Opt::initialize_objective_func(){
 
 // SNOPT Interface
 // Remember to apply the initial conditions offset for the optimization variables 
-void Jump_Opt::get_init_opt_vars(std::vector<double> &x_vars){}
-void Jump_Opt::get_opt_vars_bounds(std::vector<double> &x_low, std::vector<double> &x_upp){}   	  	
-void Jump_Opt::get_current_opt_vars(std::vector<double> &x_vars_out){}
-void Jump_Opt::update_opt_vars(std::vector<double> &x_vars){} 	  		
+void Jump_Opt::get_init_opt_vars(std::vector<double> &x_vars){
+  get_init_opt_vars(x_vars);
+}
+void Jump_Opt::get_opt_vars_bounds(std::vector<double> &x_low, std::vector<double> &x_upp){
+  opt_var_manager.get_opt_vars_bounds(x_low, x_upp);
+}   	  	
+void Jump_Opt::get_current_opt_vars(std::vector<double> &x_vars_out){
+  opt_var_manager.get_current_opt_vars(x_vars_out);
+}
+void Jump_Opt::update_opt_vars(std::vector<double> &x_vars){
+  opt_var_manager.update_opt_vars(x_vars);
+} 	  		
+
 
 
 void Jump_Opt::get_F_bounds(std::vector<double> &F_low, std::vector<double> &F_upp){

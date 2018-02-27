@@ -262,26 +262,39 @@ int ADT_Opt_Variable_Manager::count_num_vars_in_map(const int &knotpoint, std::m
 
 }
 
-void ADT_Opt_Variable_Manager::update_x(std::vector<double> &x_in){
-	if (x_in.size() == (opt_var_list.size() - initial_conditions_offset) ){
-		//std::cout << "[VAR LIST] input and stored sizes are equal" << std::endl;
-		// Update the values
-		for (size_t i = 0; i < x_in.size(); i++){
-//			std::cout << "old var_list[" << i << "] = " << opt_var_list[i]->value << std::endl;
-			opt_var_list[i + initial_conditions_offset]->value = x_in[i];
-//			std::cout << "new var_list[" << i << "] = " << opt_var_list[i]->value << std::endl;			
-		}
-	}else{
-		std::cout << "[VAR LIST] Error. Input and stored sizes are not equal" << std::endl;
-	}
+void ADT_Opt_Variable_Manager::get_init_opt_vars(std::vector<double> &x_vars){
+  x_vars.clear();
+  for(size_t i = initial_conditions_offset; i < opt_var_list.size(); i++){
+    x_vars.push_back(opt_var_list[i]->value);
+  }
+
+}
+void ADT_Opt_Variable_Manager::get_opt_vars_bounds(std::vector<double> &x_low, std::vector<double> &x_upp){
+  x_low.clear();
+  x_upp.clear();
+  for(size_t i = initial_conditions_offset; i < opt_var_list.size(); i++){
+    std::cout << "x[" << i << "] = " << opt_var_list[i]->value << std::endl;
+    std::cout << "lower x[" << i << "] = " << opt_var_list[i]->l_bound << std::endl;     
+    std::cout << "upper x[" << i << "] = " << opt_var_list[i]->u_bound << std::endl;     
+
+    x_low.push_back(opt_var_list[i]->l_bound);
+    x_upp.push_back(opt_var_list[i]->u_bound);    
+  }	
 }
 
-void ADT_Opt_Variable_Manager::populate_x(std::vector<double> &x_out){
+void ADT_Opt_Variable_Manager::get_current_opt_vars(std::vector<double> &x_out){
 	x_out.clear();
 	for (size_t i = initial_conditions_offset; i < opt_var_list.size(); i++){
 		x_out.push_back(opt_var_list[i]->value);
 	}
-
 }
+
+void ADT_Opt_Variable_Manager::update_opt_vars(std::vector<double> &x_in){
+	for (size_t i = 0; i < x_in.size(); i++){
+		opt_var_list[i + initial_conditions_offset]->value = x_in[i];
+	}
+}
+
+
 
 

@@ -85,12 +85,14 @@ set(adt_optimization_var_limits_sources src/adt/optimization_variable_limits/adt
 
 set(adt_optimization_problem_sources src/adt/optimization_problems/adt_opt_jump_problem.cpp)
 
-set(adt_objective_function_sources src/adt/objective_functions/adt_jump_objective_function.cpp)
-
 set(adt_hard_constraints_sources src/adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.cpp
 								 src/adt/hard_constraints/adt_friction_cone_2d_constraint.cpp
 								 src/adt/hard_constraints/adt_linear_back_euler_time_integration_constraint.cpp
 								 src/adt/hard_constraints/adt_position_kinematic_constraint.cpp)
+
+set(adt_objective_function_sources src/adt/objective_functions/adt_jump_objective_function.cpp)
+
+set(adt_snopt_wrapper_sources src/adt/adt_snopt_wrapper.cpp)
 
 #--------------------------------------------
 # Test Draco Model 
@@ -137,6 +139,7 @@ add_executable(test_jump_prob_object  src/small_tests/test_jump_prob_object.cpp
 										${adt_contact_sources}
 										${adt_optimization_var_limits_sources}
 										${adt_hard_constraints_sources}
-										${adt_objective_function_sources}									
+										${adt_objective_function_sources}	
+										${adt_snopt_wrapper_sources}								
 										) 
 target_link_libraries(test_jump_prob_object  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 

@@ -15,10 +15,9 @@
  	Kinematic Constraints // DONE
 
 
-- Construct Objective Function Object
+- Construct Objective Function Object DONE
 - Run Optimization
 - Provide known gradients
-
 
 - Fix Update Model
 - Create URDF for Draco visualization

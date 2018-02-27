@@ -41,9 +41,10 @@ public:
 	int get_size();
 	int get_size_timedependent_vars();
 
-	void update_x(std::vector<double> &x_in);	 // To do
-	void populate_x(std::vector<double> &x_out); // To do
-
+	void get_init_opt_vars(std::vector<double> &x_vars);
+	void get_opt_vars_bounds(std::vector<double> &x_low, std::vector<double> &x_upp);
+	void get_current_opt_vars(std::vector<double> &x_out); 
+	void update_opt_vars(std::vector<double> &x_in);	 
 
 	int initial_conditions_offset = 0;
 	int total_knotpoints;
