@@ -112,6 +112,9 @@ void Floor_2D_Contact_LCP_Constraint::evaluate_constraint(const int &knotpoint, 
   double phi_contact_dis = contact_pos_vec[1];
   double complimentary_constraint = phi_contact_dis*Fr_l2_norm_squared;
 
+  // std::cout << "phi_contact_dis = " << phi_contact_dis  << std::endl;
+  // std::cout << "complimentary_constraint = " << complimentary_constraint << std::endl;
+
   F_vec.push_back(complimentary_constraint); // Phi >= 0
   F_vec.push_back(phi_contact_dis);          // 
 

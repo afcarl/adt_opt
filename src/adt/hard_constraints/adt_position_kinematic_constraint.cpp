@@ -77,7 +77,12 @@ void Position_2D_Kinematic_Constraint::evaluate_constraint(const int &knotpoint,
 	F_vec.clear();
 	update_states(knotpoint, var_manager);
 	combined_model->UpdateModel(x_state, xdot_state);
+
 	robot_model->getPosition(q_state, link_id, pos);
+	// sejong::pretty_print(q_state, std::cout, "q_state");
+	// sejong::pretty_print(pos, std::cout, "pos");
+
+
 	F_vec.push_back(pos[dim]);
 }
 void Position_2D_Kinematic_Constraint::evaluate_sparse_gradient(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& G, std::vector<int>& iG, std::vector<int>& jG){}

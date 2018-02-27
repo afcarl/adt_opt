@@ -40,6 +40,7 @@ void Linear_Back_Euler_Time_Integration_Constraint::initialize_Flow_Fupp(){
 		F_upp.push_back(0.0);
 		F_upp.push_back(0.0);
 	}
+
 	constraint_size = F_low.size();
 }
 
@@ -113,6 +114,9 @@ void Linear_Back_Euler_Time_Integration_Constraint::evaluate_constraint(const in
   Update_Contact_Jacobian_Jc(x_state_k);
   combined_model->UpdateModel(x_state_k, xdot_state_k);
   combined_model->get_state_acceleration(x_state_k, xdot_state_k, u_state_k, Fr_state_k, xddot_k);
+
+  //sejong::pretty_print(xddot_k, std::cout, "xddot_k");
+  //sejong::pretty_print(Fr_state_k, std::cout, "Fr_state_k");  
 
   sejong::Vector be_xdot_k = xdot_state_k - xddot_k*h_k - xdot_state_k_prev;
   sejong::Vector be_x_k = x_state_k - xdot_state_k*h_k - x_state_k_prev;  

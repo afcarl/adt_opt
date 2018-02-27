@@ -51,7 +51,7 @@ Jump_Opt::~Jump_Opt(){
 void Jump_Opt::Initialization(){
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 10;
+	N_total_knotpoints = 1;
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
@@ -113,7 +113,10 @@ void Jump_Opt::initialize_ti_constraint_list(){
     double min_des_z_height = 0.05;//0.005;
     //double des_hip_ori = -M_PI/2.0;
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height));     
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height));     
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_body, Z_DIM, min_des_z_height - OPT_ZERO_EPS, min_des_z_height + OPT_ZERO_EPS)); 
 }
 
@@ -290,6 +293,7 @@ void Jump_Opt::get_F_bounds(std::vector<double> &F_low, std::vector<double> &F_u
 
 void Jump_Opt::get_F_obj_Row(int &obj_row){
   obj_row = objective_function.objective_function_index;
+  std::cout << "[Jump Opt] Objective Row = " << obj_row << std::endl;
 }
 
 void Jump_Opt::compute_F_objective_function(double &result_out){
@@ -336,6 +340,7 @@ void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){
 
       //std::cout << "F_vec_const.size() = " << F_vec_const.size() << std::endl;
     for(size_t j = 0; j < current_constraint->F_low.size(); j++ ){
+      //std::cout << " des knotpoint = " << current_constraint->des_knotpoint << std::endl;
       //std::cout << "F_ti_const[" << j <<"] = " << F_vec_const[j] << std::endl;      
       F_eval.push_back(current_constraint->F_low[j]);
     }
