@@ -24,6 +24,7 @@ public:
 
 	std::string constraint_name = "undefined constraint";	
 
+	int des_knotpoint = -1; // for time independent constraints only
 	int constraint_index = -1; // Modified by the Constraint List Holder
 	int constraint_size = 0; // Modified by the Object Constructor
 	

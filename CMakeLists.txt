@@ -87,7 +87,8 @@ set(adt_optimization_problem_sources src/adt/optimization_problems/adt_opt_jump_
 
 set(adt_hard_constraints_sources src/adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.cpp
 								 src/adt/hard_constraints/adt_friction_cone_2d_constraint.cpp
-								 src/adt/hard_constraints/adt_linear_back_euler_time_integration_constraint.cpp)
+								 src/adt/hard_constraints/adt_linear_back_euler_time_integration_constraint.cpp
+								 src/adt/hard_constraints/adt_position_kinematic_constraint.cpp)
 
 #--------------------------------------------
 # Test Draco Model 

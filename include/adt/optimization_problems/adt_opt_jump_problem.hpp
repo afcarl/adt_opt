@@ -19,8 +19,8 @@ public:
   Contact_List 								  contact_list;
 
   Constraint_List 							td_constraint_list; // Time Dependent Constraint List, exists for all timesteps
-  /*Constraint_List 							ti_constraint_list;	// Time Independent Constraint List, exists for at a particular timestep
-  */
+  Constraint_List 							ti_constraint_list;	// Time Independent Constraint List, exists for at a particular timestep
+  
 
   sejong::Vector 								robot_q_init;
   sejong::Vector 								robot_qdot_init; 
@@ -66,6 +66,7 @@ private:
   void initialize_starting_configuration();
   void initialize_contact_list();
   void initialize_td_constraint_list();
+  void initialize_ti_constraint_list();  
 
   void initialize_opt_vars();
 

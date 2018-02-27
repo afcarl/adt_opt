@@ -11,8 +11,9 @@
  - Setup Constraint List
  	LCP Constraints DONE
  	Friction Cone Constraints DONE
- 	Kinematic Constraints 
  	Actuator-Robot-Link Time Integration Constraints DONE
+ 	Kinematic Constraints // Add to not time-invariant constraint list.
+
 
 - Construct Objective Function Object
 
