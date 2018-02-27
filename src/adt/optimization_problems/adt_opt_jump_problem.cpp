@@ -51,7 +51,7 @@ Jump_Opt::~Jump_Opt(){
 void Jump_Opt::Initialization(){
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 2;
+	N_total_knotpoints = 1;
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 

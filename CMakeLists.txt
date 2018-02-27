@@ -142,4 +142,25 @@ add_executable(test_jump_prob_object  src/small_tests/test_jump_prob_object.cpp
 										${adt_objective_function_sources}	
 										${adt_snopt_wrapper_sources}								
 										) 
-target_link_libraries(test_jump_prob_object  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
+target_link_libraries(test_jump_prob_object  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})
+
+#--------------------------------------------
+# Test Optimization Problem Object 
+#--------------------------------------------
+add_executable(adt_problem  src/optimizations/main_jump_opt.cpp  
+										${draco_dyn_model_sources}
+										${draco_act_model_sources}
+										${draco_combined_dynamics_sources}
+										${adt_container_sources}
+										${adt_optimization_problem_sources}
+										${adt_contact_sources}
+										${adt_optimization_var_limits_sources}
+										${adt_hard_constraints_sources}
+										${adt_objective_function_sources}	
+										${adt_snopt_wrapper_sources}								
+										) 
+target_link_libraries(adt_problem  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})
+
+
+
+		 
