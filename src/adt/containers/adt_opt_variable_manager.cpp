@@ -195,7 +195,9 @@ int ADT_Opt_Variable_Manager::get_num_z_vars(){
 int ADT_Opt_Variable_Manager::get_num_u_vars(){
 	return num_u_vars;
 }
-
+int ADT_Opt_Variable_Manager::get_num_delta_vars(){
+	return num_delta_vars;
+}
 
 
 void ADT_Opt_Variable_Manager::compute_size_time_dep_vars(){

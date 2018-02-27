@@ -58,6 +58,7 @@ public:
 
 	int get_num_z_vars();
 	int get_num_u_vars();
+	int get_num_delta_vars();	
 private:
 	void add_variable_to_map(std::map<int, std::vector<ADT_Opt_Variable*> > &map_kp_to_var_vec, ADT_Opt_Variable* opt_variable);
 

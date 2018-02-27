@@ -51,12 +51,12 @@ Jump_Opt::~Jump_Opt(){
 void Jump_Opt::Initialization(){
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 4;
+	N_total_knotpoints = 1;
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
 	h_dt_min = 0.001; // Minimum knotpoint timestep
-  	max_normal_force = 10000; // Newtons
+  	max_normal_force = 1e10;//10000; // Newtons
   	max_tangential_force = 10000; // Newtons  	  	
 
 	initialize_starting_configuration();
@@ -64,7 +64,10 @@ void Jump_Opt::Initialization(){
 	initialize_opt_vars();
 
 	initialize_td_constraint_list();
-  initialize_ti_constraint_list();
+  	initialize_ti_constraint_list();
+
+
+	initialize_objective_func();
 
 }
 void Jump_Opt::initialize_starting_configuration(){
@@ -110,7 +113,7 @@ void Jump_Opt::initialize_ti_constraint_list(){
     double min_des_z_height = 0.05;
     //double des_hip_ori = -M_PI/2.0;
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
-
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
 }
 
 
@@ -223,7 +226,15 @@ void Jump_Opt::initialize_opt_vars(){
 	std::cout << "[Jump_Opt] Predicted Size of Opt Vars: " << predicted_size_of_F << std::endl;
 
 }
-void Jump_Opt::initialize_objective_func(){}
+void Jump_Opt::initialize_objective_func(){
+  // |F_td| = num of time dependent constraint functions
+  // |F_ti| = num of time independent constraint functions	
+  // T = total timesteps
+  objective_function.objective_function_index = td_constraint_list.get_num_constraint_funcs()*N_total_knotpoints + ti_constraint_list.get_num_constraint_funcs();
+
+  std::cout << "[Jump_Opt] Objective Function has index: " << objective_function.objective_function_index << std::endl;
+
+}
 
 
 // SNOPT Interface
@@ -251,6 +262,7 @@ void Jump_Opt::get_F_bounds(std::vector<double> &F_low, std::vector<double> &F_u
 
   }
 
+  // Initialize Bounds for Time Independent Constraints
   for(size_t i = 0; i < ti_constraint_list.get_size(); i++){
     for(size_t j = 0; j < ti_constraint_list.get_constraint(i)->F_low.size(); j++ ){
       F_low.push_back(ti_constraint_list.get_constraint(i)->F_low[j]);
@@ -260,17 +272,30 @@ void Jump_Opt::get_F_bounds(std::vector<double> &F_low, std::vector<double> &F_u
     }
   }
 
-  // Initialize Bounds for Time Independent Constraints
-  // Code Here
-
 
   // Initialize Bounds for the Objective Function
-  //F_low.push_back(objective_function.F_low);
-  //F_upp.push_back(objective_function.F_upp); 	
+  F_low.push_back(objective_function.F_low);
+  F_upp.push_back(objective_function.F_upp);  	
 }
-void Jump_Opt::get_F_obj_Row(int &obj_row){}
 
-void Jump_Opt::compute_F(std::vector<double> &F_eval){}
+void Jump_Opt::get_F_obj_Row(int &obj_row){
+  obj_row = objective_function.objective_function_index;
+}
+
+void Jump_Opt::compute_F_objective_function(double &result_out){
+  objective_function.evaluate_objective_function(opt_var_manager, result_out);
+  std::cout << "[Jump_Opt] cost = " << result_out << std::endl;
+}
+
+void Jump_Opt::compute_F(std::vector<double> &F_eval){
+  compute_F_constraints(F_eval);
+  double cost = 0.0;
+
+  compute_F_objective_function(cost);
+  F_eval.push_back(cost);
+}
+
+
 void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){
   std::vector<double> F_vec_const;
   //std::cout << "[Jump_OPT] Computing F Constraints" << std::endl;
@@ -315,7 +340,7 @@ void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){
 }
 
 
-void Jump_Opt::compute_F_objective_function(double &result_out){}
+
 void Jump_Opt::compute_G(std::vector<double> &G_eval, std::vector<int> &iGfun, std::vector<int> &jGvar, int &neG){}
 void Jump_Opt::compute_A(std::vector<double> &A_eval, std::vector<int> &iAfun, std::vector<int> &jAvar, int &neA){}
 

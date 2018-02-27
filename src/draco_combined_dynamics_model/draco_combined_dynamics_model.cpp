@@ -133,14 +133,14 @@ void Draco_Combined_Dynamics_Model::UpdateModel(const sejong::Vector &x_state_in
 	actuator_model->getStiffnessMatrix(K_act);	   
     actuator_model->getKm_Matrix(Km_act);
 
-	sejong::pretty_print(L, std::cout, "L");
+/*	sejong::pretty_print(L, std::cout, "L");
 	sejong::pretty_print(J, std::cout, "J");
 
 	sejong::pretty_print(M_act, std::cout, "M_act");
 	sejong::pretty_print(B_act, std::cout, "B_act");
 	sejong::pretty_print(K_act, std::cout, "K_act");
 
-	sejong::pretty_print(grav, std::cout, "grav");
+	sejong::pretty_print(grav, std::cout, "grav");*/
 
 	formulate_mass_matrix();
 	formulate_damping_matrix();
@@ -234,8 +234,8 @@ void Draco_Combined_Dynamics_Model::convert_x_xdot_to_q_qdot(const sejong::Vecto
 	convert_x_to_q(x_state, q_state_out);
 	convert_xdot_to_qdot(xdot_state, qdot_state_out);		
 
-	sejong::pretty_print(q_state_out, std::cout, "q_state_out");
-	sejong::pretty_print(qdot_state_out, std::cout, "qdot_state_out");	
+/*	sejong::pretty_print(q_state_out, std::cout, "q_state_out");
+	sejong::pretty_print(qdot_state_out, std::cout, "qdot_state_out");	*/
 }
 
 void Draco_Combined_Dynamics_Model::convert_x_to_q(const sejong::Vector &x_state, sejong::Vector &q_state_out){

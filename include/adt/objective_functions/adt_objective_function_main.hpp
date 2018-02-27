@@ -15,7 +15,7 @@ public:
 	virtual ~Objective_Function(){
 		std::cout << "Objective Function Destructor called" << std::endl;
 	}
-	virtual void evaluate_objective_function(ADT_Opt_Variable_Manager& var_manager, double result) {}
+	virtual void evaluate_objective_function(ADT_Opt_Variable_Manager& var_manager, double &result) {}
 	virtual void evaluate_objective_gradient(ADT_Opt_Variable_Manager& var_manager, std::vector<double>& G, std::vector<int>& iG, std::vector<int>& jG) {}
 	virtual void evaluate_sparse_A_matrix(ADT_Opt_Variable_Manager& var_manager, std::vector<double>& A, std::vector<int>& iA, std::vector<int>& jA) {}	
 
