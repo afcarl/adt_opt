@@ -51,7 +51,7 @@ Jump_Opt::~Jump_Opt(){
 void Jump_Opt::Initialization(){
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 1;
+	N_total_knotpoints = 2;
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
@@ -240,7 +240,7 @@ void Jump_Opt::initialize_objective_func(){
 // SNOPT Interface
 // Remember to apply the initial conditions offset for the optimization variables 
 void Jump_Opt::get_init_opt_vars(std::vector<double> &x_vars){
-  get_init_opt_vars(x_vars);
+  opt_var_manager.get_init_opt_vars(x_vars);
 }
 void Jump_Opt::get_opt_vars_bounds(std::vector<double> &x_low, std::vector<double> &x_upp){
   opt_var_manager.get_opt_vars_bounds(x_low, x_upp);

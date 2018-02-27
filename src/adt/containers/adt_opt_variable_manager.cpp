@@ -273,10 +273,10 @@ void ADT_Opt_Variable_Manager::get_opt_vars_bounds(std::vector<double> &x_low, s
   x_low.clear();
   x_upp.clear();
   for(size_t i = initial_conditions_offset; i < opt_var_list.size(); i++){
-    std::cout << "x[" << i << "] = " << opt_var_list[i]->value << std::endl;
+/*    std::cout << "x[" << i << "] = " << opt_var_list[i]->value << std::endl;
     std::cout << "lower x[" << i << "] = " << opt_var_list[i]->l_bound << std::endl;     
     std::cout << "upper x[" << i << "] = " << opt_var_list[i]->u_bound << std::endl;     
-
+*/
     x_low.push_back(opt_var_list[i]->l_bound);
     x_upp.push_back(opt_var_list[i]->u_bound);    
   }	
