@@ -12,11 +12,13 @@
  	LCP Constraints DONE
  	Friction Cone Constraints DONE
  	Actuator-Robot-Link Time Integration Constraints DONE
- 	Kinematic Constraints // Add to not time-invariant constraint list.
+ 	Kinematic Constraints // DONE
 
 
 - Construct Objective Function Object
-
 - Run Optimization
+- Provide known gradients
 
+
+- Fix Update Model
 - Create URDF for Draco visualization

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <adt/containers/adt_opt_variable.hpp>
 #include <adt/containers/adt_opt_variable_manager.hpp>
+#include <adt/optimization_constants.hpp>
 
 class Constraint_Function{
 public:

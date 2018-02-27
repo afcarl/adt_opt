@@ -8,6 +8,7 @@
 
   #define OPT_TIMESTEP 0.01
 
+  // These values are fixed
   #define VAR_TYPE_NONE -1 // No variable type
   #define VAR_TYPE_Q 0	   // Q State Variable Type
   #define VAR_TYPE_QDOT 1  // Qdot State Variable Type 
@@ -22,6 +23,9 @@
   #define VAR_TYPE_U 10    // Actuator current input variable type
   #define VAR_TYPE_BETA 11 // Beta basis vectors for the friction cone constraint
 
+  #define ND_2D_CONST 2 // Number of friction cone basis vectors for a 2D plane. This number is fixed.
+  #define CALC_F_MODE 0 // Decides if we are computing F
+  #define CALC_G_MODE 1 // Decides if we are computing the gradient of F
 
 
 #endif 

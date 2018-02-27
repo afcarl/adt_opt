@@ -26,18 +26,18 @@ Jump_Opt::Jump_Opt(){
 	robot_q_init.resize(NUM_Q); 
 	robot_qdot_init.resize(NUM_QDOT);	
 
-  	act_z_init.resize(NUM_ACT_JOINT);
-  	act_zdot_init.resize(NUM_ACT_JOINT);
-  	act_delta_init.resize(NUM_ACT_JOINT);
-  	act_delta_dot_init.resize(NUM_ACT_JOINT);
+	act_z_init.resize(NUM_ACT_JOINT);
+	act_zdot_init.resize(NUM_ACT_JOINT);
+	act_delta_init.resize(NUM_ACT_JOINT);
+	act_delta_dot_init.resize(NUM_ACT_JOINT);
 
 
-	robot_q_init.setZero(); 
+  robot_q_init.setZero(); 
 	robot_qdot_init.setZero();
-  	act_z_init.setZero();
-  	act_zdot_init.setZero();
-  	act_delta_init.setZero();
-  	act_delta_dot_init.setZero();
+	act_z_init.setZero();
+	act_zdot_init.setZero();
+	act_delta_init.setZero();
+	act_delta_dot_init.setZero();
 
 	Initialization();
 }
@@ -53,7 +53,7 @@ void Jump_Opt::Initialization(){
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
 	N_total_knotpoints = 4;
 
-	N_d = 2; // Number of friction cone basis vectors
+	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
 	h_dt_min = 0.001; // Minimum knotpoint timestep
   	max_normal_force = 10000; // Newtons
@@ -106,8 +106,11 @@ void Jump_Opt::initialize_td_constraint_list(){
 
 void Jump_Opt::initialize_ti_constraint_list(){
     int des_knotpoint = N_total_knotpoints/2;
-    double des_z_height = 0.05;
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, des_z_height)); 
+    int pre_final_knotpoint = N_total_knotpoints - 1;
+    double min_des_z_height = 0.05;
+    //double des_hip_ori = -M_PI/2.0;
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
+
 }
 
 
@@ -299,9 +302,6 @@ void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){
     }
 
   }
-
-
-
 
   // Debug statement  
   /*  for(int j = 0; j < F_eval.size(); j++){

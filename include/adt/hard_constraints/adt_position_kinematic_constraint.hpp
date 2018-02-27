@@ -17,17 +17,23 @@
 
 class Position_2D_Kinematic_Constraint: public Constraint_Function{
 public:
-	Position_2D_Kinematic_Constraint(int knotpoint_in, int link_id_in, int dim_in, double des_val_in);	
+	Position_2D_Kinematic_Constraint(int knotpoint_in, int link_id_in, int dim_in, double l_bound_in, double u_bound_in);	
 	~Position_2D_Kinematic_Constraint();
 
 	int link_id;
 	int dim;
-	double des_val;
+
+	double l_bound;
+	double u_bound;
 
 	DracoModel* robot_model;	
 	Draco_Combined_Dynamics_Model* combined_model;	
 
+  	sejong::Vector x_state;
+	sejong::Vector xdot_state;
+
 	sejong::Vector q_state;
+	sejong::Vect3 pos;
 
 	void evaluate_constraint(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& F_vec);
 	void evaluate_sparse_gradient(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& G, std::vector<int>& iG, std::vector<int>& jG);
@@ -37,6 +43,8 @@ public:
 private:
 	void Initialization();
 	void initialize_Flow_Fupp();
-	void get_joint_states(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, sejong::Vector &q_state);
+	void update_states(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager);
+
+
 };
 #endif

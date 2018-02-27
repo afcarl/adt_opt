@@ -26,7 +26,7 @@ public:
 private:
 	Contact_List* contact_list_obj;
 	int contact_index = -1;	
-	int Nd = 2; // Number of basis vectors
+	int Nd = ND_2D_CONST; // Number of basis vectors
 	double mu = 0.8; // Coefficient of friction
 
 	sejong::Vector n1; 	sejong::Vector n2;
