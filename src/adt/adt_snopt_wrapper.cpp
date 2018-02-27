@@ -1,4 +1,5 @@
 #include <adt/adt_snopt_wrapper.hpp>
+#include <string>
 
 namespace snopt_wrapper{
 
@@ -817,9 +818,10 @@ namespace snopt_wrapper{
 
 
 	snoptProblemA whole_body_trajectory_problem;
-	whole_body_trajectory_problem.initialize     ("", 1);  // no print file, summary on
-  	whole_body_trajectory_problem.setProbName(ptr_optimization_problem->problem_name.c_str());
-  	whole_body_trajectory_problem.setPrintFile("adt_problem.out"); 
+	whole_body_trajectory_problem.initialize("", 1);  // no print file, summary on
+
+	
+   	whole_body_trajectory_problem.setPrintFile("adt_problem.out"); 
 	whole_body_trajectory_problem.setIntParameter("Derivative option", 0);
 	whole_body_trajectory_problem.setIntParameter("Verify level ", 3);	
 
@@ -830,19 +832,19 @@ namespace snopt_wrapper{
   	std::cout << "[SNOPT Wrapper] Solving Problem with no Gradients" << std::endl;
 
   	whole_body_trajectory_problem.solve(Cold, nF, n, ObjAdd, ObjRow, snopt_wrapper::wbt_F,
-			      xlow, xupp, Flow, Fupp,
-    			  x, xstate, xmul, F, Fstate, Fmul,
-    			  nS, nInf, sInf);
+			       xlow, xupp, Flow, Fupp,
+     			  x, xstate, xmul, F, Fstate, Fmul,
+     			  nS, nInf, sInf);
 
 
-/*	for (size_t i = 0; i < n; i++){
+	for (size_t i = 0; i < n; i++){
 		std::cout << "x[" << i << "] = " << x[i] << std::endl;
-	}*/
+	}
 
 
-	// for (size_t i = 0; i < nF; i++){
-	// 	std::cout << "F[" << i << "] = " << F[i] << std::endl;
-	// }	
+	for (size_t i = 0; i < nF; i++){
+		std::cout << "F[" << i << "] = " << F[i] << std::endl;
+	}	
 
 
 

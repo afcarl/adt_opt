@@ -51,7 +51,7 @@ Jump_Opt::~Jump_Opt(){
 void Jump_Opt::Initialization(){
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 1;
+	N_total_knotpoints = 10;
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
@@ -110,10 +110,11 @@ void Jump_Opt::initialize_td_constraint_list(){
 void Jump_Opt::initialize_ti_constraint_list(){
     int des_knotpoint = N_total_knotpoints/2;
     int pre_final_knotpoint = N_total_knotpoints - 1;
-    double min_des_z_height = 0.05;
+    double min_des_z_height = 0.05;//0.005;
     //double des_hip_ori = -M_PI/2.0;
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
-    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height));     
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_body, Z_DIM, min_des_z_height - OPT_ZERO_EPS, min_des_z_height + OPT_ZERO_EPS)); 
 }
 
 
@@ -293,7 +294,7 @@ void Jump_Opt::get_F_obj_Row(int &obj_row){
 
 void Jump_Opt::compute_F_objective_function(double &result_out){
   objective_function.evaluate_objective_function(opt_var_manager, result_out);
-  std::cout << "[Jump_Opt] cost = " << result_out << std::endl;
+  //std::cout << "[Jump_Opt] cost = " << result_out << std::endl;
 }
 
 void Jump_Opt::compute_F(std::vector<double> &F_eval){
@@ -314,10 +315,10 @@ void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){
     for(int i = 0; i < td_constraint_list.get_size(); i++){
       F_vec_const.clear();
       td_constraint_list.get_constraint(i)->evaluate_constraint(knotpoint, opt_var_manager, F_vec_const);
-      std::cout << " Adding TD Constraint " << td_constraint_list.get_constraint(i)->constraint_name << std::endl;
+      //std::cout << " Adding TD Constraint " << td_constraint_list.get_constraint(i)->constraint_name << std::endl;
 
       for(int j = 0; j < F_vec_const.size(); j++){
-        std::cout << "F_td_const[" << j <<"] = " << F_vec_const[j] << std::endl;
+        //std::cout << "F_td_const[" << j <<"] = " << F_vec_const[j] << std::endl;
         // Add to F_eval
         F_eval.push_back(F_vec_const[j]);
       }
@@ -331,11 +332,11 @@ void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){
       F_vec_const.clear();
       current_constraint = ti_constraint_list.get_constraint(i);         
       current_constraint->evaluate_constraint(current_constraint->des_knotpoint, opt_var_manager, F_vec_const);
-      std::cout << " Adding TI Constraint " << current_constraint->constraint_name << std::endl;
+      //std::cout << " Adding TI Constraint " << current_constraint->constraint_name << std::endl;
 
-      std::cout << "F_vec_const.size() = " << F_vec_const.size() << std::endl;
+      //std::cout << "F_vec_const.size() = " << F_vec_const.size() << std::endl;
     for(size_t j = 0; j < current_constraint->F_low.size(); j++ ){
-      std::cout << "F_ti_const[" << j <<"] = " << F_vec_const[j] << std::endl;      
+      //std::cout << "F_ti_const[" << j <<"] = " << F_vec_const[j] << std::endl;      
       F_eval.push_back(current_constraint->F_low[j]);
     }
 
