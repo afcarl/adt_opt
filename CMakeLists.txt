@@ -86,14 +86,16 @@ set(adt_optimization_var_limits_sources src/adt/optimization_variable_limits/adt
 set(adt_optimization_problem_sources src/adt/optimization_problems/adt_opt_jump_problem.cpp)
 
 set(adt_hard_constraints_sources src/adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.cpp
-								 src/adt/hard_constraints/adt_friction_cone_2d_constraint.cpp)
+								 src/adt/hard_constraints/adt_friction_cone_2d_constraint.cpp
+								 src/adt/hard_constraints/adt_linear_back_euler_time_integration_constraint.cpp)
 
 #--------------------------------------------
 # Test Draco Model 
 #--------------------------------------------
 add_executable(test_draco_model  src/small_tests/test_draco_model.cpp  ${draco_dyn_model_sources} 	
 																	   ${draco_act_model_sources}
-																	   ${draco_combined_dynamics_sources} ${adt_contact_sources})
+																	   ${draco_combined_dynamics_sources} 
+																	   ${adt_contact_sources})
 target_link_libraries(test_draco_model  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
 #--------------------------------------------
 
@@ -110,7 +112,8 @@ target_link_libraries(test_adt_containers  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsn
 add_executable(test_hard_constraints_obj  src/small_tests/test_draco_constraints_obj.cpp
 										${adt_container_sources}
 										${draco_dyn_model_sources}
-										${draco_act_model_sources}								
+										${draco_act_model_sources}		
+										${draco_combined_dynamics_sources}															
 										${adt_contact_sources}
 										${adt_optimization_var_limits_sources}
 										${adt_optimization_problem_sources}										
@@ -124,6 +127,7 @@ target_link_libraries(test_hard_constraints_obj  ${SJUtils} ${SJurdf} ${SJrbdl} 
 add_executable(test_jump_prob_object  src/small_tests/test_jump_prob_object.cpp  
 										${draco_dyn_model_sources}
 										${draco_act_model_sources}
+										${draco_combined_dynamics_sources}
 										${adt_container_sources}
 										${adt_optimization_problem_sources}
 										${adt_contact_sources}

@@ -94,13 +94,18 @@ public:
 	void get_state_acceleration(const sejong::Vector &x_state_in, const::sejong::Vector &xdot_state_in, 
 							    const sejong::Vector &u_current_in, const::sejong::Vector &Fr_state_in,
 							    sejong::Vector &xddot_state_out);
+	
+	void convert_x_xdot_to_q_qdot(const sejong::Vector &x_state, 
+								  const sejong::Vector &xdot_state, 
+								  sejong::Vector &q_state_out, 
+								  sejong::Vector &qdot_state_out);
+
+	void convert_x_to_q(const sejong::Vector &x_state, sejong::Vector &q_state_out);
+	void convert_xdot_to_qdot(const sejong::Vector &xdot_state, sejong::Vector &qdot_state_out);
+
 
 
 protected:
-	void convert_x_xdot_to_q_qdot(const sejong::Vector &x_state, 
-								  const sejong::Vector &xdot_state, 
-								  sejong::Vector q_state_out, 
-								  sejong::Vector qdot_state_out);
 
 	void formulate_mass_matrix();
 	void formulate_damping_matrix();	

@@ -10,9 +10,9 @@
 
  - Setup Constraint List
  	LCP Constraints DONE
- 	Friction Cone Constraints
- 	Kinematic Constraints
- 	Actuator-Robot-Link Time Integration Constraints
+ 	Friction Cone Constraints DONE
+ 	Kinematic Constraints 
+ 	Actuator-Robot-Link Time Integration Constraints DONE
 
 - Construct Objective Function Object
 

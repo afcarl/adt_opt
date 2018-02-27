@@ -24,6 +24,8 @@ Friction_Cone_2D_Constraint::~Friction_Cone_2D_Constraint(){
 
 
 void Friction_Cone_2D_Constraint::Initialization(){
+	constraint_name = "Friction Cone 2D Constraint";  
+
 	n1.resize(2); d1.resize(2); n1.setZero(); d1.setZero();
 	n2.resize(2); d2.resize(2); n2.setZero(); d2.setZero();
 
@@ -34,6 +36,7 @@ void Friction_Cone_2D_Constraint::Initialization(){
 	w1 = n1 + mu*d1;
 	w2 = n2 + mu*d2;
 
+	initialize_Flow_Fupp();	
 }
 
 void Friction_Cone_2D_Constraint::initialize_Flow_Fupp(){

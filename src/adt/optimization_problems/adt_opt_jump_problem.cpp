@@ -10,6 +10,8 @@
 
 #include <adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.hpp>
 #include <adt/hard_constraints/adt_friction_cone_2d_constraint.hpp>
+#include <adt/hard_constraints/adt_linear_back_euler_time_integration_constraint.hpp>
+
 
 #include <string>
 
@@ -97,7 +99,7 @@ void Jump_Opt::initialize_td_constraint_list(){
     td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
     td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
     td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
-
+    td_constraint_list.append_constraint(new Linear_Back_Euler_Time_Integration_Constraint(&contact_list));
 }
 
 
@@ -254,6 +256,8 @@ void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){
     for(int i = 0; i < td_constraint_list.get_size(); i++){
       F_vec_const.clear();
       td_constraint_list.get_constraint(i)->evaluate_constraint(knotpoint, opt_var_manager, F_vec_const);
+
+      std::cout << " Adding Constraint " << td_constraint_list.get_constraint(i)->constraint_name << std::endl;
 
       for(int j = 0; j < F_vec_const.size(); j++){
         std::cout << "F_vec_const[" << j <<"] = " << F_vec_const[j] << std::endl;

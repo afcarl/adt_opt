@@ -210,8 +210,8 @@ void Draco_Combined_Dynamics_Model::formulate_joint_link_impedance(const::sejong
 	joint_imp = Sa*(total_imp);
 }
 
-void Draco_Combined_Dynamics_Model::convert_x_xdot_to_q_qdot(const sejong::Vector &x_state, const sejong::Vector &xdot_state, sejong::Vector q_state_out, sejong::Vector qdot_state_out){
-	// extract q_virt and actuator z_states from x_states
+void Draco_Combined_Dynamics_Model::convert_x_xdot_to_q_qdot(const sejong::Vector &x_state, const sejong::Vector &xdot_state, sejong::Vector &q_state_out, sejong::Vector &qdot_state_out){
+/*	// extract q_virt and actuator z_states from x_states
 	q_virt_state = x_state.head(NUM_VIRTUAL);
 	z_state = x_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
 
@@ -229,10 +229,37 @@ void Draco_Combined_Dynamics_Model::convert_x_xdot_to_q_qdot(const sejong::Vecto
 	q_state_out.tail(NUM_ACT_JOINT) = q_act;
 
 	qdot_state_out.head(NUM_VIRTUAL) = qdot_virt_state;	
-	qdot_state_out.tail(NUM_ACT_JOINT) = qdot_act;	
+	qdot_state_out.tail(NUM_ACT_JOINT) = qdot_act;	*/
 
-/*	sejong::pretty_print(q_state_out, std::cout, "q_state_out");
-	sejong::pretty_print(qdot_state_out, std::cout, "qdot_state_out");	*/
+	convert_x_to_q(x_state, q_state_out);
+	convert_xdot_to_qdot(xdot_state, qdot_state_out);		
+
+	sejong::pretty_print(q_state_out, std::cout, "q_state_out");
+	sejong::pretty_print(qdot_state_out, std::cout, "qdot_state_out");	
+}
+
+void Draco_Combined_Dynamics_Model::convert_x_to_q(const sejong::Vector &x_state, sejong::Vector &q_state_out){
+	q_virt_state = x_state.head(NUM_VIRTUAL);
+	z_state = x_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
+
+	// Convert z, to q
+	actuator_model->getFull_joint_pos_q(z_state, q_act);
+
+	q_state_out.resize(NUM_QDOT);
+	q_state_out.head(NUM_VIRTUAL) = q_virt_state;
+	q_state_out.tail(NUM_ACT_JOINT) = q_act;
+}
+
+void Draco_Combined_Dynamics_Model::convert_xdot_to_qdot(const sejong::Vector &xdot_state, sejong::Vector &qdot_state_out){
+	qdot_virt_state = xdot_state.head(NUM_VIRTUAL);
+	zdot_state = xdot_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
+
+	// Convert zdot to qdot
+	actuator_model->getFull_joint_vel_qdot(zdot_state, zdot_state, qdot_act);
+
+	qdot_state_out.resize(NUM_QDOT);
+	qdot_state_out.head(NUM_VIRTUAL) = qdot_virt_state;	
+	qdot_state_out.tail(NUM_ACT_JOINT) = qdot_act;	
 }
 
 void Draco_Combined_Dynamics_Model::setContactJacobian(sejong::Matrix &Jc_in){

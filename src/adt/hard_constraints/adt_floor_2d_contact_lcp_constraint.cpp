@@ -20,6 +20,7 @@ Floor_2D_Contact_LCP_Constraint::~Floor_2D_Contact_LCP_Constraint(){
 
 void Floor_2D_Contact_LCP_Constraint::Initialization(){
   std::cout << "[Floor_2D_Contact_LCP_Constraint] Initialization called" << std::endl;
+  constraint_name = "2D LCP Constraint";  
   robot_model = DracoModel::GetDracoModel();  
   actuator_model = DracoActuatorModel::GetDracoActuatorModel();
 	initialize_Flow_Fupp();	

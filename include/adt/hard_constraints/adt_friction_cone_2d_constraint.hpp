@@ -36,7 +36,5 @@ private:
 	void Initialization();
 	void initialize_Flow_Fupp();
 
-	void UpdateModel(const sejong::Vector &q, const sejong::Vector &qdot,
-                      sejong::Matrix &A_out, sejong::Vector &grav_out, sejong::Vector &cori_out);
 };
 #endif
