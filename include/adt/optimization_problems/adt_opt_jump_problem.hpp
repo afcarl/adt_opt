@@ -9,6 +9,10 @@
 #include <adt/containers/adt_constraint_list.hpp>
 #include <adt/containers/adt_contact_list.hpp>
 
+#include <adt/objective_functions/adt_jump_objective_function.hpp>
+//#include <adt/objective_functions/adt_objective_function_main.hpp>
+
+
 class Jump_Opt: public Optimization_Problem_Main{
 public:
   Jump_Opt();
@@ -37,7 +41,7 @@ public:
   double										    max_normal_force;
   double										    max_tangential_force;	  	
 
-  //	WBC_Objective_Function						objective_function;
+  Jump_Objective_Function				objective_function;
 
 
 

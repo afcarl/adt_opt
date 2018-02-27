@@ -210,6 +210,10 @@ void Jump_Opt::initialize_opt_vars(){
 		// [h_dt] knotpoint timestep
         opt_var_manager.append_variable(new ADT_Opt_Variable("h_dt_" + std::to_string(k) , VAR_TYPE_H, k, h_dt_min, h_dt_min, OPT_INFINITY) );
 	}
+  // Assign total knotpoints
+  opt_var_manager.total_knotpoints = N_total_knotpoints;
+
+
 	// Compute the size of time independent variables
 	opt_var_manager.compute_size_time_dep_vars();
 	int size_of_time_dep_vars = NUM_VIRTUAL*2 + NUM_ACT_JOINT*5 + contact_list.get_size()*2 + contact_list.get_size()*N_d + N_total_knotpoints;

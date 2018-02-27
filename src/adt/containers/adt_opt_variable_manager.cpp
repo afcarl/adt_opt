@@ -189,6 +189,13 @@ int ADT_Opt_Variable_Manager::get_num_var_knotpoint_dt(){
 }
 
 
+int ADT_Opt_Variable_Manager::get_num_z_vars(){
+	return num_z_vars;
+}
+int ADT_Opt_Variable_Manager::get_num_u_vars(){
+	return num_u_vars;
+}
+
 
 
 void ADT_Opt_Variable_Manager::compute_size_time_dep_vars(){
@@ -254,7 +261,7 @@ int ADT_Opt_Variable_Manager::count_num_vars_in_map(const int &knotpoint, std::m
 }
 
 void ADT_Opt_Variable_Manager::update_x(std::vector<double> &x_in){
-	if (x_in.size() == opt_var_list.size()){
+	if (x_in.size() == (opt_var_list.size() - initial_conditions_offset) ){
 		//std::cout << "[VAR LIST] input and stored sizes are equal" << std::endl;
 		// Update the values
 		for (size_t i = 0; i < x_in.size(); i++){

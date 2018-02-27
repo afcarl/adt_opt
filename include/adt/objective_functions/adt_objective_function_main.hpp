@@ -19,6 +19,8 @@ public:
 	virtual void evaluate_objective_gradient(ADT_Opt_Variable_Manager& var_manager, std::vector<double>& G, std::vector<int>& iG, std::vector<int>& jG) {}
 	virtual void evaluate_sparse_A_matrix(ADT_Opt_Variable_Manager& var_manager, std::vector<double>& A, std::vector<int>& iA, std::vector<int>& jA) {}	
 
+	virtual void set_var_manager(ADT_Opt_Variable_Manager& var_manager){}
+
 	// Each constraint containts its bounds
 	double F_low = -OPT_INFINITY;
 	double F_upp = OPT_INFINITY;

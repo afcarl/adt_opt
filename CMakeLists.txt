@@ -85,6 +85,8 @@ set(adt_optimization_var_limits_sources src/adt/optimization_variable_limits/adt
 
 set(adt_optimization_problem_sources src/adt/optimization_problems/adt_opt_jump_problem.cpp)
 
+set(adt_objective_function_sources src/adt/objective_functions/adt_jump_objective_function.cpp)
+
 set(adt_hard_constraints_sources src/adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.cpp
 								 src/adt/hard_constraints/adt_friction_cone_2d_constraint.cpp
 								 src/adt/hard_constraints/adt_linear_back_euler_time_integration_constraint.cpp
@@ -114,10 +116,11 @@ add_executable(test_hard_constraints_obj  src/small_tests/test_draco_constraints
 										${adt_container_sources}
 										${draco_dyn_model_sources}
 										${draco_act_model_sources}		
-										${draco_combined_dynamics_sources}															
+										${draco_combined_dynamics_sources}					
 										${adt_contact_sources}
 										${adt_optimization_var_limits_sources}
-										${adt_optimization_problem_sources}										
+										${adt_optimization_problem_sources}									
+										${adt_objective_function_sources}									
 										${adt_hard_constraints_sources}
 										) 
 target_link_libraries(test_hard_constraints_obj  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})
@@ -133,6 +136,7 @@ add_executable(test_jump_prob_object  src/small_tests/test_jump_prob_object.cpp
 										${adt_optimization_problem_sources}
 										${adt_contact_sources}
 										${adt_optimization_var_limits_sources}
-										${adt_hard_constraints_sources}									
+										${adt_hard_constraints_sources}
+										${adt_objective_function_sources}									
 										) 
 target_link_libraries(test_jump_prob_object  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 

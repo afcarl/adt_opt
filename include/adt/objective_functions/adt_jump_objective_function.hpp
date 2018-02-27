@@ -5,14 +5,14 @@
 class Jump_Objective_Function: public Objective_Function{
 public:
 	Jump_Objective_Function();
-	virtual ~Jump_Objective_Function(){
-		std::cout << "Jump Objective Function Destructor called" << std::endl;
-	}
+	~Jump_Objective_Function();
 
-	void evaluate_objective_function(ADT_Opt_Variable_Manager& var_manager, double result) {}
-	void evaluate_objective_gradient(ADT_Opt_Variable_Manager& var_manager, std::vector<double>& G, std::vector<int>& iG, std::vector<int>& jG) {}
-	void evaluate_sparse_A_matrix(ADT_Opt_Variable_Manager& var_manager, std::vector<double>& A, std::vector<int>& iA, std::vector<int>& jA) {}	
 
+	void evaluate_objective_function(ADT_Opt_Variable_Manager& var_manager, double result);
+	void evaluate_objective_gradient(ADT_Opt_Variable_Manager& var_manager, std::vector<double>& G, std::vector<int>& iG, std::vector<int>& jG);
+	void evaluate_sparse_A_matrix(ADT_Opt_Variable_Manager& var_manager, std::vector<double>& A, std::vector<int>& iA, std::vector<int>& jA) ;
+
+	void set_var_manager(ADT_Opt_Variable_Manager& var_manager);
 	void setQ_vals(const int &i, const int &j, const double &value);
 
 	std::string objective_function_name = "adt_jump_objective function";	
@@ -28,6 +28,7 @@ public:
 	int num_z;
 	int num_delta;
 	int num_Fr;
+	int num_u;
 	int N_total_knotpoints;
 
 };
