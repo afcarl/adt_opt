@@ -104,17 +104,23 @@ void Linear_Back_Euler_Time_Integration_Constraint::evaluate_constraint(const in
 
   get_states(knotpoint, var_manager, x_state_k, xdot_state_k);
   get_states(knotpoint - 1, var_manager, x_state_k_prev, xdot_state_k_prev);
+  var_manager.get_var_knotpoint_dt(knotpoint - 1, h_k);
   var_manager.get_xddot_all_states(knotpoint, xddot_k);
 
 
   // sejong::pretty_print(x_state_k, std::cout, "x_state_k");
   // sejong::pretty_print(xdot_state_k, std::cout, "xdot_state_k");
+  sejong::pretty_print(xddot_k, std::cout, "xddot_k");  
+  //xddot_k.setZero();
+
+  // sejong::Vector be_xdot_k = xdot_state_k - xddot_k*h_k - xdot_state_k_prev;
+  // sejong::Vector be_x_k = x_state_k - xdot_state_k*h_k - x_state_k_prev;  
 
   sejong::Vector be_xdot_k = xdot_state_k - xddot_k*h_k - xdot_state_k_prev;
-  sejong::Vector be_x_k = x_state_k - xdot_state_k*h_k - x_state_k_prev;  
+  sejong::Vector be_x_k = x_state_k - xdot_state_k*h_k - x_state_k_prev;    
 
-  sejong::pretty_print(x_state_k, std::cout, "x_state_k");
-  sejong::pretty_print(x_state_k_prev, std::cout, "x_state_k_prev");
+  //sejong::pretty_print(x_state_k, std::cout, "x_state_k");
+  //sejong::pretty_print(x_state_k_prev, std::cout, "x_state_k_prev");
 
   for(size_t i = 0; i < be_xdot_k.size(); i++){
     F_vec.push_back(be_xdot_k[i]);    

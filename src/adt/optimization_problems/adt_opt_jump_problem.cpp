@@ -77,7 +77,7 @@ void Jump_Opt::initialize_starting_configuration(){
   // x_pos
   robot_q_init[0] = 0.01;
   // z_pos
-  robot_q_init[1] = 0.0;//0.831165 + 0.00679965;//0.87 - 0.19;
+  robot_q_init[1] = 0.831165 + 0.00679965;//0.87 - 0.19;
   // Ry_rot
   robot_q_init[2] = 0.00; //1.135; //1.131; 	
 
@@ -106,7 +106,7 @@ void Jump_Opt::initialize_td_constraint_list(){
     //td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
     //td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
     //td_constraint_list.append_constraint(new Dynamics_Constraint(&contact_list));    
-    //td_constraint_list.append_constraint(new Linear_Back_Euler_Time_Integration_Constraint(&contact_list));
+    td_constraint_list.append_constraint(new Linear_Back_Euler_Time_Integration_Constraint(&contact_list));
 }
 
 void Jump_Opt::initialize_ti_constraint_list(){
@@ -117,10 +117,6 @@ void Jump_Opt::initialize_ti_constraint_list(){
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
-
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
-
 
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height));     
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_body, Z_DIM, min_des_z_height - OPT_ZERO_EPS, min_des_z_height + OPT_ZERO_EPS)); 

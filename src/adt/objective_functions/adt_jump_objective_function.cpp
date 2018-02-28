@@ -45,6 +45,7 @@ void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manag
 		var_manager.get_qdot_states(k, qdot_states);
 		var_manager.get_zdot_states(k, zdot_states);
 		var_manager.get_delta_dot_states(k, delta_dot_states);
+		var_manager.get_xddot_all_states(k, xddot_all_states);
 		var_manager.get_var_knotpoint_dt(k-1, h_k);
 		var_manager.get_var_reaction_forces(k, Fr_states);
 
