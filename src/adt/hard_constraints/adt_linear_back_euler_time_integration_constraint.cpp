@@ -121,6 +121,9 @@ void Linear_Back_Euler_Time_Integration_Constraint::evaluate_constraint(const in
   var_manager.get_u_states(knotpoint, u_state_k);
   var_manager.get_var_reaction_forces(knotpoint, Fr_state_k);  
 
+  //sejong::pretty_print(Fr_state_k, std::cout, "Fr_state_k");
+  //sejong::pretty_print(u_state_k, std::cout, "u_state_k");  
+
   var_manager.get_var_knotpoint_dt(knotpoint - 1, h_k);
   //std::cout << "knotpoint = " << knotpoint << ", h_k = " << h_k << std::endl;
 
@@ -132,7 +135,7 @@ void Linear_Back_Euler_Time_Integration_Constraint::evaluate_constraint(const in
   //sejong::pretty_print(x_state_k, std::cout, "x_state_k");
   //sejong::pretty_print(xdot_state_k, std::cout, "xdot_state_k");
   // sejong::pretty_print(xddot_k, std::cout, "xddot_k");
-  // sejong::pretty_print(qddot_virt_k, std::cout, "qddot_virt_k");  
+  //sejong::pretty_print(qddot_virt_k, std::cout, "qddot_virt_k");  
 
   sejong::Vector be_xdot_k; be_xdot_k.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); 
   sejong::Vector be_x_k; be_x_k.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT);

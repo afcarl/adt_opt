@@ -51,7 +51,7 @@ Jump_Opt::~Jump_Opt(){
 void Jump_Opt::Initialization(){
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 2;
+	N_total_knotpoints = 1;
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
@@ -116,8 +116,8 @@ void Jump_Opt::initialize_ti_constraint_list(){
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
 
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
 
 
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height));     

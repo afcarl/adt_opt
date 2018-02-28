@@ -59,7 +59,7 @@ void DracoActuatorModel::Initialization(){
     // Set Default Values
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 	    // Mass Elements (Kg)
-	    M_motor[i] = 293.0;
+	    M_motor[i] = 5;//293.0;
 	    M_spring[i] = 1.7;
 	    M_load[i] = 0.1; // Unknown
 

@@ -138,9 +138,7 @@ void Draco_Combined_Dynamics_Model::UpdateModel(const sejong::Vector &x_state_in
 
 	sejong::pretty_print(M_act, std::cout, "M_act");
 	sejong::pretty_print(B_act, std::cout, "B_act");
-	sejong::pretty_print(K_act, std::cout, "K_act");
-
-	sejong::pretty_print(grav, std::cout, "grav");*/
+	sejong::pretty_print(K_act, std::cout, "K_act");*/
 
 	formulate_mass_matrix();
 	formulate_damping_matrix();
@@ -275,7 +273,7 @@ void Draco_Combined_Dynamics_Model::get_state_acceleration(const sejong::Vector 
     formulate_joint_link_impedance(Fr_state_in);
 
     sejong::Vector total_input; total_input.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); total_input.setZero();
-    total_input.head(NUM_VIRTUAL) = virt_imp;
+    total_input.head(NUM_VIRTUAL) = virt_imp - A_br*J*xdot_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
     total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_in;
     total_input.tail(NUM_ACT_JOINT) = joint_imp;
 
