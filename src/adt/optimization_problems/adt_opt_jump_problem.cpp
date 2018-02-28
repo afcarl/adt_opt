@@ -101,10 +101,10 @@ void Jump_Opt::initialize_contact_list(){
 void Jump_Opt::initialize_td_constraint_list(){
 	int toe_contact_index = 0;
 	int heel_contact_index = 1;	
-    //td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
-    //td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
-    //td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
-    //td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
+    td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
+    td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
+    td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
+    td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
     //td_constraint_list.append_constraint(new Dynamics_Constraint(&contact_list));    
     td_constraint_list.append_constraint(new Linear_Back_Euler_Time_Integration_Constraint(&contact_list));
 }
