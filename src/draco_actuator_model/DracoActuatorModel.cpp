@@ -59,7 +59,7 @@ void DracoActuatorModel::Initialization(){
     // Set Default Values
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 	    // Mass Elements (Kg)
-	    M_motor[i] = 5;//293.0;
+	    M_motor[i] = 293.0;//293.0;
 	    M_spring[i] = 1.7;
 	    M_load[i] = 0.1; // Unknown
 
@@ -108,14 +108,14 @@ void DracoActuatorModel::getMassMatrix(sejong::Matrix &M_act){
 /*	// Assign block diagonally
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 		M_act(NUM_STATES_PER_ACTUATOR*i, NUM_STATES_PER_ACTUATOR*i) = M_motor[i];
-		M_act(NUM_STATES_PER_ACTUATOR*i, NUM_STATES_PER_ACTUATOR*i + 1) = M_motor[i] - M_spring[i];		
+		M_act(NUM_STATES_PER_ACTUATOR*i, NUM_STATES_PER_ACTUATOR*i + 1) = - (M_motor[i] + M_spring[i]);		
 		M_act(NUM_STATES_PER_ACTUATOR*i + 1, NUM_STATES_PER_ACTUATOR*i) = M_load[i];		
 		M_act(NUM_STATES_PER_ACTUATOR*i + 1, NUM_STATES_PER_ACTUATOR*i + 1) = M_spring[i];				
 	}*/
 	// Assign block diagonally
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 		M_act(i, NUM_STATES_PER_ACTUATOR*i) = M_motor[i];
-		M_act(i, NUM_STATES_PER_ACTUATOR*i + 1) = M_motor[i] - M_spring[i];		
+		M_act(i, NUM_STATES_PER_ACTUATOR*i + 1) = -(M_motor[i] + M_spring[i]);		
 	}
 
 	// Assign block diagonally
@@ -132,7 +132,7 @@ void DracoActuatorModel::getDampingMatrix(sejong::Matrix &B_act){
 /*	// Assign block diagonally
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 		B_act(NUM_STATES_PER_ACTUATOR*i, NUM_STATES_PER_ACTUATOR*i) = B_motor[i];
-		B_act(NUM_STATES_PER_ACTUATOR*i, NUM_STATES_PER_ACTUATOR*i + 1) = B_motor[i] - B_spring[i];		
+		B_act(NUM_STATES_PER_ACTUATOR*i, NUM_STATES_PER_ACTUATOR*i + 1) = - (B_motor[i] + B_spring[i]);		
 		B_act(NUM_STATES_PER_ACTUATOR*i + 1, NUM_STATES_PER_ACTUATOR*i) = B_load[i];		
 		B_act(NUM_STATES_PER_ACTUATOR*i + 1, NUM_STATES_PER_ACTUATOR*i + 1) = B_spring[i];				
 	}*/
@@ -140,7 +140,7 @@ void DracoActuatorModel::getDampingMatrix(sejong::Matrix &B_act){
 	// Assign block diagonally
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 		B_act(i, NUM_STATES_PER_ACTUATOR*i) = B_motor[i];
-		B_act(i, NUM_STATES_PER_ACTUATOR*i + 1) = B_motor[i] - B_spring[i];		
+		B_act(i, NUM_STATES_PER_ACTUATOR*i + 1) = -(B_motor[i] + B_spring[i]);		
 	}
 	// Assign block diagonally
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
@@ -163,7 +163,7 @@ void DracoActuatorModel::getStiffnessMatrix(sejong::Matrix &K_act){
 	// Assign block diagonally	
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 		K_act(i, NUM_STATES_PER_ACTUATOR*i) = K_motor[i];
-		K_act(i, NUM_STATES_PER_ACTUATOR*i + 1) = K_motor[i] - K_spring[i];		
+		K_act(i, NUM_STATES_PER_ACTUATOR*i + 1) =  - (K_motor[i] + K_spring[i]);		
 	}
 
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){

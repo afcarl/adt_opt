@@ -46,42 +46,38 @@ void Position_2D_Kinematic_Constraint::initialize_Flow_Fupp(){
 }
 
 void Position_2D_Kinematic_Constraint::update_states(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager){
-  sejong::Vector q_state_virt;
-  sejong::Vector z_state;
-  sejong::Vector delta_state;
+	sejong::Vector q_state_virt;
+	sejong::Vector z_state;
+	sejong::Vector delta_state;
 
-  sejong::Vector qdot_state_virt;  
-  sejong::Vector zdot_state;
-  sejong::Vector delta_dot_state;
+	sejong::Vector qdot_state_virt;  
+	sejong::Vector zdot_state;
+	sejong::Vector delta_dot_state;
 
-  var_manager.get_q_states(knotpoint, q_state_virt);
-  var_manager.get_z_states(knotpoint, z_state);
-  var_manager.get_delta_states(knotpoint, delta_state);
-  var_manager.get_qdot_states(knotpoint, qdot_state_virt);
-  var_manager.get_zdot_states(knotpoint, zdot_state);  
-  var_manager.get_delta_dot_states(knotpoint, delta_dot_state);
+	var_manager.get_q_states(knotpoint, q_state_virt);
+	var_manager.get_z_states(knotpoint, z_state);
+	var_manager.get_delta_states(knotpoint, delta_state);
+	var_manager.get_qdot_states(knotpoint, qdot_state_virt);
+	var_manager.get_zdot_states(knotpoint, zdot_state);  
+	var_manager.get_delta_dot_states(knotpoint, delta_dot_state);
 
-  x_state.head(NUM_VIRTUAL) = q_state_virt;
-  x_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = z_state;
-  x_state.tail(NUM_ACT_JOINT) = delta_state;
+	x_state.head(NUM_VIRTUAL) = q_state_virt;
+	x_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = z_state;
+	x_state.tail(NUM_ACT_JOINT) = delta_state;
 
-  xdot_state.head(NUM_VIRTUAL) = qdot_state_virt;
-  xdot_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = zdot_state;
-  xdot_state.tail(NUM_ACT_JOINT) = delta_dot_state;	   
-
-  combined_model->convert_x_to_q(x_state, q_state);
+	xdot_state.head(NUM_VIRTUAL) = qdot_state_virt;
+	xdot_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = zdot_state;
+	xdot_state.tail(NUM_ACT_JOINT) = delta_dot_state;	  
 }
 
 
 void Position_2D_Kinematic_Constraint::evaluate_constraint(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& F_vec){
 	F_vec.clear();
 	update_states(knotpoint, var_manager);
+	
 	combined_model->UpdateModel(x_state, xdot_state);
-
+	combined_model->convert_x_to_q(x_state, q_state);
 	robot_model->getPosition(q_state, link_id, pos);
-	// sejong::pretty_print(q_state, std::cout, "q_state");
-	// sejong::pretty_print(pos, std::cout, "pos");
-
 
 	F_vec.push_back(pos[dim]);
 }

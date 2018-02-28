@@ -13,7 +13,8 @@ void Jump_Objective_Function::set_var_manager(ADT_Opt_Variable_Manager& var_mana
 	num_delta = var_manager.get_num_delta_vars();
 	num_Fr = var_manager.get_num_Fr_vars();
 	num_u = var_manager.get_num_u_vars();
-	N_total_knotpoints =  var_manager.total_knotpoints;
+
+	int num_xddot_all = num_q_virt + num_z + num_delta;
 
 	c_u = 1.0;
 	c_qdotvirt = 1.0;
@@ -34,6 +35,8 @@ void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manag
 	sejong::Vector zdot_states;
 	sejong::Vector delta_dot_states;
 	sejong::Vector Fr_states;
+
+	sejong::Vector xddot_all_states;	
 	double cost = 0.0;
 	double h_k = 1.0; 
 
@@ -49,10 +52,11 @@ void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manag
 		cost += qdot_states.transpose()*Q_qdotvirt*qdot_states;
 		cost += zdot_states.transpose()*Q_zdot*zdot_states;
 		cost += delta_dot_states.transpose()*Q_delta_dot*delta_dot_states;
-		//cost += Fr_states.transpose()*Qfr_mat*Fr_states;	
+		cost += xddot_all_states.transpose()*xddot_all_states;
+		cost += Fr_states.transpose()*Qfr_mat*Fr_states;	
 		cost *= h_k;
 
-		//std::cout << "cost = " << cost << std::endl;
+		std::cout << "cost = " << cost << std::endl;
 	}
 	result = cost;
 }

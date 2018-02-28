@@ -268,7 +268,7 @@ void Draco_Combined_Dynamics_Model::setContactJacobian(sejong::Matrix &Jc_in){
 void Draco_Combined_Dynamics_Model::get_state_acceleration(const sejong::Vector &x_state_in, const::sejong::Vector &xdot_state_in, 
 							    						   const sejong::Vector &u_current_in, const::sejong::Vector &Fr_state_in,
 							    						   sejong::Vector &xddot_state_out){
-	UpdateModel(x_state, xdot_state);
+	UpdateModel(x_state_in, xdot_state_in);
     sejong::pseudoInverse(M_combined, 1.e-10, M_combined_inv, 0);
     formulate_joint_link_impedance(Fr_state_in);
 
@@ -295,4 +295,22 @@ void Draco_Combined_Dynamics_Model::get_state_acceleration(const sejong::Vector 
 
     xddot_state_out = M_combined_inv*(total_input - B_combined*xdot_state_in - K_combined*x_state_in);
 
+}
+
+void Draco_Combined_Dynamics_Model::getDynamics_constraint(const sejong::Vector &x_state_in, const sejong::Vector &xdot_state_in, const sejong::Vector &xddot_state_in,
+						  							       const sejong::Vector &u_current_in, const sejong::Vector &Fr_state_in, sejong::Vector &dynamics_out){
+
+	UpdateModel(x_state, xdot_state);
+    formulate_joint_link_impedance(Fr_state_in);
+
+    sejong::Vector total_input; total_input.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); total_input.setZero();
+    total_input.head(NUM_VIRTUAL) = virt_imp - A_br*J*xdot_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
+    total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_in;
+    total_input.tail(NUM_ACT_JOINT) = joint_imp;
+
+    // sejong::pretty_print(xddot_state_in, std::cout, "xddot_state_in");
+    // sejong::pretty_print(u_current_in, std::cout, "u_current_in");
+    // sejong::pretty_print(Fr_state_in, std::cout, "Fr_states_in");
+
+	dynamics_out = M_combined*xddot_state_in + B_combined*xdot_state_in +K_combined*x_state_in - total_input;
 }

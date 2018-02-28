@@ -11,6 +11,7 @@
 #include <adt/hard_constraints/adt_floor_2d_contact_lcp_constraint.hpp>
 #include <adt/hard_constraints/adt_friction_cone_2d_constraint.hpp>
 #include <adt/hard_constraints/adt_linear_back_euler_time_integration_constraint.hpp>
+#include <adt/hard_constraints/adt_dynamics_constraint.hpp>
 #include <adt/hard_constraints/adt_position_kinematic_constraint.hpp>
 
 
@@ -102,9 +103,10 @@ void Jump_Opt::initialize_td_constraint_list(){
 	int heel_contact_index = 1;	
     td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
     td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
-    td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
-    td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
-    td_constraint_list.append_constraint(new Linear_Back_Euler_Time_Integration_Constraint(&contact_list));
+    //td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
+    //td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
+    //td_constraint_list.append_constraint(new Dynamics_Constraint(&contact_list));    
+    //td_constraint_list.append_constraint(new Linear_Back_Euler_Time_Integration_Constraint(&contact_list));
 }
 
 void Jump_Opt::initialize_ti_constraint_list(){
@@ -113,8 +115,8 @@ void Jump_Opt::initialize_ti_constraint_list(){
     double min_des_z_height = 0.05;//0.005;
     //double des_hip_ori = -M_PI/2.0;
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
 
     // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
     // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
@@ -194,9 +196,15 @@ void Jump_Opt::initialize_opt_vars(){
 		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
 	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_dot_state_" + std::to_string(i), VAR_TYPE_DELTA_DOT, k, 0.0, opt_var_limits.l_delta_dot_limits[i], opt_var_limits.u_delta_dot_limits[i]) );
 		}
-    for(size_t i = 0; i < NUM_VIRTUAL; i++){
-          opt_var_manager.append_variable(new ADT_Opt_Variable("qddot_virt" + std::to_string(i), VAR_TYPE_QDDOT_VIRT, k, 0.0, -OPT_INFINITY, OPT_INFINITY) );
-    }    
+    // qddot_virt 
+    // for(size_t i = 0; i < NUM_VIRTUAL; i++){
+    //       opt_var_manager.append_variable(new ADT_Opt_Variable("qddot_virt" + std::to_string(i), VAR_TYPE_QDDOT_VIRT, k, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+    // }    
+
+    // [xddot_all]
+    for(size_t i = 0; i < NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT; i++){
+           opt_var_manager.append_variable(new ADT_Opt_Variable("xddot_all_" + std::to_string(i), VAR_TYPE_XDDOT_ALL, k, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+    }
 		// [current_u]
 		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
 	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_current_u_" + std::to_string(i), VAR_TYPE_U, k, 0.0, opt_var_limits.l_current_limits[i], opt_var_limits.u_current_limits[i]) );

@@ -23,6 +23,7 @@
   #define VAR_TYPE_U 10    // Actuator current input variable type
   #define VAR_TYPE_BETA 11 // Beta basis vectors for the friction cone constraint
   #define VAR_TYPE_QDDOT_VIRT 12 // virtual joint acceleration
+  #define VAR_TYPE_XDDOT_ALL 13 // virtual virtual, and actuator accelerations
 
   #define ND_2D_CONST 2 // Number of friction cone basis vectors for a 2D plane. This number is fixed.
   #define CALC_F_MODE 0 // Decides if we are computing F

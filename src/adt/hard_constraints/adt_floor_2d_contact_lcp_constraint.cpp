@@ -32,7 +32,7 @@ void Floor_2D_Contact_LCP_Constraint::initialize_Flow_Fupp(){
 	F_low.push_back(0.00);	
 	F_low.push_back(0.00);
 
-	F_upp.push_back(0.001);
+	F_upp.push_back(0.00);
 	F_upp.push_back(OPT_INFINITY);			
 
   constraint_size = F_low.size();
