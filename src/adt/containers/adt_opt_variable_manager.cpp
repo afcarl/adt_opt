@@ -38,6 +38,8 @@ void ADT_Opt_Variable_Manager::append_variable(ADT_Opt_Variable* opt_variable){
 		add_variable_to_map(knotpoint_to_u_vars, opt_variable);
 	}else if(opt_variable->type == VAR_TYPE_BETA){
 		add_variable_to_map(knotpoint_to_beta_vars, opt_variable);						
+	}else if(opt_variable->type == VAR_TYPE_QDDOT_VIRT){
+		add_variable_to_map(knotpoint_to_qddot_virt_vars, opt_variable);
 	}else if(opt_variable->type == VAR_TYPE_H){
 		knotpoint_to_dt.push_back(opt_variable);
 	}
@@ -145,6 +147,9 @@ void ADT_Opt_Variable_Manager::get_beta_states(const int &knotpoint, sejong::Vec
 	convert_to_vector(knotpoint, knotpoint_to_beta_vars, beta_state);
 }
 
+void ADT_Opt_Variable_Manager::get_qddot_virt_states(const int &knotpoint, sejong::Vector &qddot_virt_states){
+	convert_to_vector(knotpoint, knotpoint_to_qddot_virt_vars, qddot_virt_states);
+}
 
 void ADT_Opt_Variable_Manager::convert_to_vector(const int &knotpoint, 
 						  	 	   			  std::map<int, std::vector<ADT_Opt_Variable*> > &map_kp_to_var_vec,

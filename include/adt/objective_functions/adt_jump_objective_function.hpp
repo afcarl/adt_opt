@@ -21,12 +21,14 @@ public:
 	sejong::Matrix Q_qdotvirt; // Cost matrix
 	sejong::Matrix Q_zdot; // Cost matrix for actuator vel states	
 	sejong::Matrix Q_delta_dot; // Cost matrix for spring vel
+	sejong::Matrix Qfr_mat; // Cost Matrix for reaction forces
+
 	double c_u;
 	double c_qdotvirt;
 	double c_zdot;
 	double c_delta_dot;	
+	double c_fr;
 
-	sejong::Matrix Q_mat; // Cost Matrix for reaction forces
 	sejong::Matrix Qdot_mat; // Cost Matrix for time derivative reaction forces
 
 	sejong::Matrix N_mat; // Cost Matrix for task acceleration

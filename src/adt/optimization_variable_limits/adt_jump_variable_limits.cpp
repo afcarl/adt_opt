@@ -65,13 +65,13 @@ void Jump_Opt_Variable_Limits::set_limits(){
 	u_zdot_limits[SJActuatorID::act_kneePitch] = actuator_velocity_limit;	// z2 act vel upper limit (m/s)
 	u_zdot_limits[SJActuatorID::act_anklePitch] = actuator_velocity_limit;	// z3 act vel upper limit (m/s)	
 
-	l_delta_limits[SJActuatorID::act_bodyPitch] = -1.0; // delta_1 act spring lower limit (m)
-	l_delta_limits[SJActuatorID::act_kneePitch] = -1.0;	// delta_2 act spring lower limit (m)
-	l_delta_limits[SJActuatorID::act_anklePitch] = -1.0;	// delta_3 act spring lower limit (m)
+	l_delta_limits[SJActuatorID::act_bodyPitch] = -0.005; // delta_1 act spring lower limit (m)
+	l_delta_limits[SJActuatorID::act_kneePitch] = -0.005;	// delta_2 act spring lower limit (m)
+	l_delta_limits[SJActuatorID::act_anklePitch] = -0.005;	// delta_3 act spring lower limit (m)
 
-	u_delta_limits[SJActuatorID::act_bodyPitch] = 1.0; // delta_1 act upper limit (m)
-	u_delta_limits[SJActuatorID::act_kneePitch] = 1.0;	// delta_2 act upper limit (m)
-	u_delta_limits[SJActuatorID::act_anklePitch] = 1.0;	// delta_3 act upper limit (m)
+	u_delta_limits[SJActuatorID::act_bodyPitch] = 0.005; // delta_1 act upper limit (m)
+	u_delta_limits[SJActuatorID::act_kneePitch] = 0.005;	// delta_2 act upper limit (m)
+	u_delta_limits[SJActuatorID::act_anklePitch] = 0.005;	// delta_3 act upper limit (m)
 
 	l_delta_dot_limits[SJActuatorID::act_bodyPitch] = -actuator_velocity_limit; // delta_1 act spring vel lower limit (m/s)
 	l_delta_dot_limits[SJActuatorID::act_kneePitch] = -actuator_velocity_limit;	// delta_2 act spring vel lower limit (m/s)

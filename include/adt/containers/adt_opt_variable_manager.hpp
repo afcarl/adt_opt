@@ -23,6 +23,7 @@ public:
 	void get_var_keyframes(const int &knotpoint, sejong::Vector &keyframe_state);		
 	void get_var_knotpoint_dt(const int &knotpoint, double &h_dt);
 
+	void get_var_qddot_virt_states(const int &knotpoint, sejong::Vector &qddot_virt_states);
 
 	void get_q_states(const int &knotpoint, sejong::Vector &q_state);		
 	void get_qdot_states(const int &knotpoint, sejong::Vector &qdot_state);			
@@ -36,6 +37,8 @@ public:
 
 	void get_u_states(const int &knotpoint, sejong::Vector &u_state);		
 	void get_beta_states(const int &knotpoint, sejong::Vector &beta_state);				
+
+	void get_qddot_virt_states(const int &knotpoint, sejong::Vector &qddot_virt_states);				
 
 
 	int get_size();
@@ -83,6 +86,9 @@ private:
 
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_u_vars;	
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_beta_vars;
+
+	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_qddot_virt_vars;
+
 
 
 	std::vector<ADT_Opt_Variable*> knotpoint_to_dt;

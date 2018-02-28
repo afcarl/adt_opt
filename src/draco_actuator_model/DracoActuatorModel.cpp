@@ -59,18 +59,18 @@ void DracoActuatorModel::Initialization(){
     // Set Default Values
 	for(size_t i = 0; i < NUM_ACTUATORS; i++){
 	    // Mass Elements (Kg)
-	    M_motor[i] = 293;
+	    M_motor[i] = 293.0;
 	    M_spring[i] = 1.7;
 	    M_load[i] = 0.1; // Unknown
 
 	    // Damping Elements (N/m-s)
 	    B_motor[i] = 1680;
-	    B_spring[i] = 0;
-	    B_load[i] = 0;
+	    B_spring[i] = 0.0;
+	    B_load[i] = 0.0;
 
 	    // Spring Elements (N/m)
-	    K_motor[i] = 0; // Motor has no spring
-	    K_spring[i] = 8109000; // Stiff spring estimated by hcrl
+	    K_motor[i] = 0.0; // Motor has no spring
+	    K_spring[i] = 250000.0;//8109000; // Stiff spring estimated by hcrl
 
 		// Torque Constant (N/Amperes)	    
 		K_m[i] = -157.0;

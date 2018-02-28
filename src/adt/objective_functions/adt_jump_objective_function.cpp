@@ -19,11 +19,13 @@ void Jump_Objective_Function::set_var_manager(ADT_Opt_Variable_Manager& var_mana
 	c_qdotvirt = 1.0;
 	c_zdot = 1.0;
 	c_delta_dot = 1.0;
+	c_fr = 1.0;
 
 	Q_u = c_u * sejong::Matrix::Identity(num_u, num_u);
 	Q_qdotvirt = c_qdotvirt * sejong::Matrix::Identity(num_q_virt, num_q_virt);
 	Q_zdot = c_zdot * sejong::Matrix::Identity(num_z, num_z);
 	Q_delta_dot = c_delta_dot * sejong::Matrix::Identity(num_delta, num_delta);	
+	Qfr_mat = c_fr * sejong::Matrix::Identity(num_Fr, num_Fr);
 }
 
 void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manager& var_manager, double &result){
@@ -31,21 +33,26 @@ void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manag
 	sejong::Vector qdot_states;
 	sejong::Vector zdot_states;
 	sejong::Vector delta_dot_states;
+	sejong::Vector Fr_states;
 	double cost = 0.0;
 	double h_k = 1.0; 
 
 	for(size_t k = 1; k < N_total_knotpoints + 1; k++){
-		var_manager.get_u_states(k, qdot_states);
-		var_manager.get_qdot_states(k, u_states);
+		var_manager.get_u_states(k, u_states);
+		var_manager.get_qdot_states(k, qdot_states);
 		var_manager.get_zdot_states(k, zdot_states);
 		var_manager.get_delta_dot_states(k, delta_dot_states);
-		var_manager.get_var_knotpoint_dt(k, h_k);
+		var_manager.get_var_knotpoint_dt(k-1, h_k);
+		var_manager.get_var_reaction_forces(k, Fr_states);
 
 		cost += u_states.transpose()*Q_u*u_states;
 		cost += qdot_states.transpose()*Q_qdotvirt*qdot_states;
 		cost += zdot_states.transpose()*Q_zdot*zdot_states;
 		cost += delta_dot_states.transpose()*Q_delta_dot*delta_dot_states;
+		cost += Fr_states.transpose()*Qfr_mat*Fr_states;	
 		cost *= h_k;
+
+		//std::cout << "cost = " << cost << std::endl;
 	}
 	result = cost;
 }
