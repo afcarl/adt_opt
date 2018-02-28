@@ -203,7 +203,7 @@ void Draco_Combined_Dynamics_Model::formulate_stiffness_matrix(){
 //	sejong::pretty_print(K_combined, std::cout, "K_combined");
 }
 void Draco_Combined_Dynamics_Model::formulate_joint_link_impedance(const::sejong::Vector &Fr_state_in){
-	total_imp = -(coriolis + grav - Jc.transpose()*Fr_state_in);
+	total_imp = -coriolis - grav + Jc.transpose()*Fr_state_in;
 	virt_imp = Sv*(total_imp);
 	joint_imp = Sa*(total_imp);
 }
@@ -303,35 +303,44 @@ void Draco_Combined_Dynamics_Model::getDynamics_constraint(const sejong::Vector 
 	UpdateModel(x_state_in, xdot_state_in);
     formulate_joint_link_impedance(Fr_state_in);
 
- //    sejong::Vector total_input; total_input.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); total_input.setZero();
- //    total_input.head(NUM_VIRTUAL) = virt_imp - A_br*J*xdot_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
- //    total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_in;
- //    total_input.tail(NUM_ACT_JOINT) = joint_imp;
-
-	// dynamics_out = M_combined*xddot_state_in + B_combined*xdot_state_in +K_combined*x_state_in - total_input;
-
-   sejong::Vector total_input; total_input.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); total_input.setZero();
-   total_input.head(NUM_VIRTUAL) = virt_imp - A_br*J*xdot_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
-   total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_in;
-   total_input.tail(NUM_ACT_JOINT) = joint_imp;	
-
-    // sejong::pretty_print(M_combined, std::cout, "M_combined");    
-    // sejong::pretty_print(xddot_state_in, std::cout, "xddot_state_in");    
-
-    // sejong::pretty_print(Jc, std::cout, "Jc");
-    // sejong::pretty_print(grav, std::cout, "grav");
-    // sejong::pretty_print(Fr_state_in, std::cout, "Fr_state_in");
+    sejong::Vector total_input; total_input.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); total_input.setZero();
+    total_input.head(NUM_VIRTUAL) = virt_imp - A_br*J*xdot_state_in.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
+    total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_in;
+    total_input.tail(NUM_ACT_JOINT) = joint_imp;
 
 
-//	dynamics_out = -total_input; //Sv*(coriolis + grav - Jc.transpose()*Fr_state_in);
+    // sejong::Vector virt_forces =  A_br*J*xdot_state_in.segment(NUM_VIRTUAL, NUM_ACT_JOINT)+ Sv*(coriolis + grav - Jc.transpose()*Fr_state_in);
+    // sejong::Vector act_forces =  -Km_act*u_current_in;
+    // sejong::Vector joint_forces = Sa*(coriolis + grav - Jc.transpose()*Fr_state_in);
 
-//   sejong::pretty_print(grav, std::cout, "grav");
-   //sejong::pretty_print(Fr_state_in, std::cout, "Fr_state_in");   
-   //sejong::pretty_print(Jc, std::cout, "Jc");
-   dynamics_out.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); dynamics_out.setZero();
-   dynamics_out.head(NUM_VIRTUAL) = Sv*(coriolis + grav - Jc.transpose()*Fr_state_in);
-    sejong::Vector virtual_only = total_input.head(NUM_VIRTUAL);
-    sejong::Vector test_vec = Sv*(coriolis + grav - Jc.transpose()*Fr_state_in);
+    // dynamics_out.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); dynamics_out.setZero();
+    // dynamics_out.head(NUM_VIRTUAL) = virt_forces;
+    // dynamics_out.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = act_forces;
+    //  dynamics_out.tail(NUM_ACT_JOINT) = joint_forces;
+
+
+	//dynamics_out = M_combined*xddot_state_in + B_combined*xdot_state_in +K_combined*x_state_in - total_input;
+    dynamics_out = M_combined*xddot_state_in + B_combined*xdot_state_in +K_combined*x_state_in - total_input;    
+//    dynamics_out += M_combined*xddot_state_in + B_combined*xdot_state_in + K_combined*x_state_in;
+
+    sejong::pretty_print(grav, std::cout, "grav");
+
+    // sejong::pretty_print(xddot_state_in, std::cout, "xddot_state_in");
+    // sejong::pretty_print(virt_forces, std::cout, "virt_forces");
+    // sejong::pretty_print(total_input, std::cout, "total_input");    
+    sejong::pretty_print(Fr_state_in, std::cout, "Fr_state_in");
+    // sejong::pretty_print(u_current_in, std::cout, "u_current_in");
+    // sejong::pretty_print(dynamics_out, std::cout, "dynamics_out");
+
+   // sejong::Vector total_input; total_input.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); total_input.setZero();
+   // total_input.head(NUM_VIRTUAL) = virt_imp - A_br*J*xdot_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
+   // total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_in;
+   // total_input.tail(NUM_ACT_JOINT) = joint_imp;	
+
+   //  dynamics_out.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); dynamics_out.setZero();
+   //  dynamics_out.head(NUM_VIRTUAL) = Sv*(coriolis + grav - Jc.transpose()*Fr_state_in);
+   //  sejong::Vector virtual_only = total_input.head(NUM_VIRTUAL);
+   //  sejong::Vector test_vec = Sv*(coriolis + grav - Jc.transpose()*Fr_state_in);
 
 
 

@@ -55,6 +55,9 @@ void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manag
 		cost += zdot_states.transpose()*Q_zdot*zdot_states;
 		cost += delta_dot_states.transpose()*Q_delta_dot*delta_dot_states;
 		cost += xddot_all_states.transpose()*xddot_all_states;
+		double xddot_all_cost = xddot_all_states.transpose()*xddot_all_states;
+		std::cout << "[OBJ FUNC] xddot_all_state cost = " << xddot_all_cost << std::endl;
+		sejong::pretty_print(xddot_all_states, std::cout, "xddot_all_states");
 		cost += Fr_states.transpose()*Qfr_mat*Fr_states;	
 		cost *= h_k;
 
