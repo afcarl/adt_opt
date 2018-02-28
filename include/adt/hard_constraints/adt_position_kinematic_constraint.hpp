@@ -8,6 +8,7 @@
 
 #include "DracoModel.hpp"
 #include <adt/hard_constraints/adt_constraint_main.hpp>
+#include <draco_actuator_model/DracoActuatorModel.hpp>
 #include <draco_combined_dynamics_model/draco_combined_dynamics_model.hpp>
 
 #define X_DIM 0
@@ -27,6 +28,7 @@ public:
 	double u_bound;
 
 	DracoModel* robot_model;	
+	DracoActuatorModel* actuator_model;
 	Draco_Combined_Dynamics_Model* combined_model;	
 
   	sejong::Vector x_state;

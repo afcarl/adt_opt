@@ -77,7 +77,7 @@ void Jump_Opt::initialize_starting_configuration(){
   // x_pos
   robot_q_init[0] = 0.01;
   // z_pos
-  robot_q_init[1] = 0.831165 + 0.00679965;//0.87 - 0.19;
+  robot_q_init[1] = 0.0;//0.831165 + 0.00679965;//0.87 - 0.19;
   // Ry_rot
   robot_q_init[2] = 0.00; //1.135; //1.131; 	
 
@@ -101,8 +101,8 @@ void Jump_Opt::initialize_contact_list(){
 void Jump_Opt::initialize_td_constraint_list(){
 	int toe_contact_index = 0;
 	int heel_contact_index = 1;	
-    td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
-    td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
+    //td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
+    //td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
     //td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
     //td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
     //td_constraint_list.append_constraint(new Dynamics_Constraint(&contact_list));    
@@ -115,8 +115,8 @@ void Jump_Opt::initialize_ti_constraint_list(){
     double min_des_z_height = 0.05;//0.005;
     //double des_hip_ori = -M_PI/2.0;
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
-    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
 
     // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
     // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
@@ -359,7 +359,7 @@ void Jump_Opt::compute_F_constraints(std::vector<double> &F_eval){
     for(size_t j = 0; j < current_constraint->F_low.size(); j++ ){
       //std::cout << " des knotpoint = " << current_constraint->des_knotpoint << std::endl;
       //std::cout << "F_ti_const[" << j <<"] = " << F_vec_const[j] << std::endl;      
-      F_eval.push_back(current_constraint->F_low[j]);
+      F_eval.push_back(F_vec_const[j]);
     }
 
   }
