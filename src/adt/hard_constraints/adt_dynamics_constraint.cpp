@@ -33,11 +33,17 @@ void Dynamics_Constraint::initialize_Flow_Fupp(){
 	F_low.clear();
 	F_upp.clear();
 
-  // Mxddot + Bxdot + Kx - impedance = 0
-	for(size_t i = 0; i < (NUM_VIRTUAL + NUM_ACT_JOINT*NUM_STATES_PER_ACTUATOR); i++){
-		F_low.push_back(0.0);	
-		F_upp.push_back(0.0);
-	}
+ //  // Mxddot + Bxdot + Kx - impedance = 0
+	// for(size_t i = 0; i < (NUM_VIRTUAL + NUM_ACT_JOINT*NUM_STATES_PER_ACTUATOR); i++){
+	// 	F_low.push_back(0.0);	
+	// 	F_upp.push_back(0.0);
+	// }
+
+  //Mxddot + Bxdot + Kx - impedance = 0
+  for(size_t i = 0; i < (NUM_VIRTUAL); i++){
+    F_low.push_back(0.0); 
+    F_upp.push_back(0.0);
+  }
 
 	constraint_size = F_low.size();
 }
@@ -100,11 +106,12 @@ void Dynamics_Constraint::evaluate_constraint(const int &knotpoint, ADT_Opt_Vari
   var_manager.get_xddot_all_states(knotpoint, xddot_state_k);
 
   // Update the Jacobians and the model
-  Update_Contact_Jacobian_Jc(x_state_k);
   combined_model->UpdateModel(x_state_k, xdot_state_k);
+  Update_Contact_Jacobian_Jc(x_state_k); 
   combined_model-> getDynamics_constraint(x_state_k, xdot_state_k, xddot_state_k, u_state_k, Fr_state_k, dynamics_k);
 
-  for(size_t i = 0; i < dynamics_k.size(); i++){
+//  for(size_t i = 0; i < dynamics_k.size(); i++){
+  for(size_t i = 0; i < NUM_VIRTUAL; i++){
     F_vec.push_back(dynamics_k[i]);    
   }
 

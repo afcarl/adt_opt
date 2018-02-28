@@ -110,7 +110,7 @@ void Linear_Back_Euler_Time_Integration_Constraint::evaluate_constraint(const in
 
   // sejong::pretty_print(x_state_k, std::cout, "x_state_k");
   // sejong::pretty_print(xdot_state_k, std::cout, "xdot_state_k");
-  sejong::pretty_print(xddot_k, std::cout, "xddot_k");  
+  //sejong::pretty_print(xddot_k, std::cout, "xddot_k");  
   //xddot_k.setZero();
 
   // sejong::Vector be_xdot_k = xdot_state_k - xddot_k*h_k - xdot_state_k_prev;
