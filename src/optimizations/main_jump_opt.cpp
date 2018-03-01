@@ -5,18 +5,18 @@
 #include <adt/adt_snopt_wrapper.hpp>
 #include <adt/containers/adt_opt_variable_manager.hpp>
 
+#include <draco_combined_dynamics_model/draco_combined_dynamics_model.hpp>
 #include "DracoP1Rot_Definition.h"
 
 void parse_output(Optimization_Problem_Main* opt_prob){
 	ADT_Opt_Variable_Manager* var_manager;
+	Draco_Combined_Dynamics_Model* combined_model = Draco_Combined_Dynamics_Model::GetDracoCombinedDynamicsModel();	
+	DracoModel* robot_model = DracoModel::GetDracoModel();
 
 	opt_prob->get_var_manager(var_manager);
-	std::vector<sejong::Vector> vec_q_virt_states;
-	std::vector<sejong::Vector> vec_z_states;	
-	std::vector<sejong::Vector> vec_delta_states;
-	std::vector<sejong::Vector> vec_qdot_virt_states;
-	std::vector<sejong::Vector> vec_zdot_states;	
-	std::vector<sejong::Vector> vec_delta_dot_states;
+	std::vector<sejong::Vector> vec_x_states;
+	std::vector<sejong::Vector> vec_xdot_states;
+	std::vector<sejong::Vector> vec_xddot_states;			
 
 	std::vector<sejong::Vector> vec_u_current;	
 	std::vector<sejong::Vector> vec_Fr_states;	
@@ -43,6 +43,15 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 	sejong::Vector delta_dot_states_prev;
 	sejong::Vector xdot_prev;  xdot_prev.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT);
 	sejong::Vector xddot_est;
+
+	sejong::Vector q_state;
+	sejong::Vector qdot_state;	
+
+	sejong::Vect3 body_pos;
+	sejong::Vect3 foot_toe_pos;
+	sejong::Vect3 foot_heel_pos;
+	sejong::Vect3 com_pos;
+	sejong::Vect3 com_vel;			
 
 	for(size_t k = 1; k < var_manager->total_knotpoints+1; k++){
 	 	std::cout << "--------------------------" << std::endl;
@@ -76,23 +85,42 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 
 	 	xddot_est = (xdot - xdot_prev)/h_dt;
 
-	 	sejong::pretty_print(q_virt_states, std::cout, "q_virt_states");
-	 	sejong::pretty_print(z_states, std::cout, "z_states");	 	
-	 	sejong::pretty_print(delta_states, std::cout, "delta_states");	
-	 	sejong::pretty_print(qdot_virt_states, std::cout, "qdot_virt_states"); 	
-	 	sejong::pretty_print(zdot_states, std::cout, "zdot_states"); 	
-	 	sejong::pretty_print(delta_dot_states, std::cout, "delta_dot_states"); 	
+	 	combined_model->convert_x_to_q(x_state, q_state);
+	 	combined_model->convert_xdot_to_qdot(xdot, qdot_state);	 	
 
+	 	robot_model->UpdateModel(q_state, qdot_state);
+	 	robot_model->getCoMPosition(q_state, com_pos);
+	 	robot_model->getCoMVelocity(q_state, qdot_state, com_vel);
+	 	robot_model->getPosition(q_state, SJLinkID::LK_body, body_pos);
+	 	robot_model->getPosition(q_state, SJLinkID::LK_FootToe, foot_toe_pos);
+	 	robot_model->getPosition(q_state, SJLinkID::LK_FootHeel, foot_heel_pos);	 	
+
+	 	sejong::pretty_print(x_state, std::cout, "x_state (qvirt, z, delta)");
 	 	sejong::pretty_print(xdot, std::cout, "xdot");
-	 	sejong::pretty_print(xdot_prev, std::cout, "xdot_prev");
 	 	sejong::pretty_print(xddot_est, std::cout, "xddot_est");	 		 	
+
+	 	sejong::pretty_print(q_state, std::cout, "q_state");
+	 	sejong::pretty_print(qdot_state, std::cout, "qdot_state");
+
 
 	 	sejong::pretty_print(u_current, std::cout, "u_current");	
 	 	sejong::pretty_print(Fr_states, std::cout, "Fr_states");	 		 	
 	 	sejong::pretty_print(beta_states, std::cout, "beta_states");	 		 	
 	 	std::cout << "h_dt = " << h_dt << std::endl;
+
+	 	std::cout << " " << std::endl;
+	 	sejong::pretty_print(com_pos, std::cout, "com_pos (x,y,z)");
+	 	sejong::pretty_print(com_vel, std::cout, "com_vel (xdot_com, ydot_com, zdot_com");	 
+
+	 	sejong::pretty_print(body_pos, std::cout, "body_pos (x, z, Ry)");
+	 	sejong::pretty_print(foot_toe_pos, std::cout, "foot_toe_pos (x, z, Ry)");	 	
+	 	sejong::pretty_print(foot_heel_pos, std::cout, "foot_heel_pos (x, z, Ry)");	 	 		
+
 	 	std::cout << "--------------------------" << std::endl;
 	}	
+
+
+
 }
 
 int main(int argc, char **argv)
