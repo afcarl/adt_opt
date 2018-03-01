@@ -358,7 +358,7 @@ void Draco_Combined_Dynamics_Model::getDynamics_constraint(const sejong::Vector 
     sejong::Vector total_input; total_input.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); total_input.setZero();
     total_input.head(NUM_VIRTUAL) = virt_imp - A_br*J*xdot_state_k.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
     total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_k;
-    total_input.tail(NUM_ACT_JOINT) = joint_imp;  
+    total_input.tail(NUM_ACT_JOINT) = joint_imp  ;  
 
     dynamics_out = M_combined*(xdot_state_k - xdot_state_k_prev) + h_k*(B_combined*xdot_state_k + K_combined*x_state_k - total_input);    
 

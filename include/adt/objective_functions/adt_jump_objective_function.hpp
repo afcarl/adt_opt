@@ -24,6 +24,10 @@ public:
 	sejong::Matrix Qfr_mat; // Cost Matrix for reaction forces
 	sejong::Matrix Q_beta; // Cost Matrix for reaction forces
 
+	sejong::Matrix Q_qvirt; // Cost matrix for IK
+	sejong::Matrix Q_z; // Cost Matrix for IK
+
+	double c_ik;
 
 	double c_u;
 	double c_qdotvirt;

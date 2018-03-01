@@ -12,6 +12,8 @@
 #include <adt/objective_functions/adt_jump_objective_function.hpp>
 //#include <adt/objective_functions/adt_objective_function_main.hpp>
 
+#include "DracoModel.hpp"
+#include "DracoP1Rot_Definition.h"
 
 class Jump_Opt: public Optimization_Problem_Main{
 public:
@@ -19,6 +21,7 @@ public:
   ~Jump_Opt();	
 
   ADT_Opt_Variable_Manager			opt_var_manager;
+  DracoModel*                   robot_model;
 
   Contact_List 								  contact_list;
 
