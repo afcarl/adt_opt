@@ -52,11 +52,11 @@ Jump_Opt::~Jump_Opt(){
 void Jump_Opt::Initialization(){
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 15;
+	N_total_knotpoints = 1;
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
-  h_dt_min = 0.05; // Minimum knotpoint timestep
+  h_dt_min = 0.025; // Minimum knotpoint timestep
   max_normal_force = 1e10;//10000; // Newtons
   max_tangential_force = 10000; // Newtons  	  	
 
@@ -118,12 +118,12 @@ void Jump_Opt::initialize_ti_constraint_list(){
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
 
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height));     
 
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(pre_final_knotpoint, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(pre_final_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS)); 
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(pre_final_knotpoint, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(pre_final_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS)); 
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
 }
 
 
@@ -156,6 +156,7 @@ void Jump_Opt::initialize_opt_vars(){
 	}
 	// [delta, delta_dot]
 	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
+        //opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_state_" + std::to_string(i), VAR_TYPE_DELTA, 0, act_delta_init[i], -OPT_INFINITY, OPT_INFINITY) );
         opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_state_" + std::to_string(i), VAR_TYPE_DELTA, 0, act_delta_init[i], -OPT_INFINITY, OPT_INFINITY) );
 	}
 	for(size_t i = 0; i < NUM_ACT_JOINT; i++){
@@ -176,7 +177,7 @@ void Jump_Opt::initialize_opt_vars(){
 	for(size_t k = 1; k < N_total_knotpoints + 1; k++){
 
 		for(size_t i = 0; i < NUM_VIRTUAL; i++){
-	        opt_var_manager.append_variable(new ADT_Opt_Variable("virtual_q_state_" + std::to_string(i), VAR_TYPE_Q, k, robot_q_init[i], opt_var_limits.l_q_virt_limits[i] , opt_var_limits.u_q_virt_limits[i]) );
+	   	    opt_var_manager.append_variable(new ADT_Opt_Variable("virtual_q_state_" + std::to_string(i), VAR_TYPE_Q, k, robot_q_init[i], opt_var_limits.l_q_virt_limits[i] , opt_var_limits.u_q_virt_limits[i]) );
 	     }
 		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
 			// Initial values must be fixed
@@ -225,9 +226,12 @@ void Jump_Opt::initialize_opt_vars(){
 		// [Beta]		
 		for(size_t i = 0; i < contact_list.get_size(); i++){
 			for(size_t j = 0; j < N_d; j++){
+		        //opt_var_manager.append_variable(new ADT_Opt_Variable("Beta_c" + std::to_string(i) + "_b" + std::to_string(j) , VAR_TYPE_BETA, k, 0.0, 0.0, OPT_INFINITY) );
 		        opt_var_manager.append_variable(new ADT_Opt_Variable("Beta_c" + std::to_string(i) + "_b" + std::to_string(j) , VAR_TYPE_BETA, k, 0.0, 0.0, OPT_INFINITY) );
 			}
 		}
+
+
 		
 		// [h_dt] knotpoint timestep
         opt_var_manager.append_variable(new ADT_Opt_Variable("h_dt_" + std::to_string(k) , VAR_TYPE_H, k, h_dt_min, h_dt_min, OPT_INFINITY) );

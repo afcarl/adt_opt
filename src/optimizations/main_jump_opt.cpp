@@ -34,7 +34,7 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 	double h_dt;
 
 
-	for(size_t k = 1; k < var_manager->total_knotpoints + 1; k++){
+	for(size_t k = 1; k < var_manager->total_knotpoints+1; k++){
 	 	std::cout << "--------------------------" << std::endl;
 	 	std::cout << "knotpoint = " << k << std::endl;
 	 	var_manager->get_q_states(k, q_virt_states); 	
@@ -46,7 +46,7 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 	 	var_manager->get_u_states(k, u_current); 		 	
 	 	var_manager->get_var_reaction_forces(k, Fr_states); 		 	
 	 	var_manager->get_beta_states(k, beta_states);
-	 	var_manager->get_var_knotpoint_dt(k, h_dt);
+	 	var_manager->get_var_knotpoint_dt(k-1, h_dt);
 
 	 	sejong::pretty_print(q_virt_states, std::cout, "q_virt_states");
 	 	sejong::pretty_print(z_states, std::cout, "z_states");	 	
@@ -59,7 +59,6 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 	 	sejong::pretty_print(beta_states, std::cout, "beta_states");	 		 	
 	 	std::cout << "h_dt = " << h_dt << std::endl;
 	 	std::cout << "--------------------------" << std::endl;
-
 	}	
 }
 

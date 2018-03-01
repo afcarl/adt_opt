@@ -210,6 +210,10 @@ int ADT_Opt_Variable_Manager::get_num_delta_vars(){
 	return num_delta_vars;
 }
 
+int ADT_Opt_Variable_Manager::get_num_beta_vars(){
+	return num_beta_vars;
+}
+
 
 void ADT_Opt_Variable_Manager::compute_size_time_dep_vars(){
 	int knotpoint = 1;

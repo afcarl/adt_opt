@@ -57,6 +57,7 @@ public:
 	int get_num_xddot_vars();
 	int get_num_Fr_vars();
 	int get_num_keyframe_vars();		
+	int get_num_beta_vars();			
 
 	int get_num_var_knotpoint_dt();
 

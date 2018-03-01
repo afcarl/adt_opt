@@ -32,7 +32,7 @@ void Floor_2D_Contact_LCP_Constraint::initialize_Flow_Fupp(){
 	F_low.push_back(0.00);	
 	F_low.push_back(0.00);
 
-	F_upp.push_back(0.001);
+	F_upp.push_back(1e-6);
 	F_upp.push_back(OPT_INFINITY);			
 
   constraint_size = F_low.size();
@@ -90,12 +90,13 @@ void Floor_2D_Contact_LCP_Constraint::evaluate_constraint(const int &knotpoint, 
   sejong::Vector Fr_contact = Fr_all.segment(index_offset, current_contact_size);
 
   // Get normal Force only
-  sejong::Vector Fr_z; 
-  Fr_z.resize(1);
-  Fr_z[0] = Fr_contact[1];
+  // sejong::Vector Fr_z; 
+  // Fr_z.resize(1);
+  // Fr_z[0] = Fr_contact[1];
 
-  double Fr_l2_norm_squared = std::pow(Fr_z.lpNorm<2>(), 2);
+  // double Fr_l2_norm_squared = std::pow(Fr_z.lpNorm<2>(), 2);
 
+  double Fr_l2_norm_squared = std::pow(Fr_contact.lpNorm<2>(), 2);
   sejong::Vect3 contact_pos_vec;
   robot_model->getPosition(q_state, contact_link_id, contact_pos_vec);
 

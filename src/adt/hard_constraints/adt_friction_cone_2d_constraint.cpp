@@ -54,12 +54,15 @@ void Friction_Cone_2D_Constraint::initialize_Flow_Fupp(){
 
 
 void Friction_Cone_2D_Constraint::evaluate_constraint(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& F_vec){
+  F_vec.clear();
   Contact* current_contact = contact_list_obj->get_contact(contact_index);
   int contact_link_id = current_contact->contact_link_id;
 
   // Get Fr_states and beta states
   sejong::Vector Fr_all;
   sejong::Vector beta_all;
+
+
   var_manager.get_var_reaction_forces(knotpoint, Fr_all);
   var_manager.get_beta_states(knotpoint, beta_all);  
 
@@ -82,11 +85,20 @@ void Friction_Cone_2D_Constraint::evaluate_constraint(const int &knotpoint, ADT_
   double beta_2j = betas_contact[1];  
 
   sejong::Vector const_eval = Fr_contact - (beta_1j*w1 + beta_2j*w2);
+//  sejong::Vector const_eval = Fr_contact - 2*betas_contact; //(beta_1j*w1 + beta_2j*w2);
+//   sejong::Vector const_eval = Fr_all.head(2) - beta_all.head(2); //(beta_1j*w1 + beta_2j*w2);
 
-  //sejong::pretty_print(const_eval, std::cout, "Fr_j - sum_i beta w_ij");
+   // std::cout << "Link ID = " << contact_link_id << std::endl;
+   // sejong::pretty_print(w1, std::cout, "w1");  
+   // sejong::pretty_print(w2, std::cout, "w2");    
+   // sejong::pretty_print(betas_contact, std::cout, "betas_contact");  
+
+   // sejong::pretty_print(Fr_contact, std::cout, "Fr_contact");
+  // sejong::pretty_print(const_eval, std::cout, "const_eval");
 
   for (size_t i = 0; i < const_eval.size(); i++){
     F_vec.push_back(const_eval[i]);
+
   }
 
 

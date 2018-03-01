@@ -13,6 +13,7 @@ void Jump_Objective_Function::set_var_manager(ADT_Opt_Variable_Manager& var_mana
 	num_delta = var_manager.get_num_delta_vars();
 	num_Fr = var_manager.get_num_Fr_vars();
 	num_u = var_manager.get_num_u_vars();
+	num_beta = var_manager.get_num_beta_vars();
 	N_total_knotpoints = var_manager.total_knotpoints;
 
 	int num_xddot_all = num_q_virt + num_z + num_delta;
@@ -22,12 +23,15 @@ void Jump_Objective_Function::set_var_manager(ADT_Opt_Variable_Manager& var_mana
 	c_zdot = 1.0;
 	c_delta_dot = 1.0;
 	c_fr = 0.0001;
+	c_beta = c_fr/10.0;
 
 	Q_u = c_u * sejong::Matrix::Identity(num_u, num_u);
 	Q_qdotvirt = c_qdotvirt * sejong::Matrix::Identity(num_q_virt, num_q_virt);
 	Q_zdot = c_zdot * sejong::Matrix::Identity(num_z, num_z);
 	Q_delta_dot = c_delta_dot * sejong::Matrix::Identity(num_delta, num_delta);	
 	Qfr_mat = c_fr * sejong::Matrix::Identity(num_Fr, num_Fr);
+	Q_beta = c_beta * sejong::Matrix::Identity(num_beta, num_beta);
+
 }
 
 void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manager& var_manager, double &result){
@@ -36,6 +40,8 @@ void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manag
 	sejong::Vector zdot_states;
 	sejong::Vector delta_dot_states;
 	sejong::Vector Fr_states;
+	sejong::Vector beta_states;
+
 
 	sejong::Vector xddot_all_states;	
 	double cost = 0.0;
@@ -49,13 +55,15 @@ void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manag
 		var_manager.get_xddot_all_states(k, xddot_all_states);
 		var_manager.get_var_knotpoint_dt(k-1, h_k);
 		var_manager.get_var_reaction_forces(k, Fr_states);
-
+		
+		var_manager.get_beta_states(k, beta_states);  
 		cost += u_states.transpose()*Q_u*u_states;
 		cost += qdot_states.transpose()*Q_qdotvirt*qdot_states;
 		cost += zdot_states.transpose()*Q_zdot*zdot_states;
 		cost += delta_dot_states.transpose()*Q_delta_dot*delta_dot_states;
 		cost += xddot_all_states.transpose()*xddot_all_states;
 		cost += Fr_states.transpose()*Qfr_mat*Fr_states;	
+		cost += beta_states.transpose()*Q_beta*beta_states;
 		cost *= h_k;
 
 		//std::cout << "Fr cost:" << Fr_states.transpose()*Qfr_mat*Fr_states << std::endl;

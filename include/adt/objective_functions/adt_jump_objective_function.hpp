@@ -22,12 +22,15 @@ public:
 	sejong::Matrix Q_zdot; // Cost matrix for actuator vel states	
 	sejong::Matrix Q_delta_dot; // Cost matrix for spring vel
 	sejong::Matrix Qfr_mat; // Cost Matrix for reaction forces
+	sejong::Matrix Q_beta; // Cost Matrix for reaction forces
+
 
 	double c_u;
 	double c_qdotvirt;
 	double c_zdot;
 	double c_delta_dot;	
 	double c_fr;
+	double c_beta;
 
 	sejong::Matrix Qdot_mat; // Cost Matrix for time derivative reaction forces
 
@@ -41,6 +44,7 @@ public:
 	int num_delta;
 	int num_Fr;
 	int num_u;
+	int num_beta;
 	int N_total_knotpoints;
 
 };
