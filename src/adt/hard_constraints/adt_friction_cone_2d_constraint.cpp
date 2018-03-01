@@ -30,7 +30,7 @@ void Friction_Cone_2D_Constraint::Initialization(){
 	n2.resize(2); d2.resize(2); n2.setZero(); d2.setZero();
 
 	n1[1] =  1.0; n2[1] = 1.0; // Normal Vectors point up;
-	// Tangential Vectors d1 = [-1, 0] d2 ] [1,0]	
+	// Tangential Vectors d1 = [-1, 0] d2 = [1,0]	
 	d1[0] = -1;    d2[0] = 1;
 
 	w1 = n1 + mu*d1;

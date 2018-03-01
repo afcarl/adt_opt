@@ -743,7 +743,8 @@ namespace snopt_wrapper{
 	std::cout << "[SNOPT_Wrapper] F_eval has size " << F_eval.size() << std::endl; 
 
 
-	int Cold  = 0;
+	int Cold  = 0; int Basis = 1; int Warm = 2;
+	int start_condition = Basis;//Warm;
 	
 	// Get Sizes
 	// int n = 2;
@@ -824,6 +825,8 @@ namespace snopt_wrapper{
    	whole_body_trajectory_problem.setPrintFile("adt_problem.out"); 
 	whole_body_trajectory_problem.setIntParameter("Derivative option", 0);
 	whole_body_trajectory_problem.setIntParameter("Verify level ", 3);	
+	whole_body_trajectory_problem.setSpecsFile("jump.spc");
+
 
 	// whole_body_trajectory_problem.computeJac(nF, n, snopt_wrapper::wbt_FG, x, xlow, xupp,
 	// 	  iAfun_test, jAvar_test, A_test, neA_test,
@@ -831,7 +834,7 @@ namespace snopt_wrapper{
 
   	std::cout << "[SNOPT Wrapper] Solving Problem with no Gradients" << std::endl;
 
-  	whole_body_trajectory_problem.solve(Cold, nF, n, ObjAdd, ObjRow, snopt_wrapper::wbt_F,
+  	whole_body_trajectory_problem.solve(start_condition, nF, n, ObjAdd, ObjRow, snopt_wrapper::wbt_F,
 			       xlow, xupp, Flow, Fupp,
      			  x, xstate, xmul, F, Fstate, Fmul,
      			  nS, nInf, sInf);
