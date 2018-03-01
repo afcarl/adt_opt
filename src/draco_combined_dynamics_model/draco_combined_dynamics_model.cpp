@@ -361,13 +361,9 @@ void Draco_Combined_Dynamics_Model::getDynamics_constraint(const sejong::Vector 
     total_input.tail(NUM_ACT_JOINT) = joint_imp;  
 
     dynamics_out = M_combined*(xdot_state_k - xdot_state_k_prev) + h_k*(B_combined*xdot_state_k + K_combined*x_state_k - total_input);    
-    //dynamics_out = h_k*(B_combined*xdot_state_k + K_combined*x_state_k - total_input);    
 
     sejong::Vector xddot_est = (xdot_state_k - xdot_state_k_prev) / h_k;
-    sejong::pretty_print(xddot_est, std::cout, "xddot_est");
-
-    // sejong::pretty_print(xdot_state_k, std::cout, "xdot_state_k");    
-    // sejong::pretty_print(xdot_state_k_prev, std::cout, "xdot_state_k_prev");    
-    sejong::pretty_print(Fr_state_k, std::cout, "Fr_state_k");
+    //sejong::pretty_print(xddot_est, std::cout, "xddot_est");
+    //sejong::pretty_print(Fr_state_k, std::cout, "Fr_state_k");
 
 }

@@ -58,8 +58,8 @@ void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manag
 		cost += Fr_states.transpose()*Qfr_mat*Fr_states;	
 		cost *= h_k;
 
-		std::cout << "Fr cost:" << Fr_states.transpose()*Qfr_mat*Fr_states << std::endl;
-		std::cout << "qdot cost:" << qdot_states.transpose()*Q_qdotvirt*qdot_states << std::endl;		
+		//std::cout << "Fr cost:" << Fr_states.transpose()*Qfr_mat*Fr_states << std::endl;
+		//std::cout << "qdot cost:" << qdot_states.transpose()*Q_qdotvirt*qdot_states << std::endl;		
 
 		//std::cout << "cost = " << cost << std::endl;
 	}
