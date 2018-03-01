@@ -2,6 +2,7 @@
 #define ADT_OPTIMIZATION_PROBLEM_MAIN_H
 #include <Utils/wrap_eigen.hpp>
 #include <adt/optimization_constants.hpp>
+#include <adt/containers/adt_opt_variable_manager.hpp>
 #include <string>
 
 class Optimization_Problem_Main{
@@ -15,6 +16,8 @@ public:
   virtual void get_opt_vars_bounds(std::vector<double> &x_low, std::vector<double> &x_upp){}   	  	
   virtual void get_current_opt_vars(std::vector<double> &x_vars_out){}
   virtual void update_opt_vars(std::vector<double> &x_vars){} 	  		
+
+  virtual void get_var_manager(ADT_Opt_Variable_Manager* &var_manager_out){}
 
   virtual void get_F_bounds(std::vector<double> &F_low, std::vector<double> &F_upp){}
   virtual void get_F_obj_Row(int &obj_row){}

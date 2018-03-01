@@ -47,6 +47,10 @@ public:
 
   int constraint_size; // Unused
 
+  void get_var_manager(ADT_Opt_Variable_Manager* &var_manager_out){
+    var_manager_out = &opt_var_manager;
+  }
+
   // Interface to SNOPT -------------------------------------------------------------------
 
   void get_init_opt_vars(std::vector<double> &x_vars);   	
