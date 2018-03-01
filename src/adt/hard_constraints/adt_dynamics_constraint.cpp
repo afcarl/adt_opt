@@ -91,29 +91,67 @@ void Dynamics_Constraint::get_states(const int &knotpoint, ADT_Opt_Variable_Mana
 
 
 void Dynamics_Constraint::evaluate_constraint(const int &knotpoint, ADT_Opt_Variable_Manager& var_manager, std::vector<double>& F_vec){
+//   F_vec.clear();
+
+//   sejong::Vector x_state_k; 
+//   sejong::Vector xdot_state_k; 
+//   sejong::Vector xddot_state_k;
+//   sejong::Vector u_state_k;
+//   sejong::Vector Fr_state_k;
+//   sejong::Vector dynamics_k;
+
+//   get_states(knotpoint, var_manager, x_state_k, xdot_state_k);
+//   var_manager.get_u_states(knotpoint, u_state_k);
+//   var_manager.get_var_reaction_forces(knotpoint, Fr_state_k);  
+//   var_manager.get_xddot_all_states(knotpoint, xddot_state_k);
+
+//   // Update the Jacobians and the model
+//   // This order is important!
+//   combined_model->UpdateModel(x_state_k, xdot_state_k);
+//   Update_Contact_Jacobian_Jc(x_state_k); 
+//   // ------
+
+//   combined_model->getDynamics_constraint(x_state_k, xdot_state_k, xddot_state_k, u_state_k, Fr_state_k, dynamics_k);
+
+// //  for(size_t i = 0; i < dynamics_k.size(); i++){
+//   for(size_t i = 0; i < dynamics_k.size(); i++){
+//     F_vec.push_back(dynamics_k[i]);    
+//   }
+
   F_vec.clear();
 
   sejong::Vector x_state_k; 
+  sejong::Vector x_state_k_prev;   
   sejong::Vector xdot_state_k; 
-  sejong::Vector xddot_state_k;
+  sejong::Vector xdot_state_k_prev; 
+
+  double h_k;
+  var_manager.get_var_knotpoint_dt(knotpoint - 1, h_k);
+  get_states(knotpoint, var_manager, x_state_k, xdot_state_k);
+  get_states(knotpoint-1, var_manager, x_state_k_prev, xdot_state_k_prev);  
+
   sejong::Vector u_state_k;
   sejong::Vector Fr_state_k;
-  sejong::Vector dynamics_k;
-
-  get_states(knotpoint, var_manager, x_state_k, xdot_state_k);
+  sejong::Vector dynamics_k; 
   var_manager.get_u_states(knotpoint, u_state_k);
   var_manager.get_var_reaction_forces(knotpoint, Fr_state_k);  
-  var_manager.get_xddot_all_states(knotpoint, xddot_state_k);
 
   // Update the Jacobians and the model
+  // This order is important!
   combined_model->UpdateModel(x_state_k, xdot_state_k);
   Update_Contact_Jacobian_Jc(x_state_k); 
-  combined_model-> getDynamics_constraint(x_state_k, xdot_state_k, xddot_state_k, u_state_k, Fr_state_k, dynamics_k);
+  // ------
+
+  combined_model->getDynamics_constraint(x_state_k, xdot_state_k, xdot_state_k_prev, u_state_k, Fr_state_k, h_k, dynamics_k);
 
 //  for(size_t i = 0; i < dynamics_k.size(); i++){
   for(size_t i = 0; i < dynamics_k.size(); i++){
     F_vec.push_back(dynamics_k[i]);    
   }
+
+
+
+
 
 }
 

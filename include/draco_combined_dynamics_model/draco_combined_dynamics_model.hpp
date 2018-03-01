@@ -105,7 +105,10 @@ public:
 
 	void getDynamics_constraint(const sejong::Vector &x_state_in, const sejong::Vector &xdot_state_in, const sejong::Vector &xddot_state_in,
 							    const sejong::Vector &u_current_in, const sejong::Vector &Fr_state_in, sejong::Vector &dynamics_out);
-							    						   
+							    				
+	void getDynamics_constraint(const sejong::Vector &x_state_k, const sejong::Vector &xdot_state_k, const sejong::Vector &xdot_state_k_prev, 
+                                                           const sejong::Vector &u_current_k, const sejong::Vector &Fr_state_k, double h_k, sejong::Vector &dynamics_out);
+
 
 protected:
 

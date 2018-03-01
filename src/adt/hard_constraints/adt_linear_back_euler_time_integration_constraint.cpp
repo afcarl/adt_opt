@@ -33,14 +33,20 @@ void Linear_Back_Euler_Time_Integration_Constraint::initialize_Flow_Fupp(){
 	F_low.clear();
 	F_upp.clear();
 
-  // xdot[k] = xddot[k]*h[k] + xdot[k-1] => xdot[k] - xddot[k]*h[k] - xdot[k-1] = 0
-	// x[k]    = xdot[k]*h[k] + x[k-1]     => x[k] - xdot[k] - x[k-1] = 0
-	for(size_t i = 0; i < (NUM_VIRTUAL + NUM_ACT_JOINT*NUM_STATES_PER_ACTUATOR); i++){
-		F_low.push_back(0.0);	
-		F_low.push_back(0.0);
-		F_upp.push_back(0.0);
-		F_upp.push_back(0.0);
-	}
+ //  // xdot[k] = xddot[k]*h[k] + xdot[k-1] => xdot[k] - xddot[k]*h[k] - xdot[k-1] = 0
+	// // x[k]    = xdot[k]*h[k] + x[k-1]     => x[k] - xdot[k] - x[k-1] = 0
+	// for(size_t i = 0; i < (NUM_VIRTUAL + NUM_ACT_JOINT*NUM_STATES_PER_ACTUATOR); i++){
+	// 	F_low.push_back(0.0);	
+	// 	F_low.push_back(0.0);
+	// 	F_upp.push_back(0.0);
+	// 	F_upp.push_back(0.0);
+	// }
+
+  // x[k]    = xdot[k]*h[k] + x[k-1]     => x[k] - xdot[k] - x[k-1] = 0
+  for(size_t i = 0; i < (NUM_VIRTUAL + NUM_ACT_JOINT*NUM_STATES_PER_ACTUATOR); i++){
+   F_low.push_back(0.0); 
+   F_upp.push_back(0.0);
+  }  
 
 	constraint_size = F_low.size();
 }
@@ -92,39 +98,16 @@ void Linear_Back_Euler_Time_Integration_Constraint::evaluate_constraint(const in
 
   sejong::Vector x_state_k; 
   sejong::Vector x_state_k_prev;   
-  sejong::Vector xddot_k;
-
   sejong::Vector xdot_state_k; 
-  sejong::Vector xdot_state_k_prev;     
-
-  sejong::Vector u_state_k;
-  sejong::Vector Fr_state_k;
+  sejong::Vector xdot_state_k_prev;   
 
   double h_k; // Timestep  
-
   get_states(knotpoint, var_manager, x_state_k, xdot_state_k);
-  get_states(knotpoint - 1, var_manager, x_state_k_prev, xdot_state_k_prev);
+  get_states(knotpoint - 1, var_manager, x_state_k_prev, xdot_state_k_prev); 
   var_manager.get_var_knotpoint_dt(knotpoint - 1, h_k);
-  var_manager.get_xddot_all_states(knotpoint, xddot_k);
 
-
-  // sejong::pretty_print(x_state_k, std::cout, "x_state_k");
-  // sejong::pretty_print(xdot_state_k, std::cout, "xdot_state_k");
-  //sejong::pretty_print(xddot_k, std::cout, "xddot_k");  
-  //xddot_k.setZero();
-
-  // sejong::Vector be_xdot_k = xdot_state_k - xddot_k*h_k - xdot_state_k_prev;
-  // sejong::Vector be_x_k = x_state_k - xdot_state_k*h_k - x_state_k_prev;  
-
-  sejong::Vector be_xdot_k = xdot_state_k - xddot_k*h_k - xdot_state_k_prev;
   sejong::Vector be_x_k = x_state_k - xdot_state_k*h_k - x_state_k_prev;    
 
-  //sejong::pretty_print(x_state_k, std::cout, "x_state_k");
-  //sejong::pretty_print(x_state_k_prev, std::cout, "x_state_k_prev");
-
-  for(size_t i = 0; i < be_xdot_k.size(); i++){
-    F_vec.push_back(be_xdot_k[i]);    
-  }
   for(size_t i = 0; i < be_x_k.size(); i++){
     F_vec.push_back(be_x_k[i]);   
   }

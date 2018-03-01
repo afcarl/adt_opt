@@ -348,3 +348,26 @@ void Draco_Combined_Dynamics_Model::getDynamics_constraint(const sejong::Vector 
 
     
 }
+
+void Draco_Combined_Dynamics_Model::getDynamics_constraint(const sejong::Vector &x_state_k, const sejong::Vector &xdot_state_k, const sejong::Vector &xdot_state_k_prev, 
+                                                           const sejong::Vector &u_current_k, const sejong::Vector &Fr_state_k, double h_k, sejong::Vector &dynamics_out){
+    // Update the model and impedances
+    UpdateModel(x_state_k, xdot_state_k);
+    formulate_joint_link_impedance(Fr_state_k);
+    // Construct the dynamics input and impedances
+    sejong::Vector total_input; total_input.resize(NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT); total_input.setZero();
+    total_input.head(NUM_VIRTUAL) = virt_imp - A_br*J*xdot_state_k.segment(NUM_VIRTUAL, NUM_ACT_JOINT);
+    total_input.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = Km_act*u_current_k;
+    total_input.tail(NUM_ACT_JOINT) = joint_imp;  
+
+    dynamics_out = M_combined*(xdot_state_k - xdot_state_k_prev) + h_k*(B_combined*xdot_state_k + K_combined*x_state_k - total_input);    
+    //dynamics_out = h_k*(B_combined*xdot_state_k + K_combined*x_state_k - total_input);    
+
+    sejong::Vector xddot_est = (xdot_state_k - xdot_state_k_prev) / h_k;
+    sejong::pretty_print(xddot_est, std::cout, "xddot_est");
+
+    // sejong::pretty_print(xdot_state_k, std::cout, "xdot_state_k");    
+    // sejong::pretty_print(xdot_state_k_prev, std::cout, "xdot_state_k_prev");    
+    sejong::pretty_print(Fr_state_k, std::cout, "Fr_state_k");
+
+}

@@ -56,9 +56,9 @@ void Jump_Opt::Initialization(){
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
-	h_dt_min = 0.001; // Minimum knotpoint timestep
-  	max_normal_force = 1e10;//10000; // Newtons
-  	max_tangential_force = 10000; // Newtons  	  	
+  h_dt_min = 0.05; // Minimum knotpoint timestep
+  max_normal_force = 1e10;//10000; // Newtons
+  max_tangential_force = 10000; // Newtons  	  	
 
 	initialize_starting_configuration();
 	initialize_contact_list();
@@ -198,9 +198,9 @@ void Jump_Opt::initialize_opt_vars(){
     // }    
 
     // [xddot_all]
-    for(size_t i = 0; i < NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT; i++){
-           opt_var_manager.append_variable(new ADT_Opt_Variable("xddot_all_" + std::to_string(i), VAR_TYPE_XDDOT_ALL, k, 0.0, -OPT_INFINITY, OPT_INFINITY) );
-    }
+    // for(size_t i = 0; i < NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT; i++){
+    //        opt_var_manager.append_variable(new ADT_Opt_Variable("xddot_all_" + std::to_string(i), VAR_TYPE_XDDOT_ALL, k, 0.0, -OPT_INFINITY, OPT_INFINITY) );
+    // }
 		// [current_u]
 		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
 	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_current_u_" + std::to_string(i), VAR_TYPE_U, k, 0.0, opt_var_limits.l_current_limits[i], opt_var_limits.u_current_limits[i]) );
