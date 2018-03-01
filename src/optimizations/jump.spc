@@ -1,4 +1,5 @@
 Begin  Jump NLP problem
+  Major iterations limit         2000
   Iterations limit               20000
   Solution                       yes
 
@@ -8,3 +9,4 @@ Begin  Jump NLP problem
   Save frequency      500
 
 End   Jump NLP problem
+

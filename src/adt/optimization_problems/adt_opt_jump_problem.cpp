@@ -56,7 +56,7 @@ void Jump_Opt::Initialization(){
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
-  h_dt_min = 0.025; // Minimum knotpoint timestep
+  h_dt_min = 0.05; // Minimum knotpoint timestep
   max_normal_force = 1e10;//10000; // Newtons
   max_tangential_force = 10000; // Newtons  	  	
 
@@ -117,6 +117,9 @@ void Jump_Opt::initialize_ti_constraint_list(){
     //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height)); 
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
 
     // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height));     
 
