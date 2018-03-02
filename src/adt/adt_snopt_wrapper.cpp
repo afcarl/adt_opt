@@ -744,7 +744,7 @@ namespace snopt_wrapper{
 
 
 	int Cold  = 0; int Basis = 1; int Warm = 2;
-	int start_condition = Warm;//Basis;//Warm;
+	int start_condition = Cold;//Warm;//Basis;//Warm;
 	
 	// Get Sizes
 	// int n = 2;
@@ -825,7 +825,7 @@ namespace snopt_wrapper{
    	whole_body_trajectory_problem.setPrintFile("adt_problem.out"); 
 	whole_body_trajectory_problem.setIntParameter("Derivative option", 0);
 	whole_body_trajectory_problem.setIntParameter("Verify level ", 3);	
-	whole_body_trajectory_problem.setSpecsFile("jump.spc");
+	whole_body_trajectory_problem.setSpecsFile("small_jump.spc");
 
 
 	// whole_body_trajectory_problem.computeJac(nF, n, snopt_wrapper::wbt_FG, x, xlow, xupp,

@@ -1,0 +1,99 @@
+N = 3
+Kinematic Constraints:
+	// Initial condition constraint:     
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, X_DIM, heel_pos[X_DIM]-OPT_ZERO_EPS, heel_pos[X_DIM] + OPT_ZERO_EPS));     
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, X_DIM, toe_pos[X_DIM]-OPT_ZERO_EPS, toe_pos[X_DIM]+OPT_ZERO_EPS));         
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(3, SJLinkID::LK_FootHeel, Z_DIM, 0.005, OPT_INFINITY));     
+    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(3, SJLinkID::LK_FootToe, Z_DIM, 0.005, OPT_INFINITY));    
+
+knotpoint = 1                                                                                              
+x_state (qvirt, z, delta)                                                                                  
+ 0.018826   0.837411   0.010533  -0.000057   0.000184  -0.001286   0.002308   0.000000   0.000619           
+xdot                                                                                                       
+ 0.155564  -0.009754   0.185653  -0.001002   0.003244  -0.022664   0.040677   0.033941   0.010914           
+xddot_est                                                                                                  
+ 2.742060  -0.171934   3.272416  -0.017657   0.057182  -0.399491   0.716991   0.598263   0.192384           
+q_state                                                                                                    
+ 0.018826   0.837411   0.010533  -0.785915   1.572469  -0.797087                                            
+qdot_state                                                                                                 
+ 0.155564  -0.009754   0.185653  -0.009107   0.029492  -0.206038                                            
+u_current                                                                                                  
+ 0.478787   6.443848  -0.015788                                                                             
+Fr_states                                                                                                  
+-0.757459   9.014430   44.113491   191.492931                                                              
+beta_states                                                                                                
+ 4.980627   4.033803   68.175533   123.317397                                                               
+h_dt = 0.0567326                                                                                                                                           
+com_pos (x,y,z)                                                                                            
+ 0.094458  -0.003663   0.621754                                                                             
+com_vel (xdot_com, ydot_com, zdot_com                                                                      
+ 0.115854   0.000000  -0.021691                                                                             
+body_pos (x, z, Ry)                                                                                        
+ 0.018826   0.837411   0.010533                                                                             
+foot_toe_pos (x, z, Ry)                                                                                    
+ 0.117100   0.000000   0.000000                                                                             
+foot_heel_pos (x, z, Ry)                                                                                   
+-0.082900   0.000000   0.000000                                                                           
+
+knotpoint = 2                                                                                              
+x_state (qvirt, z, delta)                                                                                  
+ 0.091307   0.830867   0.097073   0.029829   0.000518   0.009659   0.002231   0.000000  -0.000593           
+xdot                                                                                                       
+ 0.726152  -0.065564   0.867004   0.299415   0.003348   0.109649  -0.000769  -0.029712  -0.012149           
+xddot_est                                                                                                  
+ 5.716454  -0.559132   6.826140   3.009733   0.001044   1.325582  -0.415229  -0.637709  -0.231062           
+q_state                                                                                                    
+ 0.091307   0.830867   0.097073  -0.514223   1.575508  -0.697591                                            
+qdot_state                                                                                                 
+ 0.726152  -0.065564   0.867004   2.721955   0.030439   0.996809                                            
+u_current                                                                                                  
+-7.957788  -0.882428  -0.000648                                                                            
+Fr_states                                                                                                  
+-28.295604   237.472694   0.011403   0.014254                                                              
+beta_states                                                                                                
+ 136.421100   101.051594   0.000000   0.014254                                                              
+h_dt = 0.0998151
+
+com_pos (x,y,z)                                                                                          │
+ 0.100730  -0.003663   0.600033                                                                          │
+com_vel (xdot_com, ydot_com, zdot_com                                                                    │
+ 0.042526   0.000000  -0.103145                                                                          │
+body_pos (x, z, Ry)                                                                                      │
+ 0.091307   0.830867   0.097073                                                                          │
+foot_toe_pos (x, z, Ry)                                                                                  │
+-0.087025   0.000000   0.460767                                                                          │
+foot_heel_pos (x, z, Ry)                                                                                 │
+-0.266167   0.088927   0.460767                                                                          │
+--------------------------                                                                               │
+--------------------------                                                                               │
+knotpoint = 3                                                                                            │
+x_state (qvirt, z, delta)                                                                                │
+ 0.127039   0.798117   0.158947   0.041565   0.000226   0.011405  -0.000082   0.000000   0.000003        │
+xdot                                                                                                     │
+ 0.714641  -0.655007   1.237486   0.234720  -0.005841   0.034925  -0.046257  -0.001536   0.011920        │
+xddot_est                                                                                                │
+-0.230229  -11.788854   7.409636  -1.293908  -0.183785  -1.494483  -0.909748   0.563522   0.481385       │
+q_state                                                                                                  │
+ 0.127039   0.798117   0.158947  -0.407532   1.572853  -0.681716                                         │
+qdot_state                                                                                               │
+ 0.714641  -0.655007   1.237486   2.133815  -0.053099   0.317498                                         │
+u_current                                                                                                │
+-0.144179   0.082239  -0.000009                                                                          │
+Fr_states                                                                                                │
+-0.000000   0.000000  -0.000000   0.000000                                                               │
+beta_states                                                                                              │
+ 0.000000   0.000000   0.000000   0.000000                                                               │
+h_dt = 0.05                                                                                              │
+                                                                                                         │
+com_pos (x,y,z)                                                                                          │
+ 0.103306  -0.003663   0.567944                                                                          │
+com_vel (xdot_com, ydot_com, zdot_com                                                                    │
+ 0.053576   0.000000  -0.589505                                                                          │
+body_pos (x, z, Ry)                                                                                      │
+ 0.127039   0.798117   0.158947                                                                          │
+foot_toe_pos (x, z, Ry)                                                                                  │
+-0.176801   0.005000   0.642552                                                                          │
+foot_heel_pos (x, z, Ry)                                                                                 │
+-0.336915   0.124848   0.642552  
