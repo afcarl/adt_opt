@@ -3,6 +3,7 @@ Begin  Jump NLP problem
   Iterations limit               20000
   Solution                       yes
 
+  Old basis file      15
   Backup basis file   15
   New basis file      16
   Save frequency      100
