@@ -100,13 +100,13 @@ void Jump_Opt::initialize_contact_list(){
 
 void Jump_Opt::initialize_td_constraint_list(){
 	int toe_contact_index = 0;
-	 int heel_contact_index = 1;	
-      td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
-      td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
-      td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
-      td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
-      td_constraint_list.append_constraint(new Dynamics_Constraint(&contact_list));    
-      td_constraint_list.append_constraint(new Linear_Back_Euler_Time_Integration_Constraint(&contact_list));
+	int heel_contact_index = 1;	
+	td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, toe_contact_index)); 
+	td_constraint_list.append_constraint(new Floor_2D_Contact_LCP_Constraint(&contact_list, heel_contact_index)); 
+	td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, toe_contact_index));
+	td_constraint_list.append_constraint(new Friction_Cone_2D_Constraint(&contact_list, heel_contact_index));     
+	td_constraint_list.append_constraint(new Dynamics_Constraint(&contact_list));    
+	td_constraint_list.append_constraint(new Linear_Back_Euler_Time_Integration_Constraint(&contact_list));
 }
 
 void Jump_Opt::initialize_ti_constraint_list(){
@@ -128,6 +128,14 @@ void Jump_Opt::initialize_ti_constraint_list(){
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootHeel, X_DIM, heel_pos[X_DIM]-OPT_ZERO_EPS, heel_pos[X_DIM] + OPT_ZERO_EPS));     
     ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(1, SJLinkID::LK_FootToe, X_DIM, toe_pos[X_DIM]-OPT_ZERO_EPS, toe_pos[X_DIM]+OPT_ZERO_EPS));         
+
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, X_DIM, heel_pos[X_DIM]-OPT_ZERO_EPS, heel_pos[X_DIM] + OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, X_DIM, toe_pos[X_DIM]-OPT_ZERO_EPS, toe_pos[X_DIM]+OPT_ZERO_EPS));         
+
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(3, SJLinkID::LK_FootHeel, Z_DIM, 0.005-OPT_ZERO_EPS, 0.005+OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(3, SJLinkID::LK_FootToe, Z_DIM, 0.005-OPT_ZERO_EPS, 0.005+OPT_ZERO_EPS));     
 
     // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
     // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     

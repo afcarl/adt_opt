@@ -29,12 +29,14 @@ void Floor_2D_Contact_LCP_Constraint::Initialization(){
 void Floor_2D_Contact_LCP_Constraint::initialize_Flow_Fupp(){
 	// Phi(q)*||Fr|| = 0
 	// Phi(q) >= 0
-	F_low.push_back(0.0);	
+  // F_n * (c_k - c_{k-1}) = 0
+ 	F_low.push_back(0.0);	
 	F_low.push_back(-1e-4);
+  F_low.push_back(0.0); 
 
 	F_upp.push_back(1e-4);
 	F_upp.push_back(OPT_INFINITY);			
-
+  F_upp.push_back(1e-4);
   constraint_size = F_low.size();
 }
 
@@ -118,6 +120,41 @@ void Floor_2D_Contact_LCP_Constraint::evaluate_constraint(const int &knotpoint, 
 
   F_vec.push_back(complimentary_constraint); // Phi >= 0
   F_vec.push_back(phi_contact_dis);          // 
+
+  // Add complimentary no slip constraint -----------------
+
+  sejong::Vector q_state_virt_prev;
+  sejong::Vector qdot_state_virt_prev;
+  sejong::Vector z_state_prev;  
+  sejong::Vector zdot_state_prev;    
+  var_manager.get_q_states(knotpoint-1, q_state_virt_prev);
+  var_manager.get_qdot_states(knotpoint-1, qdot_state_virt_prev);
+  var_manager.get_z_states(knotpoint-1, z_state_prev);
+  var_manager.get_zdot_states(knotpoint-1, zdot_state_prev);  
+
+  // convert actuator z_states to joint configuration q_state_act
+  sejong::Vector q_state_act_prev;
+  sejong::Vector qdot_state_act_prev;  
+  actuator_model->getFull_joint_pos_q(z_state, q_state_act_prev);
+  actuator_model->getFull_joint_vel_qdot(z_state, zdot_state, qdot_state_act_prev);
+
+  // Repopulate q_state_prev and qdot_state_prev
+  sejong::Vector q_state_prev; q_state_prev.resize(NUM_QDOT);
+  sejong::Vector qdot_state_prev; qdot_state_prev.resize(NUM_QDOT);
+
+  q_state_prev.head(NUM_VIRTUAL) = q_state_virt_prev;
+  q_state_prev.tail(NUM_ACT_JOINT) = q_state_act_prev;  
+  qdot_state_prev.head(NUM_VIRTUAL) = qdot_state_virt_prev;
+  qdot_state_prev.head(NUM_ACT_JOINT) = qdot_state_act_prev;   
+
+  robot_model->UpdateModel(q_state_prev, qdot_state_prev);  
+  sejong::Vect3 contact_pos_vec_prev;
+  robot_model->getPosition(q_state_prev, contact_link_id, contact_pos_vec_prev);  
+
+  double F_no_slip = Fr_contact[1]*(contact_pos_vec[0] - contact_pos_vec_prev[0]);
+  //std::cout << "F_no_slip = " << F_no_slip << std::endl;
+  F_vec.push_back(F_no_slip);
+
 
 }
 
