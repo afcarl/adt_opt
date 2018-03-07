@@ -35,6 +35,10 @@ private:
 	Contact_List* contact_list_obj;
 	int contact_index = -1;	
 
+	int num_lcp_vars = 4;
+	int num_lcps = 2;	
+
+
 	void Initialization();
 	void initialize_Flow_Fupp();
 

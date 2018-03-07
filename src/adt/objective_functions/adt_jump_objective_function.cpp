@@ -22,9 +22,9 @@ void Jump_Objective_Function::set_var_manager(ADT_Opt_Variable_Manager& var_mana
 	c_qdotvirt = 10.0;
 	c_zdot = 10.0;
 	c_delta_dot = 10.0;
-	c_fr = 0.0001;
-	c_beta = c_fr/10.0;
-	c_ik = 1.0;
+	c_fr = 1e-2;
+	c_beta = c_fr;
+	c_ik = 1e-4;
 
 	Q_qvirt = c_ik*sejong::Matrix::Identity(num_q_virt, num_q_virt);
 	Q_z = c_ik*sejong::Matrix::Identity(num_z, num_z);
@@ -77,7 +77,7 @@ void Jump_Objective_Function::evaluate_objective_function(ADT_Opt_Variable_Manag
 		cost += u_states.transpose()*Q_u*u_states;
 		cost += qdot_states.transpose()*Q_qdotvirt*qdot_states;
 		cost += zdot_states.transpose()*Q_zdot*zdot_states;
-		cost += delta_dot_states.transpose()*Q_delta_dot*delta_dot_states;
+		// cost += delta_dot_states.transpose()*Q_delta_dot*delta_dot_states;
 		//cost += Fr_states.transpose()*Qfr_mat*Fr_states;	
 		cost += beta_states.transpose()*Q_beta*beta_states;
 		cost *= h_k;

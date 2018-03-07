@@ -27,16 +27,29 @@ void Floor_2D_Contact_LCP_Constraint::Initialization(){
 }
 
 void Floor_2D_Contact_LCP_Constraint::initialize_Flow_Fupp(){
-	// Phi(q)*||Fr|| = 0
+	// Phi(q)*||Fr|| = 0. Try: Phi(q)*||Fr|| <= 0
 	// Phi(q) >= 0
-  // F_n * (c_k - c_{k-1}) = 0
- 	F_low.push_back(0.0);	
-	F_low.push_back(-1e-4);
-  F_low.push_back(0.0); 
+  // F_n * (c_k - c_{k-1}) = 0. Try: F_n * fabs(c_k - c_{k-1}) <= 0
+  // F_low.push_back(-OPT_INFINITY); 
+  // F_low.push_back(0.0);
+  // F_low.push_back(-OPT_INFINITY); 
 
-	F_upp.push_back(1e-4);
-	F_upp.push_back(OPT_INFINITY);			
-  F_upp.push_back(1e-4);
+  // F_upp.push_back(0.0);
+  // F_upp.push_back(OPT_INFINITY);      
+  // F_upp.push_back(0.0);
+
+
+  // also try alpha_1 = phi(q), gamma_1 = ||Fr||, alpha_2 = F_n, gamma_2 = abs(c_k - c_{k-1})
+  for(size_t i = 0; i < num_lcp_vars; i++){
+     F_low.push_back(0.0); 
+     F_upp.push_back(0.0);     
+  }
+  // alpha_1 gamma_1 <= 0
+  F_low.push_back(-OPT_INFINITY); F_upp.push_back(0.0);     
+
+  // alpha_2 gamma_2 <= 0
+  F_low.push_back(-OPT_INFINITY); F_upp.push_back(0.0);       
+
   constraint_size = F_low.size();
 }
 
@@ -102,25 +115,10 @@ void Floor_2D_Contact_LCP_Constraint::evaluate_constraint(const int &knotpoint, 
   sejong::Vect3 contact_pos_vec;
   robot_model->getPosition(q_state, contact_link_id, contact_pos_vec);
 
-  // Set contact to be rectangular surface. 
-    // Calculate distance to surface. 
-    // ...
-
   // For now, this is just a ground contact
 
-  // contact_pos_vec = [x, z, Ry]
-
-  //std::cout << "Fr_z = " << Fr_z[0] << std::endl;
-  //std::cout << "Fr_l2_norm_squared = " << Fr_l2_norm_squared  << std::endl;
   double phi_contact_dis = contact_pos_vec[1];
   double complimentary_constraint = phi_contact_dis*Fr_l2_norm_squared;
-
-  // std::cout << "phi_contact_dis = " << phi_contact_dis  << std::endl;
-  // std::cout << "complimentary_constraint = " << complimentary_constraint << std::endl;
-
-  F_vec.push_back(complimentary_constraint); // Phi >= 0
-  F_vec.push_back(phi_contact_dis);          // 
-
   // Add complimentary no slip constraint -----------------
 
   sejong::Vector q_state_virt_prev;
@@ -151,9 +149,36 @@ void Floor_2D_Contact_LCP_Constraint::evaluate_constraint(const int &knotpoint, 
   sejong::Vect3 contact_pos_vec_prev;
   robot_model->getPosition(q_state_prev, contact_link_id, contact_pos_vec_prev);  
 
-  double F_no_slip = Fr_contact[1]*(contact_pos_vec[0] - contact_pos_vec_prev[0]);
+  double F_z = Fr_contact[1];
+  double F_no_slip = F_z*std::fabs(contact_pos_vec[0] - contact_pos_vec_prev[0]);
   //std::cout << "F_no_slip = " << F_no_slip << std::endl;
-  F_vec.push_back(F_no_slip);
+
+
+  sejong::Vector alpha_vars;
+  sejong::Vector gamma_vars;
+  var_manager.get_alpha_states(knotpoint, alpha_vars);  
+  var_manager.get_gamma_states(knotpoint, gamma_vars);    
+
+  double alpha_1 = alpha_vars[contact_index*num_lcps];
+  double alpha_2 = alpha_vars[contact_index*num_lcps + 1];
+  double gamma_1 = gamma_vars[contact_index*num_lcps];
+  double gamma_2 = gamma_vars[contact_index*num_lcps + 1];
+
+  double alpha_1_const = alpha_1 - phi_contact_dis;
+  double gamma_1_const = gamma_1 - Fr_l2_norm_squared;
+  double alpha_2_const = alpha_2 - F_z;
+  double gamma_2_const = gamma_2 - std::fabs(contact_pos_vec[0] - contact_pos_vec_prev[0]);
+
+  F_vec.push_back(alpha_1_const);
+  F_vec.push_back(gamma_1_const);  
+  F_vec.push_back(alpha_2_const);
+  F_vec.push_back(gamma_2_const);  
+
+  F_vec.push_back(alpha_1*gamma_1);
+  F_vec.push_back(alpha_2*gamma_2);  
+  // F_vec.push_back(complimentary_constraint); // Phi >= 0
+  // F_vec.push_back(phi_contact_dis);    
+  // F_vec.push_back(F_no_slip);
 
 
 }

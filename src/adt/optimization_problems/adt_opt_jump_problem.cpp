@@ -13,6 +13,7 @@
 #include <adt/hard_constraints/adt_dynamics_constraint.hpp>
 #include <adt/hard_constraints/adt_position_kinematic_constraint.hpp>
 #include <adt/hard_constraints/adt_com_kinematic_constraint.hpp>
+#include <adt/hard_constraints/adt_timestep_constraint.hpp>
 
 #include <string>
 
@@ -52,13 +53,13 @@ void Jump_Opt::Initialization(){
 	robot_model = DracoModel::GetDracoModel();
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 12; //6;
+	N_total_knotpoints = 1; //6;
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
-  h_dt_min = 0.005; // Minimum knotpoint timestep
-  max_normal_force = 1e10;//10000; // Newtons
-  max_tangential_force = 10000; // Newtons  	  	
+	h_dt_min = 1e-4; // Minimum knotpoint timestep
+	max_normal_force = 1e10;//10000; // Newtons
+	max_tangential_force = 10000; // Newtons  	  	
 
 	initialize_starting_configuration();
 	initialize_contact_list();
@@ -132,40 +133,21 @@ void Jump_Opt::initialize_ti_constraint_list(){
     // Mid-knotpoint constraint
     // double min_com_height = 1.5;
     // ti_constraint_list.append_constraint(new CoM_2D_Kinematic_Constraint(des_knotpoint, 2, min_com_height, OPT_INFINITY));     
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_body, Z_DIM, min_des_z_height, OPT_INFINITY));    
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_body, Z_DIM, min_des_z_height, OPT_INFINITY));    
     // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootHeel, Z_DIM, min_des_z_height, OPT_INFINITY));     
     // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, min_des_z_height, OPT_INFINITY));     
 
     // Landing Constraint
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(pre_final_knotpoint, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(pre_final_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
 
 
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(3, SJLinkID::LK_FootHeel, Z_DIM, 0.005, OPT_INFINITY));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(3, SJLinkID::LK_FootToe, Z_DIM, 0.005, OPT_INFINITY));     
-
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(5, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(5, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(6, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(6, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
-
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, X_DIM, heel_pos[X_DIM]-OPT_ZERO_EPS, heel_pos[X_DIM] + OPT_ZERO_EPS));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, X_DIM, toe_pos[X_DIM]-OPT_ZERO_EPS, toe_pos[X_DIM]+OPT_ZERO_EPS));         
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_body, Z_DIM, body_pos[Z_DIM]+0.01-OPT_ZERO_EPS, body_pos[Z_DIM]+0.01+OPT_ZERO_EPS));         
-
-    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(2, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
-
-    // Jump Kinematic constraints:
-	// ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, min_des_z_height));
- //    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(pre_final_knotpoint, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
- //    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(pre_final_knotpoint, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
- //    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS)); 
- //    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // Add the time stepping constraint as suggested by Posa.
+    if (N_total_knotpoints >= 5){
+     	for(size_t j = 1; j < std::floor((N_total_knotpoints-3)/2) + 1; j++){
+		    ti_constraint_list.append_constraint(new Time_Stepping_Constraint(j));          		
+     	}
+    }
 }
 
 
@@ -239,15 +221,6 @@ void Jump_Opt::initialize_opt_vars(){
 		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
 	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_delta_dot_state_" + std::to_string(i), VAR_TYPE_DELTA_DOT, k, 0.0, opt_var_limits.l_delta_dot_limits[i], opt_var_limits.u_delta_dot_limits[i]) );
 		}
-    // qddot_virt 
-    // for(size_t i = 0; i < NUM_VIRTUAL; i++){
-    //       opt_var_manager.append_variable(new ADT_Opt_Variable("qddot_virt" + std::to_string(i), VAR_TYPE_QDDOT_VIRT, k, 0.0, -OPT_INFINITY, OPT_INFINITY) );
-    // }    
-
-    // [xddot_all]
-    // for(size_t i = 0; i < NUM_VIRTUAL + NUM_ACT_JOINT + NUM_ACT_JOINT; i++){
-    //        opt_var_manager.append_variable(new ADT_Opt_Variable("xddot_all_" + std::to_string(i), VAR_TYPE_XDDOT_ALL, k, 0.0, -OPT_INFINITY, OPT_INFINITY) );
-    // }
 		// [current_u]
 		for(size_t i = 0; i < NUM_ACT_JOINT; i++){
 	        opt_var_manager.append_variable(new ADT_Opt_Variable("actuator_current_u_" + std::to_string(i), VAR_TYPE_U, k, 0.0, opt_var_limits.l_current_limits[i], opt_var_limits.u_current_limits[i]) );
@@ -271,7 +244,15 @@ void Jump_Opt::initialize_opt_vars(){
 		        //opt_var_manager.append_variable(new ADT_Opt_Variable("Beta_c" + std::to_string(i) + "_b" + std::to_string(j) , VAR_TYPE_BETA, k, 0.0, 0.0, OPT_INFINITY) );
 		        opt_var_manager.append_variable(new ADT_Opt_Variable("Beta_c" + std::to_string(i) + "_b" + std::to_string(j) , VAR_TYPE_BETA, k, 0.0, 0.0, OPT_INFINITY) );
 			}
+
+			// Each contact has 2 LCP (2 alphas, 2 gammas) constraints.
+			for(size_t j = 0; j < 2; j++){
+		        opt_var_manager.append_variable(new ADT_Opt_Variable("alpha_c" + std::to_string(i) + "_" + std::to_string(j) , VAR_TYPE_ALPHA, k, 0.0, 0.0, OPT_INFINITY) );				
+		        opt_var_manager.append_variable(new ADT_Opt_Variable("gamma_c" + std::to_string(i) + "_" + std::to_string(j) , VAR_TYPE_GAMMA, k, 0.0, 0.0, OPT_INFINITY) );
+			}
+
 		}
+
 
 
 		
@@ -299,8 +280,6 @@ void Jump_Opt::initialize_specific_variable_bounds(){
 		opt_var_manager.knotpoint_to_qdot_state_vars[N_total_knotpoints][i]->l_bound = -0.01;		
 		opt_var_manager.knotpoint_to_qdot_state_vars[N_total_knotpoints][i]->u_bound = 	0.01;
 	}
-
-
 }
 
 void Jump_Opt::initialize_objective_func(){

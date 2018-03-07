@@ -36,7 +36,10 @@ public:
 
 
 	void get_u_states(const int &knotpoint, sejong::Vector &u_state);		
-	void get_beta_states(const int &knotpoint, sejong::Vector &beta_state);				
+	void get_beta_states(const int &knotpoint, sejong::Vector &beta_state);		
+
+	void get_alpha_states(const int &knotpoint, sejong::Vector &alpha_state);			
+	void get_gamma_states(const int &knotpoint, sejong::Vector &gamma_state);						
 
 	void get_qddot_virt_states(const int &knotpoint, sejong::Vector &qddot_virt_states);				
 	void get_xddot_all_states(const int &knotpoint, sejong::Vector &xddot_all);
@@ -81,9 +84,13 @@ public:
 
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_u_vars;	
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_beta_vars;
+	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_alpha_vars;
+	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_gamma_vars;		
 
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_qddot_virt_vars;
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_xddot_all_vars;	
+
+
 
 
 	std::vector<ADT_Opt_Variable*> knotpoint_to_dt;

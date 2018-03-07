@@ -42,6 +42,10 @@ void ADT_Opt_Variable_Manager::append_variable(ADT_Opt_Variable* opt_variable){
 		add_variable_to_map(knotpoint_to_qddot_virt_vars, opt_variable);
 	}else if(opt_variable->type == VAR_TYPE_XDDOT_ALL){
 		add_variable_to_map(knotpoint_to_xddot_all_vars, opt_variable);
+	}else if(opt_variable->type == VAR_TYPE_ALPHA){
+		add_variable_to_map(knotpoint_to_alpha_vars, opt_variable);
+	}else if(opt_variable->type == VAR_TYPE_GAMMA){
+		add_variable_to_map(knotpoint_to_gamma_vars, opt_variable);
 	}else if(opt_variable->type == VAR_TYPE_H){
 		knotpoint_to_dt.push_back(opt_variable);
 	}
@@ -156,6 +160,13 @@ void ADT_Opt_Variable_Manager::get_qddot_virt_states(const int &knotpoint, sejon
 void ADT_Opt_Variable_Manager::get_xddot_all_states(const int &knotpoint, sejong::Vector &xddot_all){
 	convert_to_vector(knotpoint, knotpoint_to_xddot_all_vars, xddot_all);	
 }
+
+void ADT_Opt_Variable_Manager::get_alpha_states(const int &knotpoint, sejong::Vector &alpha_state){
+	convert_to_vector(knotpoint, knotpoint_to_alpha_vars, alpha_state);		
+}
+void ADT_Opt_Variable_Manager::get_gamma_states(const int &knotpoint, sejong::Vector &gamma_state){
+	convert_to_vector(knotpoint, knotpoint_to_gamma_vars, gamma_state);	
+}						
 
 void ADT_Opt_Variable_Manager::convert_to_vector(const int &knotpoint, 
 						  	 	   			  std::map<int, std::vector<ADT_Opt_Variable*> > &map_kp_to_var_vec,
