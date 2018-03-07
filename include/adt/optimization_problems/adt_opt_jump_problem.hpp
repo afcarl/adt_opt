@@ -81,6 +81,8 @@ private:
 
   void initialize_opt_vars();
 
+  void initialize_specific_variable_bounds();
+
   void initialize_objective_func();
 
 

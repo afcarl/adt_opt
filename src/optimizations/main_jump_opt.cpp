@@ -48,6 +48,7 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 	sejong::Vector qdot_state;	
 
 	sejong::Vect3 body_pos;
+	sejong::Vect3 upperleg_pos;
 	sejong::Vect3 foot_toe_pos;
 	sejong::Vect3 foot_heel_pos;
 	sejong::Vect3 com_pos;
@@ -92,8 +93,12 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 	 	robot_model->getCoMPosition(q_state, com_pos);
 	 	robot_model->getCoMVelocity(q_state, qdot_state, com_vel);
 	 	robot_model->getPosition(q_state, SJLinkID::LK_body, body_pos);
+	 	robot_model->getPosition(q_state, SJLinkID::LK_upperLeg, upperleg_pos);	 	
 	 	robot_model->getPosition(q_state, SJLinkID::LK_FootToe, foot_toe_pos);
-	 	robot_model->getPosition(q_state, SJLinkID::LK_FootHeel, foot_heel_pos);	 	
+	 	robot_model->getPosition(q_state, SJLinkID::LK_FootHeel, foot_heel_pos);	 
+
+
+	 		
 
 	 	sejong::pretty_print(x_state, std::cout, "x_state (qvirt, z, delta)");
 	 	sejong::pretty_print(xdot, std::cout, "xdot");
@@ -113,6 +118,7 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 	 	sejong::pretty_print(com_vel, std::cout, "com_vel (xdot_com, ydot_com, zdot_com");	 
 
 	 	sejong::pretty_print(body_pos, std::cout, "body_pos (x, z, Ry)");
+	 	sejong::pretty_print(upperleg_pos, std::cout, "upperleg_pos (x, z, Ry)");	 	 	
 	 	sejong::pretty_print(foot_toe_pos, std::cout, "foot_toe_pos (x, z, Ry)");	 	
 	 	sejong::pretty_print(foot_heel_pos, std::cout, "foot_heel_pos (x, z, Ry)");	 	 		
 

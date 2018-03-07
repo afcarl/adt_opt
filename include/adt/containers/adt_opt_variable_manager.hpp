@@ -64,12 +64,6 @@ public:
 	int get_num_z_vars();
 	int get_num_u_vars();
 	int get_num_delta_vars();	
-private:
-	void add_variable_to_map(std::map<int, std::vector<ADT_Opt_Variable*> > &map_kp_to_var_vec, ADT_Opt_Variable* opt_variable);
-
-	void convert_to_vector(const int &knotpoint, 
-						   std::map<int, std::vector<ADT_Opt_Variable*> > &map_kp_to_var_vec,
-						   sejong::Vector &vec_out);
 
 	std::vector<ADT_Opt_Variable*> opt_var_list;
 
@@ -92,8 +86,15 @@ private:
 	std::map<int, std::vector<ADT_Opt_Variable*> > knotpoint_to_xddot_all_vars;	
 
 
-
 	std::vector<ADT_Opt_Variable*> knotpoint_to_dt;
+
+
+private:
+	void add_variable_to_map(std::map<int, std::vector<ADT_Opt_Variable*> > &map_kp_to_var_vec, ADT_Opt_Variable* opt_variable);
+
+	void convert_to_vector(const int &knotpoint, 
+						   std::map<int, std::vector<ADT_Opt_Variable*> > &map_kp_to_var_vec,
+						   sejong::Vector &vec_out);
 	
 
 	int count_num_vars_in_map(const int &knotpoint, std::map<int, std::vector<ADT_Opt_Variable*> > &map_kp_to_var_vec);

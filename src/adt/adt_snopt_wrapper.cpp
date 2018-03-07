@@ -744,8 +744,9 @@ namespace snopt_wrapper{
 
 
 	int Cold  = 0; int Basis = 1; int Warm = 2;
-	int start_condition = Basis;//Warm;//Basis;//Warm;
+	int start_condition = Cold;//Warm;//Basis;//Warm;
 	
+
 	// Get Sizes
 	// int n = 2;
 	// int nF = 2;
@@ -822,11 +823,11 @@ namespace snopt_wrapper{
 	whole_body_trajectory_problem.initialize("", 1);  // no print file, summary on
 
 	
-   	whole_body_trajectory_problem.setPrintFile("adt_problem.out"); 
+   	whole_body_trajectory_problem.setPrintFile("com_adt_problem.out"); 
 	whole_body_trajectory_problem.setIntParameter("Derivative option", 0);
 	whole_body_trajectory_problem.setIntParameter("Verify level ", 3);	
-	whole_body_trajectory_problem.setSpecsFile("small_jump.spc");
-
+	//whole_body_trajectory_problem.setSpecsFile("small_jump.spc");
+	whole_body_trajectory_problem.setSpecsFile("com_jump.spc");
 
 	// whole_body_trajectory_problem.computeJac(nF, n, snopt_wrapper::wbt_FG, x, xlow, xupp,
 	// 	  iAfun_test, jAvar_test, A_test, neA_test,
@@ -845,9 +846,9 @@ namespace snopt_wrapper{
 	// }
 
 
-	for (size_t i = 0; i < nF; i++){
-		std::cout << "F[" << i << "] = " << F[i] << std::endl;
-	}	
+	// for (size_t i = 0; i < nF; i++){
+	// 	std::cout << "F[" << i << "] = " << F[i] << std::endl;
+	// }	
 
 
 

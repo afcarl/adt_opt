@@ -17,7 +17,15 @@
 
 - Construct Objective Function Object DONE
 - Run Optimization
-- Provide known gradients
+- Provide known gradients 
 
 - Fix Update Model
 - Create URDF for Draco visualization
+
+
+For jump trajectory, consider spliting the  optimization to two process.
+-----
+For backflipping, the momentum of the hip yaw can help with doing the landing.
+
+Take optimization output and create plots.
+
