@@ -28,6 +28,7 @@ public:
 	sejong::Matrix Q_z; // Cost Matrix for IK
 
 	double c_ik;
+	double c_ik_virt;
 
 	double c_u;
 	double c_qdotvirt;

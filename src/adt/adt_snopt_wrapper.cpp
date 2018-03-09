@@ -744,7 +744,7 @@ namespace snopt_wrapper{
 
 
 	int Cold  = 0; int Basis = 1; int Warm = 2;
-	int start_condition = Cold;
+	int start_condition = Basis;
 
 	// Get Sizes
 	// int n = 2;

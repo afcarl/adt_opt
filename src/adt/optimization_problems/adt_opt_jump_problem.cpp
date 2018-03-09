@@ -53,11 +53,11 @@ void Jump_Opt::Initialization(){
 	robot_model = DracoModel::GetDracoModel();
 
 	std::cout << "[Jump_Opt] Initialization Called" << std::endl;
-	N_total_knotpoints = 10; //6;
+	N_total_knotpoints = 4; //6;
 
 	N_d = ND_2D_CONST; // Number of friction cone basis vectors
 
-	h_dt_min = 1e-4; // Minimum knotpoint timestep
+	h_dt_min = 0.001; // Minimum knotpoint timestep
 	max_normal_force = 1e10;//10000; // Newtons
 	max_tangential_force = 10000; // Newtons  	  	
 
@@ -133,13 +133,13 @@ void Jump_Opt::initialize_ti_constraint_list(){
     // Mid-knotpoint constraint
     // double min_com_height = 1.5;
     // ti_constraint_list.append_constraint(new CoM_2D_Kinematic_Constraint(des_knotpoint, 2, min_com_height, OPT_INFINITY));     
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_body, Z_DIM, min_des_z_height, OPT_INFINITY));    
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootHeel, Z_DIM, min_des_z_height, OPT_INFINITY));     
-    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(des_knotpoint, SJLinkID::LK_FootToe, Z_DIM, min_des_z_height, OPT_INFINITY));     
+    //ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(4, SJLinkID::LK_body, Z_DIM, min_des_z_height, OPT_INFINITY));    
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(4, SJLinkID::LK_FootHeel, Z_DIM, min_des_z_height, OPT_INFINITY));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(4, SJLinkID::LK_FootToe, Z_DIM, min_des_z_height, OPT_INFINITY));     
 
     // Landing Constraint
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
-    ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootHeel, Z_DIM, 0.0, OPT_ZERO_EPS));     
+    // ti_constraint_list.append_constraint(new Position_2D_Kinematic_Constraint(N_total_knotpoints, SJLinkID::LK_FootToe, Z_DIM, 0.0, OPT_ZERO_EPS));     
 
 
     // Add the time stepping constraint as suggested by Posa.
@@ -257,7 +257,7 @@ void Jump_Opt::initialize_opt_vars(){
 
 		
 		// [h_dt] knotpoint timestep
-        opt_var_manager.append_variable(new ADT_Opt_Variable("h_dt_" + std::to_string(k) , VAR_TYPE_H, k, h_dt_min, h_dt_min, OPT_INFINITY) );
+        opt_var_manager.append_variable(new ADT_Opt_Variable("h_dt_" + std::to_string(k) , VAR_TYPE_H, k, h_dt_min, 0.05, OPT_INFINITY) );
 	}
   // Assign total knotpoints
   opt_var_manager.total_knotpoints = N_total_knotpoints;
@@ -276,10 +276,31 @@ void Jump_Opt::initialize_opt_vars(){
 void Jump_Opt::initialize_specific_variable_bounds(){
 	std::cout << "!! [JUMP OPT] size of qdot at knotpoint N:" << opt_var_manager.knotpoint_to_qdot_state_vars[N_total_knotpoints].size() << std::endl;
 	// place constraint that ending velocity of virtual joints must be near 0
-	for (size_t i = 0; i < opt_var_manager.knotpoint_to_qdot_state_vars[N_total_knotpoints].size(); i++){
-		opt_var_manager.knotpoint_to_qdot_state_vars[N_total_knotpoints][i]->l_bound = 0.0;		
-		opt_var_manager.knotpoint_to_qdot_state_vars[N_total_knotpoints][i]->u_bound = 	0.01;
+	// for (size_t i = 0; i < opt_var_manager.knotpoint_to_qdot_state_vars[N_total_knotpoints].size(); i++){
+	// 	opt_var_manager.knotpoint_to_qdot_state_vars[N_total_knotpoints][i]->l_bound = 0.0;		
+	// 	opt_var_manager.knotpoint_to_qdot_state_vars[N_total_knotpoints][i]->u_bound = 	0.01;
+	// }
+
+	double init_robot_height = robot_q_init[1];
+	double des_z_height = 1.25;
+	int N_des = N_total_knotpoints;
+	double jump_slope = (des_z_height - init_robot_height)/N_des;
+
+	opt_var_manager.knotpoint_to_q_state_vars[N_des][1]->l_bound = des_z_height;
+	for(size_t k = 1; k < N_des + 1; k++){	
+		double robot_z_k = k*jump_slope + init_robot_height;
+		opt_var_manager.knotpoint_to_q_state_vars[k][1]->value = robot_z_k;
 	}
+
+
+	// double land_slope = (init_robot_height - des_z_height)/(N_total_knotpoints - N_des);
+	// for(size_t k = N_des; k < N_total_knotpoints + 1; k++){
+	// 	double robot_z_k_post = (k-N_des)*land_slope + des_z_height;
+	// 	opt_var_manager.knotpoint_to_q_state_vars[k][1]->value = robot_z_k_post;
+ // 	}
+
+
+
 }
 
 void Jump_Opt::initialize_objective_func(){

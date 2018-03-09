@@ -36,6 +36,8 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 	sejong::Vector u_current;	
 	sejong::Vector Fr_states;	
 	sejong::Vector beta_states;		
+	sejong::Vector alpha_states;		
+	sejong::Vector gamma_states;			
 	double h_dt;
 
 	sejong::Vector qdot_virt_states_prev;
@@ -70,7 +72,11 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 
 	 	var_manager->get_qdot_states(k-1, qdot_virt_states_prev); 	
 	 	var_manager->get_zdot_states(k-1, zdot_states_prev);
-	 	var_manager->get_delta_dot_states(k-1, delta_dot_states_prev); 		 	
+	 	var_manager->get_delta_dot_states(k-1, delta_dot_states_prev); 
+
+	 	var_manager->get_alpha_states(k, alpha_states);
+	 	var_manager->get_gamma_states(k, gamma_states);	 	
+
 
 	 	x_state.head(NUM_VIRTUAL) = q_virt_states;
 	 	x_state.segment(NUM_VIRTUAL, NUM_ACT_JOINT) = z_states;
@@ -110,7 +116,9 @@ void parse_output(Optimization_Problem_Main* opt_prob){
 
 	 	sejong::pretty_print(u_current, std::cout, "u_current");	
 	 	sejong::pretty_print(Fr_states, std::cout, "Fr_states");	 		 	
-	 	sejong::pretty_print(beta_states, std::cout, "beta_states");	 		 	
+	 	sejong::pretty_print(beta_states, std::cout, "beta_states");	 	
+	 	sejong::pretty_print(alpha_states, std::cout, "alpha_states");
+	 	sejong::pretty_print(gamma_states, std::cout, "gamma_states");	 		 	
 	 	std::cout << "h_dt = " << h_dt << std::endl;
 
 	 	std::cout << " " << std::endl;
