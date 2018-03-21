@@ -59,6 +59,7 @@ include_directories(
 
 include_directories(include)
 include_directories(src/draco_dynamic_model)
+include_directories(src/hopper_dynamic_model)
 
 set(draco_dyn_model_sources src/draco_dynamic_model/DracoP1Rot_Definition.h
 						  src/draco_dynamic_model/Draco_Dyn_Model.hpp						  
@@ -66,7 +67,11 @@ set(draco_dyn_model_sources src/draco_dynamic_model/DracoP1Rot_Definition.h
 						  src/draco_dynamic_model/Draco_Kin_Model.hpp						  
 						  src/draco_dynamic_model/Draco_Kin_Model.cpp						  
 						  src/draco_dynamic_model/DracoModel.hpp
-						  src/draco_dynamic_model/DracoModel.cpp)					
+						  src/draco_dynamic_model/DracoModel.cpp)			
+
+set(hopper_model_sources src/hopper_dynamic_model/Hopper_Definition.h
+						 src/hopper_dynamic_model/HopperModel.hpp
+						 src/hopper_dynamic_model/HopperModel.cpp)			
 
 set(draco_act_model_sources src/draco_actuator_model/DracoActuatorModel.cpp) 		
 set(draco_combined_dynamics_sources src/draco_combined_dynamics_model/draco_combined_dynamics_model.cpp) 			  			
@@ -105,6 +110,14 @@ add_executable(test_draco_model  src/small_tests/test_draco_model.cpp  ${draco_d
 																	   ${draco_combined_dynamics_sources} 
 																	   ${adt_contact_sources})
 target_link_libraries(test_draco_model  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
+
+
+#--------------------------------------------
+# Test Hopper Model
+#--------------------------------------------
+add_executable(test_hopper_model  src/small_tests/test_hopper_model.cpp ${hopper_model_sources})
+target_link_libraries(test_hopper_model  ${SJUtils} ${SJurdf} ${SJrbdl} ${SJsnopt})								 
+
 #--------------------------------------------
 
 #--------------------------------------------
